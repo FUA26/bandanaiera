@@ -12,7 +12,6 @@
     "format:check": "prettier --check .",
     "prepare": "husky install",
     "precommit": "lint-staged",
-    "postinstall": "tailwindcss init -p",
     "type-check": "tsc -b"
   },
   "dependencies": {
@@ -28,6 +27,7 @@
     "@types/react-dom": "^18",
     "@typescript-eslint/eslint-plugin": "^8.26.1",
     "@typescript-eslint/parser": "^8.26.1",
+    "autoprefixer": "^10.4.21",
     "commitizen": "^4.3.1",
     "cz-conventional-changelog": "^3.3.0",
     "eslint": "^8.57.1",
