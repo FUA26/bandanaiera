@@ -7,6 +7,7 @@ import "@/css/globals.css";
 import {ThemeProvider} from "next-themes";
 
 import {cn} from "@/lib/utils";
+import {SessionWrapper} from "@/components/layout/session-provider";
 
 const inter = Inter({subsets: ["latin"]});
 
@@ -23,14 +24,16 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={cn("min-h-screen bg-background", inter.className)}>
-        <ThemeProvider
-          disableTransitionOnChange
-          enableSystem
-          attribute="class"
-          defaultTheme="light"
-        >
-          {children}
-        </ThemeProvider>
+        <SessionWrapper>
+          <ThemeProvider
+            disableTransitionOnChange
+            enableSystem
+            attribute="class"
+            defaultTheme="light"
+          >
+            {children}
+          </ThemeProvider>
+        </SessionWrapper>
       </body>
     </html>
   );
