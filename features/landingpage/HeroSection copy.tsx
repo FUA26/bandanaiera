@@ -4,6 +4,7 @@ import React from "react";
 
 import HeroHeaderSection from "./HeroHeaderSection";
 import {HeroYoutubeModal} from "./HeroYoutubeModal";
+import {InfoSection} from "./InfoSection";
 
 import {cn} from "@/lib/utils";
 import {gilroyBold} from "@/lib/utils";
@@ -29,7 +30,7 @@ function HeroSection() {
 
         <div className="flex w-full flex-col justify-center">
           <HeroYoutubeModal />
-          {/* <InfoSection /> */}
+          <InfoSection />
         </div>
       </div>
     </section>
