@@ -77,7 +77,7 @@ function NavBar() {
             )} */}
             <Link href="/auth/login">
               <MainButton
-                className="border-[#EDEEF0] bg-accent text-white hover:bg-accent"
+                className="border-[#EDEEF0] bg-brand text-white hover:bg-brand"
                 text="Masuk"
                 width="contain"
               />

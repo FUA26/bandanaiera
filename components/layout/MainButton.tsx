@@ -57,7 +57,7 @@ const MainButton = forwardRef<HTMLButtonElement, MainButtonProps>(
       <Button
         ref={ref}
         className={`border-[.2rem] border-[#555E67] ${
-          isSecondaryVariant ? "bg-secondary text-white" : "bg-primary"
+          isSecondaryVariant ? "bg-secondary text-white" : "bg-brand"
         } text-white ${propWidth} md:${propWidth} select-none rounded-[1.3rem] hover:opacity-90 ${variant_hover} ${size_height} ${className}`}
         disabled={disabled}
         form={form}
