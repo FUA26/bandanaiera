@@ -3,6 +3,7 @@
 
 import * as React from "react";
 import {BookOpen, Bot, Command, SquareTerminal} from "lucide-react";
+import {Session} from "next-auth";
 
 import {NavMain} from "./nav-main";
 import {NavUser} from "./nav-user";
@@ -18,31 +19,38 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 
-const data = {
-  navMain: [
-    {
-      title: "Aplikasi",
-      url: "dashboard",
-      icon: SquareTerminal,
-      isActive: true,
-      items: [],
-    },
-    {
-      title: "Pengajuan Integrasi",
-      url: "pengajuan",
-      icon: Bot,
-      items: [],
-    },
-    {
-      title: "Log Aktifitas",
-      url: "logs",
-      icon: BookOpen,
-      items: [],
-    },
-  ],
-};
+interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
+  session?: Session;
+}
 
-export function AppSidebar({...props}: React.ComponentProps<typeof Sidebar>) {
+const navItems = [
+  {
+    title: "Aplikasi",
+    url: "dashboard",
+    icon: SquareTerminal,
+    items: [],
+  },
+  {
+    title: "Pengajuan Integrasi",
+    url: "pengajuan",
+    icon: Bot,
+    items: [],
+  },
+  {
+    title: "Log Aktifitas",
+    url: "logs",
+    icon: BookOpen,
+    items: [],
+  },
+];
+
+export function AppSidebar({session, ...props}: AppSidebarProps) {
+  const user = session?.user;
+
+  // console.log("USERRRR", user);
+  const userName = user?.name || "Pengguna";
+  const userEmail = user?.email || "";
+
   return (
     <Sidebar variant="inset" {...props}>
       <SidebarHeader>
@@ -63,8 +71,8 @@ export function AppSidebar({...props}: React.ComponentProps<typeof Sidebar>) {
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
-        <NavUser />
-        <NavMain items={data.navMain} />
+        <NavUser email={session?.user?.email ?? ""} name={session?.user?.name ?? "Pengguna"} />
+        <NavMain items={navItems} />
       </SidebarContent>
       <SidebarFooter>
         <SidebarOptInForm />

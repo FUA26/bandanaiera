@@ -2,7 +2,6 @@
 
 import {BadgeCheck, Bell, ChevronsUpDown, CreditCard, LogOut} from "lucide-react";
 import {signOut} from "next-auth/react";
-import useSWR from "swr";
 
 import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar";
 import {
@@ -15,17 +14,15 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import {SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar} from "@/components/ui/sidebar";
-const fetcher = (url: string) => fetch(url, {credentials: "include"}).then((res) => res.json());
 
-export function NavUser() {
+type NavUserProps = {
+  name: string;
+  email: string;
+  avatar?: string;
+};
+
+export function NavUser({name, email, avatar}: NavUserProps) {
   const {isMobile} = useSidebar();
-  const {data} = useSWR("/api/me", fetcher);
-
-  console.log("NavUser data:", data);
-
-  const user = data?.user;
-
-  if (!user) return null;
 
   return (
     <SidebarMenu>
@@ -37,12 +34,12 @@ export function NavUser() {
               size="lg"
             >
               <Avatar className="size-8 rounded-lg">
-                <AvatarImage alt={user.name} src={user.avatar} />
-                <AvatarFallback className="rounded-lg">CN</AvatarFallback>
+                <AvatarImage alt={name} src={avatar} />
+                <AvatarFallback className="rounded-lg">{name?.[0] ?? "?"}</AvatarFallback>
               </Avatar>
               <div className="grid flex-1 text-left text-sm leading-tight">
-                <span className="truncate font-semibold">{user.name}</span>
-                <span className="truncate text-xs">{user.email}</span>
+                <span className="truncate font-semibold">{name}</span>
+                <span className="truncate text-xs">{email}</span>
               </div>
               <ChevronsUpDown className="ml-auto size-4" />
             </SidebarMenuButton>
@@ -56,12 +53,12 @@ export function NavUser() {
             <DropdownMenuLabel className="p-0 font-normal">
               <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                 <Avatar className="size-8 rounded-lg">
-                  <AvatarImage alt={user.name} src={user.avatar} />
-                  <AvatarFallback className="rounded-lg">CN</AvatarFallback>
+                  <AvatarImage alt={name} src={avatar} />
+                  <AvatarFallback className="rounded-lg">{name?.[0] ?? "?"}</AvatarFallback>
                 </Avatar>
                 <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-semibold">{user.name}</span>
-                  <span className="truncate text-xs">{user.email}</span>
+                  <span className="truncate font-semibold">{name}</span>
+                  <span className="truncate text-xs">{email}</span>
                 </div>
               </div>
             </DropdownMenuLabel>

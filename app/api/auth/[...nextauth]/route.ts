@@ -1,3 +1,5 @@
+// app/api/auth/[...nextauth]/route.ts
+
 import NextAuth, {NextAuthOptions, User} from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import axios from "axios";
@@ -23,7 +25,7 @@ async function getKeycloakToken(email: string, password: string) {
 
     return response.data;
   } catch (error: any) {
-    console.error("Keycloak login failed:", error?.response?.data || error.message);
+    console.error("🔴 Keycloak login failed:", error?.response?.data || error.message);
 
     return null;
   }
@@ -33,15 +35,15 @@ function extractUserFromToken(token: string): Partial<User> | null {
   const decoded: any = decodeToken(token);
 
   if (!decoded) {
-    console.warn("Failed to decode access token.");
+    console.warn("⚠️ Failed to decode access token.");
 
     return null;
   }
 
   return {
-    id: decoded?.sub,
-    email: decoded?.email,
-    name: decoded?.name,
+    id: decoded.sub,
+    email: decoded.email,
+    name: decoded.name,
     roles: decoded?.realm_access?.roles ?? [],
   };
 }
@@ -65,14 +67,16 @@ async function refreshAccessToken(token: any) {
 
     const refreshedTokens = response.data;
 
+    console.log("🔁 Access token refreshed successfully.");
+
     return {
       ...token,
       access_token: refreshedTokens.access_token,
       refresh_token: refreshedTokens.refresh_token ?? token.refresh_token,
-      accessTokenExpires: Date.now() + refreshedTokens.expires_in * 1000,
+      accessTokenExpires: Date.now() + (refreshedTokens.expires_in - 30) * 1000, // buffer 30 detik
     };
   } catch (error: any) {
-    console.error("Error refreshing access token:", error?.response?.data || error.message);
+    console.error("🔴 Error refreshing access token:", error?.response?.data || error.message);
 
     return {
       ...token,
@@ -97,17 +101,25 @@ export const authOptions: NextAuthOptions = {
         const {email, password} = credentials!;
         const tokenResponse = await getKeycloakToken(email, password);
 
-        if (!tokenResponse) return null;
+        if (!tokenResponse) {
+          console.warn("⚠️ No token received from Keycloak.");
 
+          return null;
+        }
+        console.log("ACCCESSSSTOKEN,", tokenResponse.access_token);
         const userInfo = extractUserFromToken(tokenResponse.access_token);
 
-        if (!userInfo) return null;
+        if (!userInfo) {
+          console.warn("⚠️ Failed to extract user info from token.");
+
+          return null;
+        }
 
         return {
           ...userInfo,
           access_token: tokenResponse.access_token,
           refresh_token: tokenResponse.refresh_token,
-          accessTokenExpires: Date.now() + tokenResponse.expires_in * 1000,
+          accessTokenExpires: Date.now() + (tokenResponse.expires_in - 30) * 1000,
         } as User;
       },
     }),

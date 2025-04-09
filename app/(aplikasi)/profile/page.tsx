@@ -3,8 +3,8 @@
 import {useEffect, useTransition, useState} from "react";
 import {useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
-import * as z from "zod";
 import useSWR from "swr";
+import * as z from "zod";
 
 import {Input} from "@/components/ui/input";
 import {Button} from "@/components/ui/button";
@@ -12,34 +12,28 @@ import {Separator} from "@/components/ui/separator";
 import {Label} from "@/components/ui/label";
 import {Skeleton} from "@/components/ui/skeleton";
 
-const formSchema = z.object({
+const schema = z.object({
   name: z.string().min(1, "Nama wajib diisi"),
   email: z.string().email("Email tidak valid"),
 });
 
-const fetcher = async (url: string) => {
-  const res = await fetch(url, {credentials: "include"});
+type ProfileForm = z.infer<typeof schema>;
 
-  console.log("🔎 Fetched:", res.status);
+const fetcher = (url: string) => fetch(url, {credentials: "include"}).then((res) => res.json());
 
-  return res.json();
-};
-
-export default function SettingsLayout() {
-  const {data, mutate, isLoading} = useSWR("/api/me", fetcher);
+export default function ProfilePage() {
+  const {data, isLoading, mutate} = useSWR("/api/me", fetcher);
   const [isPending, startTransition] = useTransition();
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
-
-  console.log("SWR", data);
 
   const {
     register,
     handleSubmit,
     formState: {errors},
     reset,
-  } = useForm({
-    resolver: zodResolver(formSchema),
+  } = useForm<ProfileForm>({
+    resolver: zodResolver(schema),
     defaultValues: {
       name: "",
       email: "",
@@ -49,13 +43,13 @@ export default function SettingsLayout() {
   useEffect(() => {
     if (data?.user) {
       reset({
-        name: data.user.name,
-        email: data.user.email,
+        name: data.user.name ?? "",
+        email: data.user.email ?? "",
       });
     }
   }, [data?.user, reset]);
 
-  async function onSubmit(values: z.infer<typeof formSchema>) {
+  async function onSubmit(values: ProfileForm) {
     setErrorMessage(null);
     setSuccessMessage(null);
 
@@ -69,10 +63,13 @@ export default function SettingsLayout() {
           body: JSON.stringify(values),
         });
 
-        if (!res.ok) throw new Error("Gagal memperbarui profil");
+        if (!res.ok) {
+          const err = await res.json();
+
+          throw new Error(err.error || "Gagal memperbarui profil");
+        }
 
         mutate(
-          "/api/me",
           {
             ...data,
             user: {
@@ -84,14 +81,14 @@ export default function SettingsLayout() {
         );
 
         setSuccessMessage("Profil berhasil diperbarui!");
-      } catch (err) {
+      } catch (err: any) {
         console.error(err);
-        setErrorMessage("Terjadi kesalahan saat menyimpan.");
+        setErrorMessage(err.message || "Terjadi kesalahan saat menyimpan.");
       }
     });
   }
 
-  if (isLoading) {
+  if (isLoading || !data?.user) {
     return <Skeleton className="h-48 w-full rounded-xl" />;
   }
 
@@ -100,7 +97,7 @@ export default function SettingsLayout() {
       <div>
         <h3 className="text-lg font-medium">Profil</h3>
         <p className="text-sm text-muted-foreground">
-          Ini adalah informasi profil yang akan dilihat pengguna lain.
+          Informasi ini ditampilkan ke pengguna lain dan dapat diedit.
         </p>
       </div>
       <Separator />
