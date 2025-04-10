@@ -8,6 +8,7 @@ import {ThemeProvider} from "next-themes";
 
 import {cn} from "@/lib/utils";
 import {SessionWrapper} from "@/components/layout/session-provider";
+import {Toaster} from "@/components/ui/sonner";
 
 const inter = Inter({subsets: ["latin"]});
 
@@ -32,6 +33,7 @@ export default function RootLayout({
             defaultTheme="light"
           >
             {children}
+            <Toaster closeButton richColors position="top-right" />
           </ThemeProvider>
         </SessionWrapper>
       </body>

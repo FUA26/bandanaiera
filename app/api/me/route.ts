@@ -4,13 +4,17 @@ import * as z from "zod";
 
 import {getAdminToken} from "@/lib/keycloak";
 
-// ✅ Schema validasi input
 const schema = z.object({
   name: z.string().min(1),
   email: z.string().email(),
+  phone: z
+    .string()
+    .regex(/^0\d{10,12}$/, "Nomor tidak valid")
+    .optional()
+    .or(z.literal("")),
+  address: z.string().max(50).optional().or(z.literal("")),
 });
 
-// ✅ GET: Ambil data user dari token
 export async function GET(req: NextRequest) {
   const token = await getToken({req, secret: process.env.NEXTAUTH_SECRET});
 
@@ -18,17 +22,37 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({error: "Unauthorized"}, {status: 401});
   }
 
-  return NextResponse.json({
-    user: {
-      id: token.sub,
-      name: token.name || "",
-      email: token.email || "",
-      roles: token.roles || [],
-    },
-  });
+  try {
+    const adminToken = await getAdminToken();
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_BASE_KEYCLOAK_URL}/admin/realms/${process.env.REALMS_ID}/users/${token.sub}`,
+      {
+        headers: {Authorization: `Bearer ${adminToken}`},
+      },
+    );
+
+    if (!res.ok) {
+      return NextResponse.json({error: "Failed to fetch user"}, {status: res.status});
+    }
+
+    const user = await res.json();
+
+    return NextResponse.json({
+      user: {
+        id: user.id,
+        name: user.attributes?.fullName?.[0] || "",
+        email: user.email || "",
+        phone: user.attributes?.phone?.[0] || "",
+        address: user.attributes?.address?.[0] || "",
+      },
+    });
+  } catch (err) {
+    console.error("Error fetching user:", err);
+
+    return NextResponse.json({error: "Internal server error"}, {status: 500});
+  }
 }
 
-// ✅ PATCH: Update nama dan email user via Keycloak Admin API
 export async function PATCH(req: NextRequest) {
   const token = await getToken({req, secret: process.env.NEXTAUTH_SECRET});
 
@@ -36,7 +60,6 @@ export async function PATCH(req: NextRequest) {
     return NextResponse.json({error: "Unauthorized"}, {status: 401});
   }
 
-  const userId = token.sub;
   const body = await req.json();
   const parsed = schema.safeParse(body);
 
@@ -44,20 +67,12 @@ export async function PATCH(req: NextRequest) {
     return NextResponse.json({error: "Invalid data"}, {status: 400});
   }
 
-  const {name, email} = parsed.data;
+  const {name, email, phone, address} = parsed.data;
 
   try {
     const adminToken = await getAdminToken();
-
-    console.log("🔧 Tokenn:", adminToken);
-    console.log("🔧 Updating user:", userId);
-    console.log("📦 Payload:", {attributes: {fullName: name}, email});
-    console.log(
-      "🔧 URL:",
-      `${process.env.NEXT_PUBLIC_BASE_KEYCLOAK_URL}/admin/realms/${process.env.REALMS_ID}/users/${userId}`,
-    );
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_KEYCLOAK_URL}/admin/realms/${process.env.REALMS_ID}/users/${userId}`,
+      `${process.env.NEXT_PUBLIC_BASE_KEYCLOAK_URL}/admin/realms/${process.env.REALMS_ID}/users/${token.sub}`,
       {
         method: "PUT",
         headers: {
@@ -65,11 +80,12 @@ export async function PATCH(req: NextRequest) {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          // Jika kamu pakai custom attribute `fullName`
+          email,
           attributes: {
             fullName: name,
+            phone,
+            address,
           },
-          email,
         }),
       },
     );
@@ -77,14 +93,14 @@ export async function PATCH(req: NextRequest) {
     if (!res.ok) {
       const text = await res.text();
 
-      console.error("❌ Failed to update user in Keycloak:", text);
+      console.error("Failed to update user:", text);
 
       return NextResponse.json({error: "Failed to update profile"}, {status: res.status});
     }
 
     return NextResponse.json({success: true});
   } catch (err) {
-    console.error("🔥 Unexpected error:", err);
+    console.error("Error updating user:", err);
 
     return NextResponse.json({error: "Internal server error"}, {status: 500});
   }

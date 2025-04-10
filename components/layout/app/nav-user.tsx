@@ -2,6 +2,8 @@
 
 import {BadgeCheck, Bell, ChevronsUpDown, CreditCard, LogOut} from "lucide-react";
 import {signOut} from "next-auth/react";
+import useSWR from "swr";
+import Link from "next/link";
 
 import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar";
 import {
@@ -15,14 +17,17 @@ import {
 } from "@/components/ui/dropdown-menu";
 import {SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar} from "@/components/ui/sidebar";
 
-type NavUserProps = {
-  name: string;
-  email: string;
-  avatar?: string;
-};
+const fetcher = (url: string) => fetch(url, {credentials: "include"}).then((res) => res.json());
 
-export function NavUser({name, email, avatar}: NavUserProps) {
+export function NavUser() {
   const {isMobile} = useSidebar();
+  const {data, isLoading} = useSWR("/api/me", fetcher);
+
+  const user = data?.user;
+
+  if (isLoading || !user) return null;
+
+  const {name, email, avatar} = user;
 
   return (
     <SidebarMenu>
@@ -64,13 +69,17 @@ export function NavUser({name, email, avatar}: NavUserProps) {
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
-              <DropdownMenuItem>
-                <BadgeCheck />
-                Profile
+              <DropdownMenuItem asChild>
+                <Link className="flex items-center gap-2" href="/profile">
+                  <BadgeCheck />
+                  Profile
+                </Link>
               </DropdownMenuItem>
-              <DropdownMenuItem>
-                <CreditCard />
-                Ganti Password
+              <DropdownMenuItem asChild>
+                <Link className="flex items-center gap-2" href="/change-password">
+                  <CreditCard />
+                  Ganti Password
+                </Link>
               </DropdownMenuItem>
               <DropdownMenuItem>
                 <Bell />

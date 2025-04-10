@@ -1,9 +1,6 @@
 // app/(aplikasi)/layout.tsx
 
 import {ReactNode} from "react";
-import {getServerSession} from "next-auth";
-
-import {authOptions} from "../api/auth/[...nextauth]/route";
 
 import {SidebarProvider} from "@/components/ui/sidebar";
 import {AppSidebar} from "@/components/layout/app/app-sidebar";
@@ -17,11 +14,9 @@ interface LayoutProps {
 }
 
 export default async function Layout({children}: LayoutProps) {
-  const session = await getServerSession(authOptions); // 👈 SSR session di layout
-
   return (
     <SidebarProvider>
-      <AppSidebar session={session || undefined} />
+      <AppSidebar />
       <SidebarInset>
         <header className="flex h-16 shrink-0 items-center gap-2">
           <div className="flex items-center gap-2 px-4">

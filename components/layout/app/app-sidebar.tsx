@@ -37,6 +37,13 @@ const navItems = [
     items: [],
   },
   {
+    title: "Session",
+    url: "session",
+    icon: BookOpen,
+    items: [],
+  },
+
+  {
     title: "Log Aktifitas",
     url: "logs",
     icon: BookOpen,
@@ -44,13 +51,7 @@ const navItems = [
   },
 ];
 
-export function AppSidebar({session, ...props}: AppSidebarProps) {
-  const user = session?.user;
-
-  // console.log("USERRRR", user);
-  const userName = user?.name || "Pengguna";
-  const userEmail = user?.email || "";
-
+export function AppSidebar({...props}) {
   return (
     <Sidebar variant="inset" {...props}>
       <SidebarHeader>
@@ -71,7 +72,7 @@ export function AppSidebar({session, ...props}: AppSidebarProps) {
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
-        <NavUser email={session?.user?.email ?? ""} name={session?.user?.name ?? "Pengguna"} />
+        <NavUser />
         <NavMain items={navItems} />
       </SidebarContent>
       <SidebarFooter>
