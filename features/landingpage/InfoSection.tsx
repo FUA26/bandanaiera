@@ -11,20 +11,13 @@ export function InfoSection() {
           </h2>
           <div className="grid gap-6 sm:grid-cols-2 md:gap-12 lg:gap-24">
             <div className="relative mb-6 sm:mb-0">
-              <div className="bg-linear-to-b aspect-76/59 relative rounded-2xl from-zinc-300 to-transparent p-px dark:from-zinc-700">
+              <div className="relative aspect-[1207/720] bg-gradient-to-b from-zinc-300 to-transparent p-px dark:from-zinc-700">
                 <Image
-                  alt="payments illustration dark"
-                  className="hidden rounded-[15px] dark:block"
-                  height={829}
-                  src="/payments.png"
-                  width={1207}
-                />
-                <Image
+                  fill
                   alt="payments illustration light"
-                  className="rounded-[15px] shadow dark:hidden"
-                  height={829}
-                  src="/payments-light.png"
-                  width={1207}
+                  className="shadow dark:hidden"
+                  src="/images/about.png"
+                  style={{objectFit: "cover"}}
                 />
               </div>
             </div>
