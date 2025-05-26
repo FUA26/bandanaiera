@@ -25,13 +25,21 @@ async function getKeycloakToken(email: string, password: string) {
 
     return response.data;
   } catch (error: any) {
-    console.error("🔴 Keycloak login failed:", error?.response?.data || error.message);
+    const kcError = error?.response?.data;
 
-    return null;
+    if (kcError?.error === "invalid_grant") {
+      console.error("🔴 Keycloak login failed: Invalid user credentials");
+      throw new Error("Kombinasi email dan password tidak sesuai");
+    }
+
+    console.error("🔴 Keycloak login failed:", kcError || error.message);
+    throw new Error("Gagal melakukan login ke server otentikasi.");
   }
 }
 
-function extractUserFromToken(token: string): Partial<User> | null {
+function extractUserFromToken(
+  token: string,
+): (Partial<User> & {accessTokenExpires?: number}) | null {
   const decoded: any = decodeToken(token);
 
   if (!decoded) {
@@ -45,6 +53,7 @@ function extractUserFromToken(token: string): Partial<User> | null {
     email: decoded.email,
     name: decoded.name,
     roles: decoded?.realm_access?.roles ?? [],
+    accessTokenExpires: decoded.exp ? decoded.exp * 1000 : undefined, // ⏳ ambil dari exp
   };
 }
 
@@ -66,14 +75,13 @@ async function refreshAccessToken(token: any) {
     );
 
     const refreshedTokens = response.data;
-
-    console.log("🔁 Access token refreshed successfully.");
+    const refreshedUserInfo = extractUserFromToken(refreshedTokens.access_token);
 
     return {
       ...token,
       access_token: refreshedTokens.access_token,
       refresh_token: refreshedTokens.refresh_token ?? token.refresh_token,
-      accessTokenExpires: Date.now() + (refreshedTokens.expires_in - 30) * 1000, // buffer 30 detik
+      accessTokenExpires: refreshedUserInfo?.accessTokenExpires ?? Date.now() + 5 * 60 * 1000, // fallback 5 menit
     };
   } catch (error: any) {
     console.error("🔴 Error refreshing access token:", error?.response?.data || error.message);
@@ -99,28 +107,34 @@ export const authOptions: NextAuthOptions = {
       },
       async authorize(credentials): Promise<User | null> {
         const {email, password} = credentials!;
-        const tokenResponse = await getKeycloakToken(email, password);
 
-        if (!tokenResponse) {
-          console.warn("⚠️ No token received from Keycloak.");
+        try {
+          const tokenResponse = await getKeycloakToken(email, password);
 
-          return null;
+          if (!tokenResponse) {
+            console.warn("⚠️ No token received from Keycloak.");
+
+            return null;
+          }
+
+          const userInfo = extractUserFromToken(tokenResponse.access_token);
+
+          if (!userInfo) {
+            console.warn("⚠️ Failed to extract user info from token.");
+
+            return null;
+          }
+
+          return {
+            ...userInfo,
+            access_token: tokenResponse.access_token,
+            refresh_token: tokenResponse.refresh_token,
+            accessTokenExpires: userInfo.accessTokenExpires ?? Date.now() + 5 * 60 * 1000,
+          } as User;
+        } catch (err: any) {
+          console.warn("🟡 Login failed in authorize():", err.message);
+          throw new Error(err.message);
         }
-        console.log("ACCCESSSSTOKEN,", tokenResponse.access_token);
-        const userInfo = extractUserFromToken(tokenResponse.access_token);
-
-        if (!userInfo) {
-          console.warn("⚠️ Failed to extract user info from token.");
-
-          return null;
-        }
-
-        return {
-          ...userInfo,
-          access_token: tokenResponse.access_token,
-          refresh_token: tokenResponse.refresh_token,
-          accessTokenExpires: Date.now() + (tokenResponse.expires_in - 30) * 1000,
-        } as User;
       },
     }),
   ],
@@ -135,7 +149,7 @@ export const authOptions: NextAuthOptions = {
           roles: user.roles,
           access_token: user.access_token,
           refresh_token: user.refresh_token,
-          accessTokenExpires: user.accessTokenExpires,
+          accessTokenExpires: user.accessTokenExpires ?? Date.now() + 5 * 60 * 1000,
         };
       }
 
@@ -149,6 +163,7 @@ export const authOptions: NextAuthOptions = {
 
       return await refreshAccessToken(token);
     },
+
     async session({session, token}) {
       return {
         ...session,

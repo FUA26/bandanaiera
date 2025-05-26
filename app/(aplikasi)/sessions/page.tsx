@@ -38,7 +38,48 @@ export default function ActiveSessionsPage() {
   }
 
   if (isLoading || !data?.sessions) {
-    return <Skeleton className="h-48 w-full rounded-xl" />;
+    return (
+      <div className="space-y-6">
+        <div className="flex items-center justify-between">
+          <div>
+            <h3 className="text-lg font-medium">Sesi Aktif</h3>
+            <p className="text-sm text-muted-foreground">Daftar sesi login aktif dari akun Anda.</p>
+          </div>
+          <Skeleton className="h-8 w-32 rounded-md" />
+        </div>
+        <Separator />
+        <div className="overflow-x-auto rounded-md border">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead className="w-40">Login</TableHead>
+                <TableHead>IP</TableHead>
+                <TableHead>Client</TableHead>
+                <TableHead className="w-24">Aksi</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {[...Array(3)].map((_, i) => (
+                <TableRow key={i}>
+                  <TableCell>
+                    <Skeleton className="h-4 w-32" />
+                  </TableCell>
+                  <TableCell>
+                    <Skeleton className="h-4 w-24" />
+                  </TableCell>
+                  <TableCell>
+                    <Skeleton className="h-4 w-28" />
+                  </TableCell>
+                  <TableCell>
+                    <Skeleton className="h-8 w-20 rounded" />
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
+      </div>
+    );
   }
 
   const currentSessionId = session?.user.id ?? "";

@@ -30,8 +30,8 @@ export default function Login() {
         </div>
         <h1 className="text-3xl font-bold">Login</h1>
         <p className="text-muted-foreground">
-          Anda harus login terlebih dahulu untuk mengakses halaman{" "}
-          <span className="font-bold text-primary">{name}</span>.
+          Anda harus login terlebih dahulu untuk mengakses halaman dashboard.
+          {/* <span className="font-bold text-primary">{name}</span>. */}
         </p>
       </div>
       <div className="grid gap-4">

@@ -4,6 +4,7 @@ import {useTransition, useState} from "react";
 import {useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
 import * as z from "zod";
+import {Eye, EyeOff} from "lucide-react"; // ⬅️ Tambahkan icon
 
 import {Input} from "@/components/ui/input";
 import {Button} from "@/components/ui/button";
@@ -28,6 +29,12 @@ export default function ChangePasswordPage() {
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
+  const [showPassword, setShowPassword] = useState({
+    current: false,
+    new: false,
+    confirm: false,
+  });
+
   const {
     register,
     handleSubmit,
@@ -43,7 +50,7 @@ export default function ChangePasswordPage() {
 
     startTransition(async () => {
       try {
-        const res = await fetch("/api/change-password", {
+        const res = await fetch("/api/me/password", {
           method: "PATCH",
           headers: {"Content-Type": "application/json"},
           body: JSON.stringify(values),
@@ -74,30 +81,73 @@ export default function ChangePasswordPage() {
       <Separator />
 
       <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
+        {/* Current Password */}
         <div className="grid gap-2">
           <Label htmlFor="currentPassword">Password Saat Ini</Label>
-          <Input id="currentPassword" type="password" {...register("currentPassword")} />
+          <div className="relative">
+            <Input
+              id="currentPassword"
+              type={showPassword.current ? "text" : "password"}
+              {...register("currentPassword")}
+            />
+            <button
+              className="absolute right-2 top-2.5 text-muted-foreground"
+              type="button"
+              onClick={() => setShowPassword((prev) => ({...prev, current: !prev.current}))}
+            >
+              {showPassword.current ? <EyeOff size={18} /> : <Eye size={18} />}
+            </button>
+          </div>
           {errors.currentPassword && (
             <p className="text-sm text-red-500">{errors.currentPassword.message}</p>
           )}
         </div>
 
+        {/* New Password */}
         <div className="grid gap-2">
           <Label htmlFor="newPassword">Password Baru</Label>
-          <Input id="newPassword" type="password" {...register("newPassword")} />
+          <div className="relative">
+            <Input
+              id="newPassword"
+              type={showPassword.new ? "text" : "password"}
+              {...register("newPassword")}
+            />
+            <button
+              className="absolute right-2 top-2.5 text-muted-foreground"
+              type="button"
+              onClick={() => setShowPassword((prev) => ({...prev, new: !prev.new}))}
+            >
+              {showPassword.new ? <EyeOff size={18} /> : <Eye size={18} />}
+            </button>
+          </div>
           {errors.newPassword && (
             <p className="text-sm text-red-500">{errors.newPassword.message}</p>
           )}
         </div>
 
+        {/* Confirm Password */}
         <div className="grid gap-2">
           <Label htmlFor="confirmPassword">Konfirmasi Password Baru</Label>
-          <Input id="confirmPassword" type="password" {...register("confirmPassword")} />
+          <div className="relative">
+            <Input
+              id="confirmPassword"
+              type={showPassword.confirm ? "text" : "password"}
+              {...register("confirmPassword")}
+            />
+            <button
+              className="absolute right-2 top-2.5 text-muted-foreground"
+              type="button"
+              onClick={() => setShowPassword((prev) => ({...prev, confirm: !prev.confirm}))}
+            >
+              {showPassword.confirm ? <EyeOff size={18} /> : <Eye size={18} />}
+            </button>
+          </div>
           {errors.confirmPassword && (
             <p className="text-sm text-red-500">{errors.confirmPassword.message}</p>
           )}
         </div>
 
+        {/* Messages */}
         {successMessage && <p className="text-sm text-green-600">{successMessage}</p>}
         {errorMessage && <p className="text-sm text-red-600">{errorMessage}</p>}
 

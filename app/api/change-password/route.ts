@@ -15,10 +15,18 @@ const schema = z
     path: ["confirmPassword"],
   });
 
+function isExpired(token: any) {
+  return (
+    token?.accessTokenExpires &&
+    typeof token.accessTokenExpires === "number" &&
+    Date.now() > token.accessTokenExpires
+  );
+}
+
 export async function PATCH(req: NextRequest) {
   const token = await getToken({req, secret: process.env.NEXTAUTH_SECRET});
 
-  if (!token || !token.sub || !token.email) {
+  if (!token || !token.sub || !token.email || isExpired(token)) {
     return NextResponse.json({error: "Unauthorized"}, {status: 401});
   }
 
@@ -26,15 +34,18 @@ export async function PATCH(req: NextRequest) {
   const parsed = schema.safeParse(body);
 
   if (!parsed.success) {
-    return NextResponse.json({error: parsed.error.flatten()}, {status: 400});
+    return NextResponse.json(
+      {error: "Invalid input", details: parsed.error.flatten()},
+      {status: 400},
+    );
   }
 
   const {currentPassword, newPassword} = parsed.data;
 
   try {
-    // Step 1: Verify current password
+    // Step 1: Verifikasi password lama via Keycloak
     const verifyRes = await fetch(
-      `${process.env.KEYCLOAK_URL}/realms/${process.env.REALMS_ID}/protocol/openid-connect/token`,
+      `${process.env.KEYCLOAK_URL}/${process.env.REALMS_ID}/protocol/openid-connect/token`,
       {
         method: "POST",
         headers: {"Content-Type": "application/x-www-form-urlencoded"},
@@ -48,11 +59,18 @@ export async function PATCH(req: NextRequest) {
       },
     );
 
+    console.log(
+      "verifyRes",
+      `${process.env.KEYCLOAK_URL}/${process.env.REALMS_ID}/protocol/openid-connect/token`,
+      token.email,
+      currentPassword,
+    );
+    console.log(verifyRes);
     if (!verifyRes.ok) {
       return NextResponse.json({error: "Password lama salah"}, {status: 403});
     }
 
-    // Step 2: Update password via admin API
+    // Step 2: Update password via Keycloak Admin API
     const adminToken = await getAdminToken();
 
     const res = await fetch(
@@ -74,14 +92,14 @@ export async function PATCH(req: NextRequest) {
     if (!res.ok) {
       const text = await res.text();
 
-      console.error("Failed to update password:", text);
+      console.error("❌ Failed to update password:", text);
 
       return NextResponse.json({error: "Gagal mengubah password"}, {status: res.status});
     }
 
     return NextResponse.json({success: true});
   } catch (err) {
-    console.error("Error changing password:", err);
+    console.error("🔥 Error changing password:", err);
 
     return NextResponse.json({error: "Internal server error"}, {status: 500});
   }

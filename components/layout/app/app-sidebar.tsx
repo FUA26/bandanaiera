@@ -2,7 +2,7 @@
 "use client";
 
 import * as React from "react";
-import {BookOpen, Bot, Command, SquareTerminal} from "lucide-react";
+import {BookOpen, Command, SquareTerminal, TimerIcon} from "lucide-react";
 import {Session} from "next-auth";
 
 import {NavMain} from "./nav-main";
@@ -30,16 +30,16 @@ const navItems = [
     icon: SquareTerminal,
     items: [],
   },
-  {
-    title: "Pengajuan Integrasi",
-    url: "pengajuan",
-    icon: Bot,
-    items: [],
-  },
+  // {
+  //   title: "Pengajuan Integrasi",
+  //   url: "pengajuan",
+  //   icon: Bot,
+  //   items: [],
+  // },
   {
     title: "Session",
-    url: "session",
-    icon: BookOpen,
+    url: "sessions",
+    icon: TimerIcon,
     items: [],
   },
 

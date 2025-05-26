@@ -1,6 +1,7 @@
-// app/(aplikasi)/layout.tsx
+"use client";
 
-import {ReactNode} from "react";
+import {ReactNode, useEffect} from "react";
+import {useSession, signOut} from "next-auth/react";
 
 import {SidebarProvider} from "@/components/ui/sidebar";
 import {AppSidebar} from "@/components/layout/app/app-sidebar";
@@ -13,7 +14,22 @@ interface LayoutProps {
   children: ReactNode;
 }
 
-export default async function Layout({children}: LayoutProps) {
+export default function Layout({children}: LayoutProps) {
+  const {data: session, status} = useSession();
+
+  // 🔁 Auto logout jika token refresh gagal
+  useEffect(() => {
+    if (session?.error === "RefreshAccessTokenError") {
+      console.warn("🔴 Refresh token expired, auto sign out...");
+      signOut({callbackUrl: "/auth/login"});
+    }
+  }, [session?.error]);
+
+  // // Optional: loading indicator saat status 'loading'
+  // if (status === "loading") {
+  //   return <div className="p-8 text-sm text-muted-foreground">Memuat sesi pengguna...</div>;
+  // }
+
   return (
     <SidebarProvider>
       <AppSidebar />

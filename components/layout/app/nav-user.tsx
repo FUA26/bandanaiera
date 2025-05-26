@@ -17,17 +17,27 @@ import {
 } from "@/components/ui/dropdown-menu";
 import {SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar} from "@/components/ui/sidebar";
 
-const fetcher = (url: string) => fetch(url, {credentials: "include"}).then((res) => res.json());
+// ✅ Custom fetcher with 401 handling
+const fetcher = async (url: string) => {
+  const res = await fetch(url, {credentials: "include"});
+
+  if (res.status === 401) {
+    // 🔴 Refresh token expired → logout otomatis
+    console.warn("🔴 Unauthorized, signing out...");
+    signOut({callbackUrl: "/auth/login"});
+    throw new Error("Unauthorized");
+  }
+
+  return res.json();
+};
 
 export function NavUser() {
   const {isMobile} = useSidebar();
-  const {data, isLoading} = useSWR("/api/me", fetcher);
+  const {data, isLoading, error} = useSWR("/api/me", fetcher);
 
-  const user = data?.user;
+  if (isLoading || error || !data?.user) return null;
 
-  if (isLoading || !user) return null;
-
-  const {name, email, avatar} = user;
+  const {name, email, avatar} = data.user;
 
   return (
     <SidebarMenu>
