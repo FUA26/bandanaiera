@@ -1,41 +1,39 @@
-// app/api/auth/logout/route.ts
-import {getToken} from "next-auth/jwt";
 import {NextRequest, NextResponse} from "next/server";
-import axios from "axios";
+import {getToken} from "next-auth/jwt";
 
-export async function GET(req: NextRequest) {
+export async function POST(req: NextRequest) {
   const token = await getToken({req, secret: process.env.NEXTAUTH_SECRET});
 
-  if (!token) {
-    // Jika tidak ada token, langsung redirect ke login
-    return NextResponse.redirect(new URL("/auth/login", req.nextUrl.origin));
+  if (!token || !token.refresh_token) {
+    return NextResponse.json({error: "Unauthorized"}, {status: 401});
   }
 
   try {
-    if (token.refresh_token) {
-      await axios.post(
-        `${process.env.KEYCLOAK_URL}/${process.env.REALMS_ID}/protocol/openid-connect/logout`,
-        new URLSearchParams({
+    const logoutRes = await fetch(
+      `${process.env.KEYCLOAK_URL}/${process.env.REALMS_ID}/protocol/openid-connect/logout`,
+      {
+        method: "POST",
+        headers: {"Content-Type": "application/x-www-form-urlencoded"},
+        body: new URLSearchParams({
           client_id: process.env.CLIENT_ID!,
           client_secret: process.env.SECRET!,
-          refresh_token: token.refresh_token as string,
-        }).toString(),
-        {
-          headers: {
-            "Content-Type": "application/x-www-form-urlencoded",
-          },
-        },
-      );
+          refresh_token: token.refresh_token.toString(),
+        }),
+      },
+    );
+
+    if (!logoutRes.ok) {
+      const errorText = await logoutRes.text();
+
+      console.error("🔴 Failed to logout from Keycloak:", errorText);
+
+      return NextResponse.json({error: "Failed to logout from Keycloak"}, {status: 500});
     }
-  } catch (error: any) {
-    console.error("Failed to revoke token in Keycloak:", error?.response?.data || error.message);
-    // Lanjut logout meski revoke gagal
+
+    return NextResponse.json({success: true});
+  } catch (err) {
+    console.error("❌ Logout error:", err);
+
+    return NextResponse.json({error: "Unexpected error"}, {status: 500});
   }
-
-  // Hapus sesi NextAuth (client-side cookie)
-  const logoutUrl = new URL("/api/auth/signout", req.nextUrl.origin);
-
-  logoutUrl.searchParams.set("callbackUrl", "/auth/login");
-
-  return NextResponse.redirect(logoutUrl);
 }

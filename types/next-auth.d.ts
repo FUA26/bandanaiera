@@ -9,6 +9,7 @@ declare module "next-auth" {
     access_token?: string;
     refresh_token?: string;
     error?: string;
+    sessionId?: string;
   }
 
   interface User extends DefaultUser {
@@ -16,5 +17,6 @@ declare module "next-auth" {
     access_token?: string;
     refresh_token?: string;
     accessTokenExpires?: number;
+    sessionId?: string;
   }
 }
