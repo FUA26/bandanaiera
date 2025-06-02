@@ -41,6 +41,8 @@ export async function GET(req: NextRequest) {
 
     const sessions = await res.json();
 
+    console.log("sessions", sessions);
+
     return NextResponse.json({sessions});
   } catch (err) {
     console.error("🔥 Error fetching sessions:", err);

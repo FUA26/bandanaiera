@@ -31,6 +31,24 @@ const fetcher = async (url: string) => {
   return res.json();
 };
 
+async function handleLogout() {
+  try {
+    // 🔒 Logout dari Keycloak (hapus sesi via refresh_token)
+    const res = await fetch("/api/auth/logout", {method: "POST"});
+
+    if (!res.ok) {
+      const error = await res.text();
+
+      console.warn("🔴 Keycloak logout failed:", error);
+    }
+  } catch (err) {
+    console.warn("⚠️ Gagal logout Keycloak:", err);
+  } finally {
+    // 🧹 Logout NextAuth
+    signOut({callbackUrl: "/auth/login"});
+  }
+}
+
 export function NavUser() {
   const {isMobile} = useSidebar();
   const {data, isLoading, error} = useSWR("/api/me", fetcher);
@@ -97,7 +115,7 @@ export function NavUser() {
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={() => signOut({callbackUrl: "/auth/login"})}>
+            <DropdownMenuItem onClick={handleLogout}>
               <LogOut />
               Log out
             </DropdownMenuItem>

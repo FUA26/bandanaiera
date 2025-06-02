@@ -1,59 +1,47 @@
-// app/api/auth/[...nextauth]/route.ts
-
 import NextAuth, {NextAuthOptions, User} from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import axios from "axios";
 import {decodeToken} from "react-jwt";
 
 async function getKeycloakToken(email: string, password: string) {
-  try {
-    const response = await axios.post(
-      `${process.env.KEYCLOAK_URL}/${process.env.REALMS_ID}/protocol/openid-connect/token`,
-      new URLSearchParams({
-        client_id: process.env.CLIENT_ID!,
-        client_secret: process.env.SECRET!,
-        username: email,
-        password,
-        grant_type: "password",
-      }).toString(),
-      {
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded",
-        },
-      },
-    );
+  const response = await axios.post(
+    `${process.env.KEYCLOAK_URL}/${process.env.REALMS_ID}/protocol/openid-connect/token`,
+    new URLSearchParams({
+      client_id: process.env.CLIENT_ID!,
+      client_secret: process.env.SECRET!,
+      username: email,
+      password,
+      grant_type: "password",
+      scope: "openid",
+    }).toString(),
+    {headers: {"Content-Type": "application/x-www-form-urlencoded"}},
+  );
 
-    return response.data;
-  } catch (error: any) {
-    const kcError = error?.response?.data;
-
-    if (kcError?.error === "invalid_grant") {
-      console.error("🔴 Keycloak login failed: Invalid user credentials");
-      throw new Error("Kombinasi email dan password tidak sesuai");
-    }
-
-    console.error("🔴 Keycloak login failed:", kcError || error.message);
-    throw new Error("Gagal melakukan login ke server otentikasi.");
-  }
+  return response.data;
 }
 
-function extractUserFromToken(
-  token: string,
-): (Partial<User> & {accessTokenExpires?: number}) | null {
+async function getUserInfoFromAccessToken(accessToken: string) {
+  const res = await fetch(
+    `${process.env.KEYCLOAK_URL}${process.env.REALMS_ID}/protocol/openid-connect/userinfo`,
+    {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    },
+  );
+
+  console.log("🔒 User info:", res);
+  if (!res.ok) throw new Error("Gagal mengambil userinfo dari Keycloak");
+
+  return await res.json();
+}
+
+function extractUserFromToken(token: string): {accessTokenExpires?: number; roles?: string[]} {
   const decoded: any = decodeToken(token);
 
-  if (!decoded) {
-    console.warn("⚠️ Failed to decode access token.");
-
-    return null;
-  }
-
   return {
-    id: decoded.sub,
-    email: decoded.email,
-    name: decoded.name,
     roles: decoded?.realm_access?.roles ?? [],
-    accessTokenExpires: decoded.exp ? decoded.exp * 1000 : undefined, // ⏳ ambil dari exp
+    accessTokenExpires: decoded.exp ? decoded.exp * 1000 : undefined,
   };
 }
 
@@ -67,29 +55,22 @@ async function refreshAccessToken(token: any) {
         grant_type: "refresh_token",
         refresh_token: token.refresh_token,
       }).toString(),
-      {
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded",
-        },
-      },
+      {headers: {"Content-Type": "application/x-www-form-urlencoded"}},
     );
 
     const refreshedTokens = response.data;
-    const refreshedUserInfo = extractUserFromToken(refreshedTokens.access_token);
+    const userInfo = extractUserFromToken(refreshedTokens.access_token);
 
     return {
       ...token,
       access_token: refreshedTokens.access_token,
       refresh_token: refreshedTokens.refresh_token ?? token.refresh_token,
-      accessTokenExpires: refreshedUserInfo?.accessTokenExpires ?? Date.now() + 5 * 60 * 1000, // fallback 5 menit
+      accessTokenExpires: userInfo.accessTokenExpires ?? Date.now() + 5 * 60 * 1000,
     };
   } catch (error: any) {
     console.error("🔴 Error refreshing access token:", error?.response?.data || error.message);
 
-    return {
-      ...token,
-      error: "RefreshAccessTokenError",
-    };
+    return {...token, error: "RefreshAccessTokenError"};
   }
 }
 
@@ -107,34 +88,19 @@ export const authOptions: NextAuthOptions = {
       },
       async authorize(credentials): Promise<User | null> {
         const {email, password} = credentials!;
+        const tokenResponse = await getKeycloakToken(email, password);
+        const userInfo = await getUserInfoFromAccessToken(tokenResponse.access_token);
+        const decoded = extractUserFromToken(tokenResponse.access_token);
 
-        try {
-          const tokenResponse = await getKeycloakToken(email, password);
-
-          if (!tokenResponse) {
-            console.warn("⚠️ No token received from Keycloak.");
-
-            return null;
-          }
-
-          const userInfo = extractUserFromToken(tokenResponse.access_token);
-
-          if (!userInfo) {
-            console.warn("⚠️ Failed to extract user info from token.");
-
-            return null;
-          }
-
-          return {
-            ...userInfo,
-            access_token: tokenResponse.access_token,
-            refresh_token: tokenResponse.refresh_token,
-            accessTokenExpires: userInfo.accessTokenExpires ?? Date.now() + 5 * 60 * 1000,
-          } as User;
-        } catch (err: any) {
-          console.warn("🟡 Login failed in authorize():", err.message);
-          throw new Error(err.message);
-        }
+        return {
+          id: userInfo.sub, // ✅ UUID Keycloak
+          email: userInfo.email,
+          name: userInfo.name,
+          roles: decoded.roles,
+          access_token: tokenResponse.access_token,
+          refresh_token: tokenResponse.refresh_token,
+          accessTokenExpires: decoded.accessTokenExpires ?? Date.now() + 5 * 60 * 1000,
+        } as User;
       },
     }),
   ],
@@ -149,33 +115,24 @@ export const authOptions: NextAuthOptions = {
           roles: user.roles,
           access_token: user.access_token,
           refresh_token: user.refresh_token,
-          accessTokenExpires: user.accessTokenExpires ?? Date.now() + 5 * 60 * 1000,
+          accessTokenExpires: user.accessTokenExpires,
         };
       }
-
-      if (
-        token.accessTokenExpires &&
-        typeof token.accessTokenExpires === "number" &&
-        Date.now() < token.accessTokenExpires
-      ) {
-        return token;
-      }
+      if (Date.now() < (token as any).accessTokenExpires) return token;
 
       return await refreshAccessToken(token);
     },
-
     async session({session, token}) {
       return {
         ...session,
         user: {
-          ...session.user,
-          id: token.id ?? "",
-          email: token.email ?? "",
-          name: token.name ?? "",
-          roles: token.roles ?? [],
+          id: token.id,
+          email: token.email,
+          name: token.name,
+          roles: token.roles,
         },
-        access_token: token.access_token ?? "",
-        refresh_token: token.refresh_token ?? "",
+        access_token: token.access_token,
+        refresh_token: token.refresh_token,
         error: token.error ?? null,
       };
     },

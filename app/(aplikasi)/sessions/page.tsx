@@ -3,6 +3,7 @@
 import useSWR from "swr";
 import {useSession} from "next-auth/react";
 import {toast} from "sonner";
+import React from "react";
 
 import {Button} from "@/components/ui/button";
 import {Separator} from "@/components/ui/separator";
@@ -37,6 +38,15 @@ export default function ActiveSessionsPage() {
     }
   }
 
+  const currentSessionId = session?.user.id ?? "";
+
+  const columns = [
+    {title: "Waktu Login", className: "whitespace-nowrap min-w-[160px]"},
+    {title: "IP Address", className: "whitespace-nowrap min-w-[120px]"},
+    {title: "Aplikasi Client", className: "min-w-[180px]"},
+    {title: "Aksi", className: "text-center min-w-[80px]"},
+  ];
+
   if (isLoading || !data?.sessions) {
     return (
       <div className="space-y-6">
@@ -52,10 +62,11 @@ export default function ActiveSessionsPage() {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead className="w-40">Login</TableHead>
-                <TableHead>IP</TableHead>
-                <TableHead>Client</TableHead>
-                <TableHead className="w-24">Aksi</TableHead>
+                {columns.map((col, i) => (
+                  <TableHead key={i} className={col.className}>
+                    {col.title}
+                  </TableHead>
+                ))}
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -82,11 +93,9 @@ export default function ActiveSessionsPage() {
     );
   }
 
-  const currentSessionId = session?.user.id ?? "";
-
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-wrap items-center justify-between gap-2">
         <div>
           <h3 className="text-lg font-medium">Sesi Aktif</h3>
           <p className="text-sm text-muted-foreground">Daftar sesi login aktif dari akun Anda.</p>
@@ -101,10 +110,11 @@ export default function ActiveSessionsPage() {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead className="w-40">Login</TableHead>
-              <TableHead>IP</TableHead>
-              <TableHead>Client</TableHead>
-              <TableHead className="w-24">Aksi</TableHead>
+              {columns.map((col, i) => (
+                <TableHead key={i} className={col.className}>
+                  {col.title}
+                </TableHead>
+              ))}
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -125,8 +135,21 @@ export default function ActiveSessionsPage() {
                   >
                     <TableCell>{new Date(session.start).toLocaleString()}</TableCell>
                     <TableCell>{session.ipAddress}</TableCell>
-                    <TableCell>{session.clientId}</TableCell>
-                    <TableCell>
+                    <TableCell className="flex flex-wrap gap-1 py-2">
+                      {session.clients && typeof session.clients === "object" ? (
+                        Object.entries(session.clients).map(([id, name]) => (
+                          <span
+                            key={id}
+                            className="inline-flex items-center rounded-md bg-muted px-2 py-0.5 text-xs font-medium text-muted-foreground"
+                          >
+                            {name as React.ReactNode}
+                          </span>
+                        ))
+                      ) : (
+                        <span className="text-sm text-muted-foreground">-</span>
+                      )}
+                    </TableCell>
+                    <TableCell className="text-center">
                       {isCurrent ? (
                         <span className="text-xs font-semibold text-green-600">Sesi ini</span>
                       ) : (
