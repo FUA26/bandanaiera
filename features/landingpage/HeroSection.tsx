@@ -10,7 +10,7 @@ import {gilroyBold} from "@/lib/utils";
 
 function HeroSection() {
   return (
-    <section>
+    <section id="beranda">
       <div className="my-40 flex flex-col justify-center">
         <HeroHeaderSection />
         <div

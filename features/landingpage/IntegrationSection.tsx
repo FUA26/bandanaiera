@@ -1,7 +1,7 @@
 export function IntegrationSection() {
   return (
     <>
-      <section className="bg-slate-100 py-12 dark:bg-slate-900/50 md:py-20">
+      <section className="bg-slate-100 py-12 dark:bg-slate-900/50 md:py-20" id="aplikasi">
         <div className="mx-auto max-w-5xl space-y-8 px-6 md:space-y-16">
           <div className="relative z-10 mx-auto max-w-xl space-y-6 text-center">
             <h2 className="text-4xl font-medium lg:text-5xl">Aplikasi Terintegrasi</h2>

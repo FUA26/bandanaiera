@@ -6,10 +6,10 @@ import Image from "next/image";
 import {Button} from "@/components/ui/button";
 
 const links = [
-  {href: "#beranda", name: "Beranda", badgeCount: 0},
-  {href: "#tentang", name: "Tentang SSO", badgeCount: 0},
-  {href: "#aplikasi", name: "Aplikasi", badgeCount: 4},
-  {href: "#kontak", name: "Hubungi Kami", badgeCount: 0},
+  {href: "/#beranda", name: "Beranda", badgeCount: 0},
+  {href: "/#tentang", name: "Tentang SSO", badgeCount: 0},
+  {href: "/#aplikasi", name: "Aplikasi", badgeCount: 4},
+  {href: "/#kontak", name: "Hubungi Kami", badgeCount: 0},
 ];
 
 export default function NavBar() {

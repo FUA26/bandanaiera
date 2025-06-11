@@ -57,19 +57,11 @@ const links = [
     items: [
       {
         title: "Kebijakan Privasi",
-        href: "#",
+        href: "/privacy",
       },
       {
         title: "Syarat & Ketentuan",
-        href: "#",
-      },
-      {
-        title: "Kebijakan Cookie",
-        href: "#",
-      },
-      {
-        title: "Keamanan Data",
-        href: "#",
+        href: "/terms",
       },
     ],
   },
@@ -77,7 +69,7 @@ const links = [
 
 export default function FooterSection() {
   return (
-    <footer className="border-b bg-slate-200 pt-20 dark:bg-transparent">
+    <footer className="border-b bg-slate-200 pt-20 dark:bg-transparent" id="kontak">
       <div className="mx-auto max-w-5xl px-6">
         <div className="grid gap-12 md:grid-cols-5">
           <div className="md:col-span-2">

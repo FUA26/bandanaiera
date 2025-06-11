@@ -3,10 +3,12 @@ import {getToken} from "next-auth/jwt";
 
 const WHITELISTED_PATHS = [
   "/",
+  "/privacy",
+  "/terms",
+  "/auth/register",
   "/api/public",
   "/oauth/sso/authorize",
   "/auth/login",
-  "/auth/register",
 ];
 
 function isWhitelisted(pathname: string): boolean {

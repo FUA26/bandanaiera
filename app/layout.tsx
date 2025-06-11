@@ -1,3 +1,5 @@
+// app/layout.tsx
+
 import type {Metadata} from "next";
 
 import React from "react";
@@ -9,6 +11,7 @@ import {ThemeProvider} from "next-themes";
 import {cn} from "@/lib/utils";
 import {SessionWrapper} from "@/components/layout/session-provider";
 import {Toaster} from "@/components/ui/sonner";
+import AppTour from "@/components/layout/AppTour";
 
 const inter = Inter({subsets: ["latin"]});
 
@@ -33,6 +36,7 @@ export default function RootLayout({
             defaultTheme="light"
           >
             {children}
+            <AppTour /> {/* ⬅️ Tambahkan di sini */}
             <Toaster closeButton richColors position="top-right" />
           </ThemeProvider>
         </SessionWrapper>
