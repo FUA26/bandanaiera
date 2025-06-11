@@ -21,7 +21,7 @@ export default function NavBar() {
       {/* DESKTOP */}
       <div className="hidden bg-white p-4 transition-all duration-300 ease-in-out animate-in fade-in zoom-in lg:block">
         <div className="mx-4 flex items-center justify-between">
-          <a href="#beranda">
+          <a href="/">
             <Image
               alt="logo"
               className="h-10"
@@ -66,7 +66,7 @@ export default function NavBar() {
         className={`fixed top-0 z-[999] w-full bg-white py-4 shadow-sm transition-all duration-300 ease-in-out animate-in fade-in zoom-in lg:hidden ${menu ? "bg-primary py-2" : ""}`}
       >
         <div className="mx-4 flex items-center justify-between">
-          <a href="#beranda">
+          <a href="/">
             <Image
               alt="logo"
               className="h-10"

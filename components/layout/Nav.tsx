@@ -3,6 +3,7 @@
 import {useState} from "react";
 import {Menu, X} from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 
 import {Button} from "@/components/ui/button";
 
@@ -21,7 +22,15 @@ function NavBar() {
       {/* DESKTOP */}
       <div className="hidden bg-white p-4 animate-in fade-in zoom-in lg:block">
         <div className="mx-4 flex items-center justify-between">
-          <Image alt="logo" className="h-10" height={40} src="/images/full-login.png" width={160} />
+          <Link href="/">
+            <Image
+              alt="logo1"
+              className="h-10"
+              height={40}
+              src="/images/full-login.png"
+              width={160}
+            />
+          </Link>
 
           <div className="flex items-center gap-[20px] text-[16px] xl:gap-[50px]">
             {links.map((item, index) => (
@@ -56,7 +65,15 @@ function NavBar() {
         }`}
       >
         <div className="mx-[10px] flex justify-between">
-          <Image alt="logo" className="h-10" height={40} src="/images/full-login.png" width={160} />
+          <Link href="/">
+            <Image
+              alt="logo2"
+              className="h-10"
+              height={40}
+              src="/images/full-login.png"
+              width={160}
+            />
+          </Link>
 
           <div className="flex items-center gap-[40px]">
             {menu ? (
