@@ -1,66 +1,139 @@
-import React from "react";
+"use client";
 
-import {cn} from "@/lib/utils";
+import * as z from "zod";
+import {useSearchParams, useRouter} from "next/navigation";
+import {useForm} from "react-hook-form";
+import {zodResolver} from "@hookform/resolvers/zod";
+import {useState, useTransition} from "react";
+
+import {loginUserSchema} from "./schema/login-schema";
+
+import {
+  Form,
+  FormControl,
+  FormError,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+  FormSuccess,
+} from "@/components/ui/form";
 import {Button} from "@/components/ui/button";
-import {Card, CardContent, CardDescription, CardHeader, CardTitle} from "@/components/ui/card";
 import {Input} from "@/components/ui/input";
-import {Label} from "@/components/ui/label";
 
-type LoginFormProps = React.ComponentPropsWithoutRef<"div"> & {
-  clientName?: string;
-};
+export const LoginForm = () => {
+  const router = useRouter();
+  const searchParams = useSearchParams();
 
-export function LoginForm({className, clientName = "aplikasi Anda", ...props}: LoginFormProps) {
+  const [error, setError] = useState<string | undefined>("");
+  const [success, setSuccess] = useState<string | undefined>("");
+  const [isPending, startTransition] = useTransition();
+
+  const client_id = searchParams.get("client_id") ?? "";
+  const redirect_uri = searchParams.get("redirect_uri") ?? "/";
+  const scope = searchParams.get("scope") ?? "openid";
+  const state = searchParams.get("state") ?? "";
+
+  const form = useForm<z.infer<typeof loginUserSchema>>({
+    resolver: zodResolver(loginUserSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+  });
+
+  const onSubmit = (values: z.infer<typeof loginUserSchema>) => {
+    setError("");
+    setSuccess("");
+
+    startTransition(async () => {
+      try {
+        const res = await fetch("/api/oauth/sso/authorize", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            username: values.email,
+            password: values.password,
+            clientId: client_id,
+            redirectUri: redirect_uri,
+            scope,
+          }),
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+          setError(data.error || "Login gagal.");
+
+          return;
+        }
+
+        setSuccess("Login berhasil. Anda akan diarahkan...");
+
+        // Redirect ke aplikasi client dengan token
+        const redirectUrl = new URL(redirect_uri);
+
+        redirectUrl.searchParams.set("access_token", data.access_token);
+        redirectUrl.searchParams.set("token_type", data.token_type);
+        redirectUrl.searchParams.set("expires_in", data.expires_in.toString());
+        if (state) redirectUrl.searchParams.set("state", state);
+
+        router.push(redirectUrl.toString());
+      } catch (err) {
+        console.error(err);
+        setError("Terjadi kesalahan saat login.");
+      }
+    });
+  };
+
   return (
-    <div className={cn("flex flex-col gap-6", className)} {...props}>
-      <Card>
-        <CardHeader className="text-center">
-          <CardTitle className="text-xl">Masuk ke {clientName}</CardTitle>
-          <CardDescription>Silakan login untuk melanjutkan akses</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <form>
-            <div className="grid gap-6">
-              <div className="grid gap-4">
-                <div className="grid gap-2">
-                  <Label htmlFor="email">Email</Label>
+    <Form {...form}>
+      <form className="grid gap-2" onSubmit={form.handleSubmit(onSubmit)}>
+        <div className="grid gap-1">
+          <FormField
+            control={form.control}
+            name="email"
+            render={({field}) => (
+              <FormItem>
+                <FormLabel>Email</FormLabel>
+                <FormControl>
                   <Input
-                    required
-                    autoComplete="email"
-                    id="email"
-                    placeholder="nama@email.com"
+                    {...field}
+                    disabled={isPending}
+                    placeholder="selamet@mail.com"
                     type="email"
                   />
-                </div>
-                <div className="grid gap-2">
-                  <div className="flex items-center">
-                    <Label htmlFor="password">Kata Sandi</Label>
-                    <a className="ml-auto text-sm underline-offset-4 hover:underline" href="/">
-                      Lupa kata sandi?
-                    </a>
-                  </div>
-                  <Input required autoComplete="current-password" id="password" type="password" />
-                </div>
-                <Button className="w-full" type="submit">
-                  Masuk
-                </Button>
-              </div>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
+        <div className="grid gap-1">
+          <FormField
+            control={form.control}
+            name="password"
+            render={({field}) => (
+              <FormItem>
+                <FormLabel>Password</FormLabel>
+                <FormControl>
+                  <Input {...field} disabled={isPending} placeholder="******" type="password" />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
 
-              <div className="text-center text-sm">
-                Belum punya akun?{" "}
-                <a className="underline underline-offset-4" href="/">
-                  Daftar sekarang
-                </a>
-              </div>
-            </div>
-          </form>
-        </CardContent>
-      </Card>
+        <FormError message={error} />
+        <FormSuccess message={success} />
 
-      <div className="text-balance text-center text-xs text-muted-foreground [&_a]:underline [&_a]:underline-offset-4 hover:[&_a]:text-primary">
-        Dengan melanjutkan, Anda menyetujui <a href="/">Syarat & Ketentuan</a> serta{" "}
-        <a href="/">Kebijakan Privasi</a> yang berlaku.
-      </div>
-    </div>
+        <Button className="w-full" disabled={isPending} type="submit">
+          {isPending ? "Memproses..." : "Login"}
+        </Button>
+      </form>
+    </Form>
   );
-}
+};

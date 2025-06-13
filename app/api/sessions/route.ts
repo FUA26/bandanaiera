@@ -87,6 +87,10 @@ export async function DELETE(req: NextRequest) {
 
 // POST: Logout semua sesi user
 export async function POST(req: NextRequest) {
+  console.log("####################");
+  console.log("OAuth Authorization Request Received");
+  console.log("####################");
+
   const token = await getToken({req, secret: process.env.NEXTAUTH_SECRET});
 
   if (!token || !token.sub || isExpired(token)) {
