@@ -24,6 +24,9 @@ export async function GET(req: NextRequest) {
 
   try {
     const adminToken = await getAdminToken();
+
+    // console.log("HIIIT ME", adminToken);
+
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_BASE_KEYCLOAK_URL}/admin/realms/${process.env.REALMS_ID}/users/${token.sub}`,
       {
@@ -31,11 +34,15 @@ export async function GET(req: NextRequest) {
       },
     );
 
+    // console.log("res me", res);
+
     if (!res.ok) {
       return NextResponse.json({error: "Failed to fetch user"}, {status: res.status});
     }
 
     const user = await res.json();
+
+    console.log(user);
 
     return NextResponse.json({
       user: {

@@ -9,7 +9,7 @@ import {Card, CardContent, CardDescription, CardHeader, CardTitle} from "@/compo
 
 export default function LoginPage() {
   const searchParams = useSearchParams();
-  const clientName = searchParams.get("client") || "Your App";
+  const clientName = searchParams.get("client_id") || "Your App";
 
   // console.log(searchParams);
 

@@ -5,7 +5,7 @@ export async function getAdminToken(): Promise<string> {
   params.append("client_id", process.env.BACK_ID!);
   params.append("client_secret", process.env.BACK_SECRET!);
 
-  const tokenUrl = `${process.env.KEYCLOAK_URL}/${process.env.REALMS_ID}/protocol/openid-connect/token`;
+  const tokenUrl = `${process.env.KEYCLOAK_URL}/realms/${process.env.REALMS_ID}/protocol/openid-connect/token`;
   const res = await fetch(tokenUrl, {
     method: "POST",
     body: params,

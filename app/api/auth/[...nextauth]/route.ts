@@ -4,8 +4,12 @@ import axios from "axios";
 import {decodeToken} from "react-jwt";
 
 async function getKeycloakToken(email: string, password: string) {
+  // console.log(
+  //   "HIIIIIT",
+  //   `${process.env.KEYCLOAK_URL}/realms/${process.env.REALMS_ID}/protocol/openid-connect/token`,
+  // );
   const response = await axios.post(
-    `${process.env.KEYCLOAK_URL}/${process.env.REALMS_ID}/protocol/openid-connect/token`,
+    `${process.env.KEYCLOAK_URL}/realms/${process.env.REALMS_ID}/protocol/openid-connect/token`,
     new URLSearchParams({
       client_id: process.env.CLIENT_ID!,
       client_secret: process.env.SECRET!,
@@ -17,12 +21,14 @@ async function getKeycloakToken(email: string, password: string) {
     {headers: {"Content-Type": "application/x-www-form-urlencoded"}},
   );
 
+  // console.log("HIIIIIT", response.data);
+
   return response.data;
 }
 
 async function getUserInfoFromAccessToken(accessToken: string) {
   const res = await fetch(
-    `${process.env.KEYCLOAK_URL}${process.env.REALMS_ID}/protocol/openid-connect/userinfo`,
+    `${process.env.KEYCLOAK_URL}/realms/${process.env.REALMS_ID}/protocol/openid-connect/userinfo`,
     {
       headers: {
         Authorization: `Bearer ${accessToken}`,
@@ -48,7 +54,7 @@ function extractUserFromToken(token: string): {accessTokenExpires?: number; role
 async function refreshAccessToken(token: any) {
   try {
     const response = await axios.post(
-      `${process.env.KEYCLOAK_URL}/${process.env.REALMS_ID}/protocol/openid-connect/token`,
+      `${process.env.KEYCLOAK_URL}/realms/${process.env.REALMS_ID}/protocol/openid-connect/token`,
       new URLSearchParams({
         client_id: process.env.CLIENT_ID!,
         client_secret: process.env.SECRET!,
@@ -88,8 +94,15 @@ export const authOptions: NextAuthOptions = {
       },
       async authorize(credentials): Promise<User | null> {
         const {email, password} = credentials!;
+
+        console.log(email, password);
+
         const tokenResponse = await getKeycloakToken(email, password);
+
+        console.log("Token ", tokenResponse);
         const userInfo = await getUserInfoFromAccessToken(tokenResponse.access_token);
+
+        console.log("UserInfo ", userInfo);
         const decoded = extractUserFromToken(tokenResponse.access_token);
 
         return {
