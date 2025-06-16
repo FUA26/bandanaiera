@@ -4,7 +4,7 @@
 import {useSearchParams} from "next/navigation";
 import Image from "next/image";
 
-import {LoginForm} from "@/features/oauth/sso/autorize/form";
+import {LoginForm} from "@/features/oauth/sso/v1/autorize/form";
 import {Card, CardContent, CardDescription, CardHeader, CardTitle} from "@/components/ui/card";
 
 export default function LoginPage() {
@@ -32,8 +32,8 @@ export default function LoginPage() {
           </Card>
 
           <div className="text-balance text-center text-xs text-muted-foreground [&_a]:underline [&_a]:underline-offset-4 hover:[&_a]:text-primary">
-            Dengan melanjutkan, Anda menyetujui <a href="/">Syarat & Ketentuan</a> serta{" "}
-            <a href="/">Kebijakan Privasi</a> yang berlaku.
+            Dengan melanjutkan, Anda menyetujui <a href="/terms">Syarat & Ketentuan</a> serta{" "}
+            <a href="/privacy">Kebijakan Privasi</a> yang berlaku.
           </div>
         </div>
       </div>

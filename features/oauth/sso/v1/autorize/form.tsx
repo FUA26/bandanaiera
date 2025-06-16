@@ -70,16 +70,17 @@ export const LoginForm = () => {
           return;
         }
 
+        setSuccess("Login berhasil. Anda akan diarahkan...");
+
         // // Redirect ke aplikasi client dengan token
         const redirectUrl = new URL(redirect_uri);
 
-        // redirectUrl.searchParams.set("access_token", data.access_token);
+        redirectUrl.searchParams.set("access_token", data.access_token);
         // redirectUrl.searchParams.set("token_type", data.token_type);
         // redirectUrl.searchParams.set("expires_in", data.expires_in.toString());
         // if (state) redirectUrl.searchParams.set("state", state);
 
-        // setSuccess("Login berhasil. Anda akan diarahkan...");
-        // router.push(redirectUrl.toString());
+        router.push(redirectUrl.toString());
       } catch (err) {
         console.error(err);
         setError("Terjadi kesalahan saat login.");

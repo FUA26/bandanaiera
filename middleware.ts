@@ -8,6 +8,7 @@ const WHITELISTED_PATHS = [
   "/auth/register",
   "/api/public",
   "/api/oauth/sso/authorize",
+  "/api/oauth/sso/v1/authorize",
   "/oauth/sso/authorize",
   "/oauth/sso/v1/authorize",
   "/auth/login",
