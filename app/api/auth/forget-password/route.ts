@@ -24,7 +24,7 @@ export async function POST(req: NextRequest) {
   try {
     const adminToken = await getAdminToken();
 
-    console.log("ADMIN TOKEN", adminToken);
+    // console.log("ADMIN TOKEN", adminToken);
     // Cari user berdasarkan email
     const userRes = await fetch(
       `${process.env.NEXT_PUBLIC_BASE_KEYCLOAK_URL}/admin/realms/${process.env.REALMS_ID}/users?email=${email}`,
@@ -37,6 +37,7 @@ export async function POST(req: NextRequest) {
       },
     );
 
+    // console.log(userRes);
     const users = await userRes.json();
 
     if (!Array.isArray(users) || users.length === 0) {
@@ -45,9 +46,13 @@ export async function POST(req: NextRequest) {
 
     const userId = users[0].id;
 
+    console.log("USER", userId);
     // Kirim email untuk reset password
+
     const sendRes = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_KEYCLOAK_URL}/admin/realms/${process.env.REALMS_ID}/users/${userId}/execute-actions-email`,
+      `${process.env.NEXT_PUBLIC_BASE_KEYCLOAK_URL}/admin/realms/${process.env.REALMS_ID}/users/${userId}/execute-actions-email?client_id=${process.env.CLIENT_ID}&redirect_uri=${encodeURIComponent(
+        process.env.NEXT_URL + "/auth/reset-password",
+      )}`,
       {
         method: "PUT",
         headers: {
@@ -58,9 +63,13 @@ export async function POST(req: NextRequest) {
       },
     );
 
+    console.log("➡️ Reset Email URL:", sendRes.url);
+
+    console.log(sendRes);
     if (!sendRes.ok) {
       const text = await sendRes.text();
 
+      console.error("❌ Response:", text);
       console.error("Gagal mengirim email reset password:", text);
 
       return NextResponse.json(

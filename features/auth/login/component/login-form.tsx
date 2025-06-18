@@ -106,6 +106,12 @@ export const LoginForm = () => {
             )}
           />
         </div>
+
+        <div className="text-right">
+          <a className="text-sm text-primary hover:underline" href="/auth/forget-password">
+            Lupa kata sandi?
+          </a>
+        </div>
         <FormError message={error} />
         <FormSuccess message={success} />
         <Button className="w-full" disabled={isPending} type="submit">
