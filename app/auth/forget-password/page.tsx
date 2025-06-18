@@ -1,12 +1,11 @@
 // import Image from "next/image";
 "use client";
-import Link from "next/link";
 
 // import {AuthorizeForm} from "@/components/forms/authorize-form";
 import Image from "@/components/ui/image";
-import {LoginForm} from "@/features/auth/login/component/login-form";
+import {ForgotForm} from "@/features/auth/forget-password/component/login-form";
 
-export default function Login() {
+export default function ForgetPasswordPage() {
   // const searchParams = useSearchParams();
 
   // const name = searchParams.get("name");
@@ -27,20 +26,14 @@ export default function Login() {
             src="/images/full-login.png"
           />
         </div>
-        <h1 className="text-3xl font-bold">Login</h1>
+        <h1 className="text-2xl font-bold">Atur Ulang Kata Sandi</h1>
         <p className="text-muted-foreground">
-          Anda harus login terlebih dahulu untuk mengakses halaman dashboard.
-          {/* <span className="font-bold text-primary">{name}</span>. */}
+          Silakan masukkan alamat email atau nama pengguna Anda. Instruksi pengaturan ulang kata
+          sandi akan dikirimkan melalui email.
         </p>
       </div>
       <div className="grid gap-4">
-        <LoginForm />
-      </div>
-      <div className="mt-4 text-center text-sm">
-        Belum punya akun ?{" "}
-        <Link className="underline" href="register">
-          Daftar
-        </Link>
+        <ForgotForm />
       </div>
     </>
   );

@@ -9,9 +9,11 @@ const WHITELISTED_PATHS = [
   "/api/public",
   "/api/oauth/sso/authorize",
   "/api/oauth/sso/v1/authorize",
+  "/api/auth/forget-password",
   "/oauth/sso/authorize",
   "/oauth/sso/v1/authorize",
   "/auth/login",
+  "/auth/forget-password",
 ];
 
 function isWhitelisted(pathname: string): boolean {
