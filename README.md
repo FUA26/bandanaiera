@@ -1,58 +1,126 @@
-# Turborepo Tailwind CSS starter
+# Bandanaiera Monorepo
 
-This Turborepo starter is maintained by the Turborepo core team.
+Monorepo for landing and backoffice applications built with Turborepo, Next.js, and shadcn/ui.
 
-## Using this example
+## 📁 Structure
 
-Run the following command:
+- `apps/landing` - Landing page application
+- `apps/backoffice` - Backoffice/admin application
+- `packages/ui` - Shared UI components (shadcn/ui)
+- `packages/api` - Shared API client
+- `packages/utils` - Shared utilities
+- `packages/types` - Shared TypeScript types
+- `packages/hooks` - Shared React hooks
+- `packages/logger` - Shared logging utilities
 
-```sh
-npx create-turbo@latest -e with-tailwind
+## 🚀 Quick Start
+
+```bash
+# Install dependencies
+pnpm install
+
+# Run all apps in development
+pnpm dev
+
+# Run specific app
+pnpm --filter landing dev    # http://localhost:3000
+pnpm --filter backoffice dev # http://localhost:3001
 ```
 
-## What's inside?
+## 📚 Documentation
 
-This Turborepo includes the following packages/apps:
+See [DEVELOPMENT.md](./DEVELOPMENT.md) for detailed development instructions.
 
-### Apps and Packages
+## 🐳 Docker
 
-- `docs`: a [Next.js](https://nextjs.org/) app with [Tailwind CSS](https://tailwindcss.com/)
-- `web`: another [Next.js](https://nextjs.org/) app with [Tailwind CSS](https://tailwindcss.com/)
-- `ui`: a stub React component library with [Tailwind CSS](https://tailwindcss.com/) shared by both `web` and `docs` applications
-- `@repo/eslint-config`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
-- `@repo/typescript-config`: `tsconfig.json`s used throughout the monorepo
+> ⚠️ **Note**: Docker configuration needs further testing and refinement.
+> See `docker/` directory for Docker deployment configuration.
 
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
+### Quick Docker Commands
 
-### Building packages/ui
-
-This example is set up to produce compiled styles for `ui` components into the `dist` directory. The component `.tsx` files are consumed by the Next.js apps directly using `transpilePackages` in `next.config.ts`. This was chosen for several reasons:
-
-- Make sharing one `tailwind.config.ts` to apps and packages as easy as possible.
-- Make package compilation simple by only depending on the Next.js Compiler and `tailwindcss`.
-- Ensure Tailwind classes do not overwrite each other. The `ui` package uses a `ui-` prefix for it's classes.
-- Maintain clear package export boundaries.
-
-Another option is to consume `packages/ui` directly from source without building. If using this option, you will need to update the `tailwind.config.ts` in your apps to be aware of your package locations, so it can find all usages of the `tailwindcss` class names for CSS compilation.
-
-For example, in [tailwind.config.ts](packages/tailwind-config/tailwind.config.ts):
-
-```js
-  content: [
-    // app content
-    `src/**/*.{js,ts,jsx,tsx}`,
-    // include packages if not transpiling
-    "../../packages/ui/*.{js,ts,jsx,tsx}",
-  ],
+```bash
+cd docker
+docker compose build
+docker compose up -d
+docker compose down
 ```
 
-If you choose this strategy, you can remove the `tailwindcss` and `autoprefixer` dependencies from the `ui` package.
+### Domain Routing
 
-### Utilities
+- `http://bandanaiera.local` or `http://landing.bandanaiera.local` → Landing app
+- `http://admin.bandanaiera.local` → Backoffice app
 
-This Turborepo has some additional tools already setup for you:
+Add to your `/etc/hosts`:
+```
+127.0.0.1 bandanaiera.local landing.bandanaiera.local admin.bandanaiera.local
+```
 
-- [Tailwind CSS](https://tailwindcss.com/) for styles
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [ESLint](https://eslint.org/) for code linting
-- [Prettier](https://prettier.io) for code formatting
+## 📦 Packages
+
+### @workspace/ui
+Shared UI components powered by shadcn/ui.
+
+```bash
+# Add new shadcn components
+npx shadcn@latest add button
+npx shadcn@latest add input
+```
+
+### @workspace/api
+API client for backend communication.
+
+### @workspace/utils
+Common utility functions.
+
+```typescript
+import { formatCurrency } from '@workspace/utils'
+```
+
+### @workspace/types
+Shared TypeScript types.
+
+```typescript
+import type { User, PaginatedResponse } from '@workspace/types'
+```
+
+### @workspace/hooks
+Custom React hooks.
+
+```typescript
+import { useCounter } from '@workspace/hooks'
+```
+
+### @workspace/logger
+Logging utilities.
+
+```typescript
+import { logger } from '@workspace/logger'
+logger.info('Application started')
+```
+
+## 🛠️ Development
+
+### Build
+
+```bash
+# Build all
+pnpm build
+
+# Build specific app
+pnpm --filter landing build
+pnpm --filter backoffice build
+```
+
+### Lint
+
+```bash
+# Lint all
+pnpm lint
+
+# Lint specific app
+pnpm --filter landing lint
+```
+
+## 📝 License
+
+Private project - All rights reserved.
