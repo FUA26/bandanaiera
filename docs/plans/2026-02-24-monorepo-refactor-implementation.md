@@ -129,7 +129,7 @@ Generated apps/web and packages/ui with proper components.json"
 mkdir -p packages/api/src
 cat > packages/api/package.json << 'EOF'
 {
-  "name": "@repo/api",
+  "name": "@workspace/api",
   "version": "0.0.0",
   "private": true,
   "main": "./src/index.ts",
@@ -139,11 +139,11 @@ cat > packages/api/package.json << 'EOF'
     "type-check": "tsc --noEmit"
   },
   "dependencies": {
-    "@repo/types": "workspace:*",
-    "@repo/logger": "workspace:*"
+    "@workspace/types": "workspace:*",
+    "@workspace/logger": "workspace:*"
   },
   "devDependencies": {
-    "@repo/typescript-config": "workspace:*",
+    "@workspace/typescript-config": "workspace:*",
     "typescript": "^5.9.2"
   }
 }
@@ -176,7 +176,7 @@ Expected: File created
 mkdir -p packages/utils/src
 cat > packages/utils/package.json << 'EOF'
 {
-  "name": "@repo/utils",
+  "name": "@workspace/utils",
   "version": "0.0.0",
   "private": true,
   "main": "./src/index.ts",
@@ -186,7 +186,7 @@ cat > packages/utils/package.json << 'EOF'
     "type-check": "tsc --noEmit"
   },
   "devDependencies": {
-    "@repo/typescript-config": "workspace:*",
+    "@workspace/typescript-config": "workspace:*",
     "typescript": "^5.9.2"
   }
 }
@@ -213,7 +213,7 @@ Expected: Files created
 mkdir -p packages/types/src
 cat > packages/types/package.json << 'EOF'
 {
-  "name": "@repo/types",
+  "name": "@workspace/types",
   "version": "0.0.0",
   "private": true,
   "main": "./src/index.ts",
@@ -223,7 +223,7 @@ cat > packages/types/package.json << 'EOF'
     "type-check": "tsc --noEmit"
   },
   "devDependencies": {
-    "@repo/typescript-config": "workspace:*",
+    "@workspace/typescript-config": "workspace:*",
     "typescript": "^5.9.2"
   }
 }
@@ -256,7 +256,7 @@ Expected: Files created
 mkdir -p packages/hooks/src
 cat > packages/hooks/package.json << 'EOF'
 {
-  "name": "@repo/hooks",
+  "name": "@workspace/hooks",
   "version": "0.0.0",
   "private": true,
   "main": "./src/index.ts",
@@ -266,12 +266,12 @@ cat > packages/hooks/package.json << 'EOF'
     "type-check": "tsc --noEmit"
   },
   "dependencies": {
-    "@repo/types": "workspace:*",
-    "@repo/api": "workspace:*",
+    "@workspace/types": "workspace:*",
+    "@workspace/api": "workspace:*",
     "react": "^19.0.0"
   },
   "devDependencies": {
-    "@repo/typescript-config": "workspace:*",
+    "@workspace/typescript-config": "workspace:*",
     "typescript": "^5.9.2"
   }
 }
@@ -298,7 +298,7 @@ Expected: Files created
 mkdir -p packages/logger/src
 cat > packages/logger/package.json << 'EOF'
 {
-  "name": "@repo/logger",
+  "name": "@workspace/logger",
   "version": "0.0.0",
   "private": true,
   "main": "./src/index.ts",
@@ -308,7 +308,7 @@ cat > packages/logger/package.json << 'EOF'
     "type-check": "tsc --noEmit"
   },
   "devDependencies": {
-    "@repo/typescript-config": "workspace:*",
+    "@workspace/typescript-config": "workspace:*",
     "typescript": "^5.9.2"
   }
 }
@@ -375,16 +375,16 @@ Update paths section (or add if not exists):
       "@/*": ["./apps/*/src/*", "./packages/*/src/*"],
       "@workspace/ui": ["./packages/ui/src"],
       "@workspace/ui/*": ["./packages/ui/src/*"],
-      "@repo/api": ["./packages/api/src"],
-      "@repo/api/*": ["./packages/api/src/*"],
-      "@repo/utils": ["./packages/utils/src"],
-      "@repo/utils/*": ["./packages/utils/src/*"],
-      "@repo/types": ["./packages/types/src"],
-      "@repo/types/*": ["./packages/types/src/*"],
-      "@repo/hooks": ["./packages/hooks/src"],
-      "@repo/hooks/*": ["./packages/hooks/src/*"],
-      "@repo/logger": ["./packages/logger/src"],
-      "@repo/logger/*": ["./packages/logger/src/*"]
+      "@workspace/api": ["./packages/api/src"],
+      "@workspace/api/*": ["./packages/api/src/*"],
+      "@workspace/utils": ["./packages/utils/src"],
+      "@workspace/utils/*": ["./packages/utils/src/*"],
+      "@workspace/types": ["./packages/types/src"],
+      "@workspace/types/*": ["./packages/types/src/*"],
+      "@workspace/hooks": ["./packages/hooks/src"],
+      "@workspace/hooks/*": ["./packages/hooks/src/*"],
+      "@workspace/logger": ["./packages/logger/src"],
+      "@workspace/logger/*": ["./packages/logger/src/*"]
     }
   }
 }
@@ -1095,10 +1095,10 @@ npx shadcn@latest add form
 import { Button } from "@workspace/ui/components"
 
 // Shared packages
-import { formatCurrency } from "@repo/utils"
-import { apiClient } from "@repo/api"
-import type { User } from "@repo/types"
-import { useAuth } from "@repo/hooks"
+import { formatCurrency } from "@workspace/utils"
+import { apiClient } from "@workspace/api"
+import type { User } from "@workspace/types"
+import { useAuth } from "@workspace/hooks"
 
 // App-specific
 import { MyComponent } from "@/components/my-component"

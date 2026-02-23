@@ -13,8 +13,8 @@
   "aliases": {
     "components": "@/components",
     "utils": "@/lib/utils",
-    "ui": "@repo/ui",
-    "lib": "@repo/ui/lib",
+    "ui": "@workspace/ui",
+    "lib": "@workspace/ui/lib",
     "hooks": "@/hooks"
   },
   "iconLibrary": "lucide"
