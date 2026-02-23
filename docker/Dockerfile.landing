@@ -21,7 +21,7 @@ RUN corepack enable pnpm && pnpm build --filter=landing
 
 # Production image, copy all files and run next
 FROM base AS runner
-WORKDIR /app
+WORKDIR /app/apps/landing
 
 ENV NODE_ENV production
 ENV NEXT_TELEMETRY_DISABLED 1
@@ -29,13 +29,14 @@ ENV NEXT_TELEMETRY_DISABLED 1
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 
-COPY --from=builder /app/apps/landing/public ./apps/landing/public
+COPY --from=builder /app/apps/landing/public ./public
 
 # Set the correct permission for prerender cache
 RUN mkdir -p .next
 RUN chown -R nextjs:nodejs .next
 
 # Automatically leverage output traces to reduce image size
+WORKDIR /app/apps/landing
 COPY --from=builder --chown=nextjs:nodejs /app/apps/landing/.next/standalone/apps/landing ./
 COPY --from=builder --chown=nextjs:nodejs /app/apps/landing/.next/standalone/node_modules ./node_modules
 COPY --from=builder --chown=nextjs:nodejs /app/apps/landing/.next/static ./.next/static
