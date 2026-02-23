@@ -20,7 +20,7 @@ importers:
 
   apps/docs:
     dependencies:
-      '@repo/ui':
+      '@workspace/ui':
         specifier: workspace:*
         version: link:../../packages/ui
       next:
@@ -75,7 +75,7 @@ importers:
 
   apps/web:
     dependencies:
-      '@repo/ui':
+      '@workspace/ui':
         specifier: workspace:*
         version: link:../../packages/ui
       next:
@@ -128,6 +128,22 @@ importers:
         specifier: 5.9.2
         version: 5.9.2
 
+  packages/api:
+    dependencies:
+      '@workspace/logger':
+        specifier: workspace:*
+        version: link:../logger
+      '@workspace/types':
+        specifier: workspace:*
+        version: link:../types
+    devDependencies:
+      '@repo/typescript-config':
+        specifier: workspace:*
+        version: link:../typescript-config
+      typescript:
+        specifier: ^5.9.2
+        version: 5.9.2
+
   packages/eslint-config:
     devDependencies:
       '@eslint/js':
@@ -164,6 +180,34 @@ importers:
         specifier: ^8.39.0
         version: 8.46.2(eslint@9.39.1(jiti@2.6.1))(typescript@5.9.2)
 
+  packages/hooks:
+    dependencies:
+      '@workspace/api':
+        specifier: workspace:*
+        version: link:../api
+      '@workspace/types':
+        specifier: workspace:*
+        version: link:../types
+      react:
+        specifier: ^19.0.0
+        version: 19.2.0
+    devDependencies:
+      '@repo/typescript-config':
+        specifier: workspace:*
+        version: link:../typescript-config
+      typescript:
+        specifier: ^5.9.2
+        version: 5.9.2
+
+  packages/logger:
+    devDependencies:
+      '@repo/typescript-config':
+        specifier: workspace:*
+        version: link:../typescript-config
+      typescript:
+        specifier: ^5.9.2
+        version: 5.9.2
+
   packages/tailwind-config:
     devDependencies:
       postcss:
@@ -172,6 +216,15 @@ importers:
       tailwindcss:
         specifier: ^4.1.5
         version: 4.1.16
+
+  packages/types:
+    devDependencies:
+      '@repo/typescript-config':
+        specifier: workspace:*
+        version: link:../typescript-config
+      typescript:
+        specifier: ^5.9.2
+        version: 5.9.2
 
   packages/typescript-config: {}
 
@@ -207,6 +260,15 @@ importers:
         version: 4.1.16
       typescript:
         specifier: 5.9.2
+        version: 5.9.2
+
+  packages/utils:
+    devDependencies:
+      '@repo/typescript-config':
+        specifier: workspace:*
+        version: link:../typescript-config
+      typescript:
+        specifier: ^5.9.2
         version: 5.9.2
 
 packages:
