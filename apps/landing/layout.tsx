@@ -15,8 +15,8 @@ const fontSans = Inter({
 
 export const metadata: Metadata = {
   icons: {
-    icon: "/icon.png",
-    apple: "/apple-icon.png",
+    icon: "/naiera.png",
+    apple: "/naiera.png",
   },
 };
 

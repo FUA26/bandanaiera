@@ -34,8 +34,8 @@ export default auth((req) => {
 
   // Check manage routes - requires ADMIN role
   if (isOnManageRoute && isLoggedIn) {
-    // Use roleName instead of nested role.name for middleware
-    const userRoleName = req.auth?.user?.roleName;
+    // Access role.name from the nested role object
+    const userRoleName = req.auth?.user?.role?.name;
 
     if (!userRoleName || userRoleName !== "ADMIN") {
       // User is not admin, redirect to unauthorized page
