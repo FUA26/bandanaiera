@@ -51,15 +51,44 @@ export function ProfileForm({ initialData, onSuccess }: ProfileFormProps) {
     },
   });
 
-  // _file parameter is required by SimpleAvatarUpload interface but not used
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const handleAvatarSelect = (fileId: string, url: string, _file: File) => {
+  // Auto-save avatar to database after upload
+  const handleAvatarSelect = async (fileId: string, url: string, _file: File) => {
     setAvatarId(fileId);
     setAvatarUrl(url);
     // Update form values and mark as dirty
     form.setValue("avatarId", fileId, { shouldDirty: true });
     form.setValue("avatarUrl", url, { shouldDirty: true });
     form.trigger(["avatarId", "avatarUrl"]);
+
+    // Auto-save avatar to database
+    try {
+      const response = await fetch(`/api/users/${initialData.id}/profile`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          avatarId: fileId,
+          avatarUrl: url,
+        }),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.message || "Failed to update avatar");
+      }
+
+      toast.success("Avatar updated successfully");
+    } catch (error) {
+      console.error("Failed to update avatar:", error);
+      toast.error(error instanceof Error ? error.message : "Failed to update avatar");
+      // Revert form values on error
+      setAvatarId(initialData.avatarId || null);
+      setAvatarUrl(initialData.avatarUrl || null);
+      form.setValue("avatarId", initialData.avatarId || undefined, { shouldDirty: false });
+      form.setValue("avatarUrl", initialData.avatarUrl || undefined, { shouldDirty: false });
+    }
   };
 
   const handleAvatarRemove = () => {
