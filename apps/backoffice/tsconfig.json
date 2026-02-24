@@ -5,7 +5,13 @@
       {
         "name": "next"
       }
-    ]
+    ],
+    "paths": {
+      "@/*": ["./*"]
+    },
+    "strict": false,
+    "skipLibCheck": true,
+    "noImplicitAny": false
   },
   "include": [
     "**/*.ts",

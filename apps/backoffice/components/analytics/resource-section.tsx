@@ -123,7 +123,7 @@ export function ResourceSection() {
               />
               <Scatter data={scatterData}>
                 {scatterData.map((entry, index) => (
-                  <Cell key={`cell-${index}`} fill={FILE_TYPE_COLORS[entry.fileType]} />
+                  <Cell key={`cell-${index}`} fill={FILE_TYPE_COLORS[entry.fileType ?? "other"]} />
                 ))}
               </Scatter>
             </ScatterChart>

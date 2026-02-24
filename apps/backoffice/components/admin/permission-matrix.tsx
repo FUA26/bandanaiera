@@ -121,7 +121,7 @@ export function PermissionMatrix({
   }
 
   return (
-    <Tabs defaultValue={categories[0].name}>
+    <Tabs defaultValue={categories[0]?.name ?? ""}>
       <TabsList
         className={`grid w-full`}
         style={{ gridTemplateColumns: `repeat(${categories.length}, minmax(0, 1fr))` }}

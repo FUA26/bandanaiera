@@ -106,6 +106,7 @@ export function FileUpload({
       // Upload each file
       for (let i = 0; i < newUploads.length; i++) {
         const upload = newUploads[i];
+        if (!upload) continue;
 
         // Update status to uploading
         setUploads((prev) =>

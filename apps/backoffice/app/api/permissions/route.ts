@@ -11,6 +11,7 @@ import {
   getAllPermissions,
   getPermissionStats,
 } from "@/lib/rbac-server/permission-crud";
+import type { CreatePermissionInput } from "@/lib/validations/permission";
 import { Permission } from "@/lib/rbac/types";
 import { createPermissionSchema, permissionQuerySchema } from "@/lib/validations/permission";
 import { NextResponse } from "next/server";
@@ -77,7 +78,11 @@ export const POST = protectApiRoute({
       const validatedData = createPermissionSchema.parse(body);
 
       // Create permission
-      const permission = await createPermission(validatedData);
+      const permission = await createPermission({
+        name: validatedData.name!,
+        category: validatedData.category,
+        description: validatedData.description,
+      });
 
       return NextResponse.json(
         {

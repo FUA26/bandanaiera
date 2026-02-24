@@ -84,7 +84,7 @@ export function Shield({
     case "tooltip": {
       // Wrap in tooltip explaining why action is disabled
       const disabledChild = React.cloneElement(childElement, {
-        ...(childElement.props || {}),
+        ...((childElement.props || {}) as any),
         disabled: true,
       } as React.HTMLAttributes<HTMLElement>);
 
@@ -103,7 +103,7 @@ export function Shield({
     case "inline": {
       // Show message below the disabled element
       const disabledChild = React.cloneElement(childElement, {
-        ...(childElement.props || {}),
+        ...((childElement.props || {}) as any),
         disabled: true,
         className: `${(childElement.props as React.HTMLAttributes<HTMLElement>)?.className || ""} opacity-50 cursor-not-allowed`,
       } as React.HTMLAttributes<HTMLElement>);
@@ -119,7 +119,7 @@ export function Shield({
     case "disabled": {
       // Just disable the element without additional feedback
       return React.cloneElement(childElement, {
-        ...(childElement.props || {}),
+        ...((childElement.props || {}) as any),
         disabled: true,
         className: `${(childElement.props as React.HTMLAttributes<HTMLElement>)?.className || ""} opacity-50 cursor-not-allowed`,
       } as React.HTMLAttributes<HTMLElement>);

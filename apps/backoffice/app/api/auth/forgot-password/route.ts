@@ -64,7 +64,7 @@ export async function POST(req: Request) {
     // Send reset email
     await sendPasswordResetEmail({
       to: user.email,
-      userName: user.name || user.email.split("@")[0],
+      userName: user.name ?? user.email?.split("@")[0] ?? "User",
       resetLink,
     });
 

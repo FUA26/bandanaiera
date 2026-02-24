@@ -18,7 +18,7 @@ export function ActivitySection({ dateRange = "30" }: { dateRange?: string }) {
   const loginData = generateMockLoginActivity(days);
 
   const lineChartData = loginData.map((d) => ({
-    date: new Date(d.date).toLocaleDateString("en-US", { month: "short", day: "numeric" }),
+    date: new Date(d.date ?? new Date().toISOString()).toLocaleDateString("en-US", { month: "short", day: "numeric" }),
     successful: d.successful,
     failed: d.failed,
   }));

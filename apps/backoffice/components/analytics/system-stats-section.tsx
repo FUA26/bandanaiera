@@ -32,7 +32,7 @@ export function SystemStatsSection() {
 
   // Transform for area chart
   const areaChartData = apiData.map((d) => ({
-    date: new Date(d.date).toLocaleDateString("en-US", { month: "short", day: "numeric" }),
+    date: new Date(d.date ?? new Date().toISOString()).toLocaleDateString("en-US", { month: "short", day: "numeric" }),
     requests: d.requests,
   }));
 
