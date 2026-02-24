@@ -1,7 +1,6 @@
 {
   "compilerOptions": {
     "paths": {
-      "@/*": ["./apps/*/src/*", "./packages/*/src/*"],
       "@workspace/ui": ["./packages/ui/src"],
       "@workspace/ui/*": ["./packages/ui/src/*"],
       "@workspace/api": ["./packages/api/src"],

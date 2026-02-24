@@ -1,15 +1,20 @@
-// Shared types placeholder
-// Will be populated during migration phase
+// Common types
+export * from './common';
 
-export interface User {
-  id: string;
-  name: string;
-  email: string;
-}
+// Entities
+export * from './entities';
 
-export interface PaginatedResponse<T> {
-  data: T[];
-  total: number;
-  page: number;
-  pageSize: number;
-}
+// RBAC types
+export * from './rbac/permissions';
+
+// Auth types
+export * from './auth/next-auth';
+export * from './auth/next-auth-global';
+
+// Table types
+export * from './table/data-table';
+
+// API types
+export * from './api/response';
+export * from './api/error';
+export * from './api/paginator';
