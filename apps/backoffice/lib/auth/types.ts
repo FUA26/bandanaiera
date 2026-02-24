@@ -18,6 +18,15 @@ declare module "next-auth" {
       roleId: string;
       roleName?: string;
       permissions?: Permission[];
+      role?: {
+        id: string;
+        name: string;
+        permissions: Array<{
+          permission: {
+            name: string;
+          };
+        }>;
+      };
     } & DefaultSession["user"];
   }
 
@@ -25,6 +34,15 @@ declare module "next-auth" {
     roleId: string;
     roleName?: string;
     permissions?: Permission[];
+    role?: {
+      id: string;
+      name: string;
+      permissions: Array<{
+        permission: {
+          name: string;
+        };
+      }>;
+    };
   }
 }
 

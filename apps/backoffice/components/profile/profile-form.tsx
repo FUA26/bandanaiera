@@ -29,6 +29,7 @@ interface ProfileFormProps {
     id: string;
     name?: string | null;
     email: string;
+    avatarId?: string | null;
     avatarUrl?: string | null;
     bio?: string | null;
   };

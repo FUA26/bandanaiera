@@ -58,7 +58,7 @@ export function generateBreadcrumbs(pathname: string): BreadcrumbItem[] {
 
     // Dynamic segments (user IDs, etc.)
     if (i === segments.length - 1) {
-      breadcrumbs.push({ label: segment, href: null });
+      breadcrumbs.push({ label: segment || "", href: null });
     }
   }
 

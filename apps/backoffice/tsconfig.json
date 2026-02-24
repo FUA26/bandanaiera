@@ -9,9 +9,8 @@
     "paths": {
       "@/*": ["./*"]
     },
-    "strict": false,
-    "skipLibCheck": true,
-    "noImplicitAny": false
+    "declaration": false,
+    "declarationMap": false
   },
   "include": [
     "**/*.ts",

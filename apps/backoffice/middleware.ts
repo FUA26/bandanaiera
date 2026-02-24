@@ -34,9 +34,10 @@ export default auth((req) => {
 
   // Check manage routes - requires ADMIN role
   if (isOnManageRoute && isLoggedIn) {
-    const userRole = req.auth?.user?.role?.name;
+    // Use roleName instead of nested role.name for middleware
+    const userRoleName = req.auth?.user?.roleName;
 
-    if (!userRole || userRole !== "ADMIN") {
+    if (!userRoleName || userRoleName !== "ADMIN") {
       // User is not admin, redirect to unauthorized page
       return NextResponse.redirect(new URL("/unauthorized", req.url));
     }

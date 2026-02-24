@@ -29,7 +29,8 @@ export async function getUsersByRole() {
 
   const roleCounts = users.reduce(
     (acc, user) => {
-      const roleName = user.role.name;
+      const roleName = user.role?.name;
+      if (!roleName) return acc;
       acc[roleName] = (acc[roleName] || 0) + 1;
       return acc;
     },
@@ -65,8 +66,11 @@ export async function getUserGrowth(days: number = 30) {
   // Group by date and role
   const growthData = users.reduce(
     (acc, user) => {
-      const date = user.createdAt.toISOString().split("T")[0];
-      const role = user.role.name;
+      const dateParts = user.createdAt.toISOString().split("T");
+      const date = dateParts[0];
+      const role = user.role?.name;
+
+      if (!role || !date) return acc;
 
       if (!acc[date]) {
         acc[date] = {};
