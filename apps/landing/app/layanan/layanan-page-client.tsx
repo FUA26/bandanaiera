@@ -109,6 +109,12 @@ export function LayananPageClient({
   const [selectedCategory, setSelectedCategory] = useState<string | null>(initialCategory || null);
   const [integrationFilter, setIntegrationFilter] = useState<'all' | 'integrated' | 'non-integrated'>('all');
 
+  // Transform categories with icon components (needed for useEffect hooks)
+  const categories = rawCategories.map((cat) => ({
+    ...cat,
+    icon: iconMap[cat.icon] || Users,
+  }));
+
   // Sync selectedCategory when initialCategory prop changes (e.g., from URL navigation)
   useEffect(() => {
     if (initialCategory !== undefined) {
@@ -123,6 +129,18 @@ export function LayananPageClient({
       setSearchQuery(searchParam);
     }
   }, [searchParams]);
+
+  // Handle invalid category slug - redirect to clean URL if slug doesn't exist
+  useEffect(() => {
+    const categoryParam = searchParams.get('kategori');
+    if (categoryParam && !categories.find((c) => c.slug === categoryParam)) {
+      // Invalid slug, remove kategori param from URL
+      const params = new URLSearchParams(searchParams?.toString() || '');
+      params.delete('kategori');
+      const newUrl = params.toString() ? `${pathname}?${params.toString()}` : pathname;
+      router.replace(newUrl);
+    }
+  }, [searchParams, categories, pathname, router]);
 
   // Update category and sync with URL
   const updateCategory = (slug: string | null) => {
@@ -157,12 +175,6 @@ export function LayananPageClient({
     const newUrl = params.toString() ? `${pathname}?${params.toString()}` : pathname;
     router.replace(newUrl, { scroll: false });
   };
-
-  // Transform categories with icon components
-  const categories = rawCategories.map((cat) => ({
-    ...cat,
-    icon: iconMap[cat.icon] || Users,
-  }));
 
   // Transform services with icon components
   const services = rawServices.map((service) => ({
