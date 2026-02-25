@@ -116,12 +116,20 @@ export function LayananPageClient({
     }
   }, [initialCategory]);
 
+  // Sync searchQuery from URL on mount
+  useEffect(() => {
+    const searchParam = searchParams.get('search');
+    if (searchParam !== null) {
+      setSearchQuery(searchParam);
+    }
+  }, [searchParams]);
+
   // Update category and sync with URL
   const updateCategory = (slug: string | null) => {
     setSelectedCategory(slug);
 
     // Update URL query param
-    const params = new URLSearchParams(searchParams.toString());
+    const params = new URLSearchParams(searchParams?.toString() || '');
     if (slug) {
       params.set('kategori', slug);
     } else {
@@ -129,6 +137,23 @@ export function LayananPageClient({
     }
 
     // Build new URL, preserve search param if exists
+    const newUrl = params.toString() ? `${pathname}?${params.toString()}` : pathname;
+    router.replace(newUrl, { scroll: false });
+  };
+
+  // Update search query and sync with URL
+  const updateSearch = (value: string) => {
+    setSearchQuery(value);
+
+    // Update URL query param
+    const params = new URLSearchParams(searchParams?.toString() || '');
+    if (value) {
+      params.set('search', value);
+    } else {
+      params.delete('search');
+    }
+
+    // Preserve kategori param if exists
     const newUrl = params.toString() ? `${pathname}?${params.toString()}` : pathname;
     router.replace(newUrl, { scroll: false });
   };
@@ -193,7 +218,7 @@ export function LayananPageClient({
                 type="text"
                 placeholder="Cari layanan..."
                 value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
+                onChange={(e) => updateSearch(e.target.value)}
                 className="h-14 rounded-xl border-0 bg-white pl-12 text-slate-800 shadow-lg placeholder:text-slate-400"
               />
             </div>
