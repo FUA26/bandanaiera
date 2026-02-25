@@ -78,6 +78,10 @@ const envSchema = z.object({
     .transform((val) => val === "true")
     .default("false"),
   CDN_DOMAIN: z.string().optional(),
+
+  // Revalidation
+  REVALIDATE_SECRET: z.string().optional(),
+  LANDING_URL: z.string().url().optional(),
 });
 
 // Validate and parse environment variables
