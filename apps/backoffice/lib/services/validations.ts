@@ -120,11 +120,10 @@ export const serviceSchema = z.object({
 export const serviceCreateSchema = serviceSchema;
 
 /**
- * Schema for updating an existing service (all fields optional except id)
- * Uses lax validation for nested objects to allow partial updates
+ * Schema for updating an existing service (all fields optional)
+ * id is handled separately from form data
  */
 export const serviceUpdateSchema = z.object({
-  id: z.string().cuid("Invalid service ID format"),
   slug: z.string().optional(),
   icon: z.string().optional(),
   name: z.string().optional(),

@@ -62,8 +62,7 @@ export function ServiceForm({
   const schema = mode === "create" ? serviceCreateSchema : serviceUpdateSchema;
 
   const form = useForm<ServiceInput | ServiceUpdateInput>({
-    // Skip resolver for now to test
-    // resolver: zodResolver(schema, { mode: "sync" }) as any,
+    resolver: zodResolver(schema) as any,
     mode: "onSubmit",
     defaultValues: initialData || {
       slug: "",
