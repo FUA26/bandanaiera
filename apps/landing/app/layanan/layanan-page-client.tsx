@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import {
   CreditCard,
@@ -103,6 +103,13 @@ export function LayananPageClient({
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string | null>(initialCategory || null);
   const [integrationFilter, setIntegrationFilter] = useState<'all' | 'integrated' | 'non-integrated'>('all');
+
+  // Sync selectedCategory when initialCategory prop changes (e.g., from URL navigation)
+  useEffect(() => {
+    if (initialCategory !== undefined) {
+      setSelectedCategory(initialCategory);
+    }
+  }, [initialCategory]);
 
   // Transform categories with icon components
   const categories = rawCategories.map((cat) => ({
