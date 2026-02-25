@@ -18,10 +18,15 @@
 import { config } from "dotenv";
 import { PrismaClient, ServiceStatus } from "@prisma/client";
 import { readFileSync, readdirSync } from "fs";
-import { join } from "path";
+import { join, dirname } from "path";
+import { fileURLToPath } from "url";
+
+// Get the script directory
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 // Load environment variables
-config({ path: ".env.local" });
+config({ path: join(__dirname, '..', '.env.local') });
 
 const prisma = new PrismaClient();
 
@@ -53,19 +58,19 @@ interface ServiceJson {
   showInMenu: boolean;
   order: number;
   isIntegrated: boolean;
-  detailedDescription: string;
-  requirements: string[];
-  process: string[];
-  duration: string;
-  cost: string;
-  contactInfo: {
+  detailedDescription?: string;
+  requirements?: string[];
+  process?: string[];
+  duration?: string;
+  cost?: string;
+  contactInfo?: {
     office: string;
     phone: string;
     email: string;
   };
-  downloadForms: DownloadFormJson[];
-  relatedServices: string[];
-  faqs: {
+  downloadForms?: DownloadFormJson[];
+  relatedServices?: string[];
+  faqs?: {
     question: string;
     answer: string;
   }[];
@@ -128,7 +133,7 @@ async function migrateServices() {
     console.log(`  ✅ Using user ID: ${adminUserId}\n`);
 
     // Read categories JSON
-    const categoriesPath = join(process.cwd(), '../landing/data/services/categories.json');
+    const categoriesPath = join(__dirname, '../../landing/data/services/categories.json');
     console.log(`📂 Reading categories from: ${categoriesPath}`);
     const categoriesJson: CategoryJson[] = JSON.parse(readFileSync(categoriesPath, 'utf-8'));
     console.log(`  ✅ Found ${categoriesJson.length} categories\n`);
@@ -166,7 +171,7 @@ async function migrateServices() {
     console.log(`\n✅ Migrated ${categoryMap.size} categories\n`);
 
     // Read services directory to find all service JSON files
-    const servicesDir = join(process.cwd(), '../landing/data/services');
+    const servicesDir = join(__dirname, '../../landing/data/services');
     const files = readdirSync(servicesDir).filter(f => f.endsWith('.json') && f !== 'categories.json');
 
     console.log(`📂 Found ${files.length} service files to process\n`);
@@ -210,7 +215,7 @@ async function migrateServices() {
               duration: serviceJson.duration,
               cost: serviceJson.cost,
               contactInfo: serviceJson.contactInfo,
-              downloadForms: convertDownloadForms(serviceJson.downloadForms),
+              downloadForms: serviceJson.downloadForms ? convertDownloadForms(serviceJson.downloadForms) : [],
               relatedServices: serviceJson.relatedServices,
               faqs: serviceJson.faqs,
               status: ServiceStatus.PUBLISHED,
@@ -233,7 +238,7 @@ async function migrateServices() {
               duration: serviceJson.duration,
               cost: serviceJson.cost,
               contactInfo: serviceJson.contactInfo,
-              downloadForms: convertDownloadForms(serviceJson.downloadForms),
+              downloadForms: serviceJson.downloadForms ? convertDownloadForms(serviceJson.downloadForms) : [],
               relatedServices: serviceJson.relatedServices,
               faqs: serviceJson.faqs,
               status: ServiceStatus.PUBLISHED,
