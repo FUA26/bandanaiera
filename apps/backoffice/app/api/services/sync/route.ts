@@ -20,7 +20,7 @@ export const POST = protectApiRoute({
   handler: async (request) => {
     try {
       const landingUrl = process.env.LANDING_URL || "http://localhost:3002";
-      const revalidateSecret = process.env.LANDING_REVALIDATE_SECRET || "dev-secret-change-in-production";
+      const revalidateSecret = process.env.REVALIDATE_SECRET || "dev-secret-change-in-production";
 
       // Call the landing app's revalidate endpoint
       const response = await fetch(`${landingUrl}/api/revalidate`, {
