@@ -85,8 +85,8 @@ export interface CategoriesResponse {
 // Get the backoffice API URL from environment variable
 const BACKOFFICE_API_URL = process.env.BACKOFFICE_API_URL || 'http://localhost:3001';
 
-// Cache duration in seconds (30 seconds - for near realtime updates)
-const CACHE_DURATION = 30;
+// Cache duration in seconds (from env or default 30 seconds for near realtime updates)
+const CACHE_DURATION = parseInt(process.env.SERVICES_CACHE_DURATION || '30', 10);
 
 // In-memory cache for development (use Next.js cache with revalidation in production)
 const cache = new Map<string, { data: unknown; expires: number }>();
