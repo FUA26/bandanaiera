@@ -10,7 +10,7 @@ import { SyncButton } from "@/components/admin/sync-button";
 import { ProtectedRoute } from "@/components/rbac/ProtectedRoute";
 import { Can } from "@/components/rbac/Can";
 import { Button } from "@/components/ui/button";
-import { PlusIcon } from "@hugeicons/core-free-icons";
+import { Add01Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import Link from "next/link";
 import { Suspense } from "react";
@@ -31,7 +31,7 @@ function ServicesContent() {
           <Can permissions={["CONTENT_CREATE"]}>
             <Link href="/services/new">
               <Button>
-                <HugeiconsIcon icon={PlusIcon} className="h-4 w-4 mr-2" />
+                <HugeiconsIcon icon={Add01Icon} className="h-4 w-4 mr-2" />
                 New Service
               </Button>
             </Link>

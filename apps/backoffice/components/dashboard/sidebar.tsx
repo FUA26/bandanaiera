@@ -20,6 +20,7 @@ import {
   Settings01Icon,
   Settings02Icon,
   Users,
+  FolderOpenIcon,
 } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import Link from "next/link";
@@ -47,6 +48,12 @@ const navItems = [
     label: "Permissions",
     icon: Settings01Icon,
     permission: "ADMIN_PERMISSIONS_MANAGE",
+  },
+  {
+    href: "/services",
+    label: "Services",
+    icon: FolderOpenIcon,
+    permission: "CONTENT_READ_ANY",
   },
   {
     href: "/manage/system-settings",

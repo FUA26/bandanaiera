@@ -8,7 +8,7 @@
 
 import { ServiceDialog } from "@/components/admin/service-dialog";
 import { Button } from "@/components/ui/button";
-import { PlusIcon } from "@hugeicons/core-free-icons";
+import { Add01Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { useState } from "react";
 import { useRouter } from "next/navigation";

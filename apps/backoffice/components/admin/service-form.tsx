@@ -27,7 +27,7 @@ import type { ServiceInput, ServiceUpdateInput } from "@/lib/services/validation
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState } from "react";
 import { useForm, useFieldArray } from "react-hook-form";
-import { PlusIcon, Delete01Icon } from "@hugeicons/core-free-icons";
+import { Add01Icon, Delete01Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 
 interface FAQ {
@@ -351,7 +351,7 @@ export function ServiceForm({
                 size="sm"
                 onClick={() => requirementsArray.append("")}
               >
-                <HugeiconsIcon icon={PlusIcon} className="h-4 w-4 mr-1" />
+                <HugeiconsIcon icon={Add01Icon} className="h-4 w-4 mr-1" />
                 Add Requirement
               </Button>
             </div>
@@ -387,7 +387,7 @@ export function ServiceForm({
                 size="sm"
                 onClick={() => processArray.append("")}
               >
-                <HugeiconsIcon icon={PlusIcon} className="h-4 w-4 mr-1" />
+                <HugeiconsIcon icon={Add01Icon} className="h-4 w-4 mr-1" />
                 Add Step
               </Button>
             </div>
@@ -463,7 +463,7 @@ export function ServiceForm({
                 size="sm"
                 onClick={() => faqsArray.append({ question: "", answer: "" })}
               >
-                <HugeiconsIcon icon={PlusIcon} className="h-4 w-4 mr-1" />
+                <HugeiconsIcon icon={Add01Icon} className="h-4 w-4 mr-1" />
                 Add FAQ
               </Button>
             </div>
@@ -511,7 +511,7 @@ export function ServiceForm({
                 size="sm"
                 onClick={() => downloadFormsArray.append({ type: "url", name: "", value: "" })}
               >
-                <HugeiconsIcon icon={PlusIcon} className="h-4 w-4 mr-1" />
+                <HugeiconsIcon icon={Add01Icon} className="h-4 w-4 mr-1" />
                 Add Form
               </Button>
             </div>

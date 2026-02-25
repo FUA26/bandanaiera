@@ -9,7 +9,7 @@ import { ServiceDialog } from "@/components/admin/service-dialog";
 import { ProtectedRoute } from "@/components/rbac/ProtectedRoute";
 import { Button } from "@/components/ui/button";
 import { prisma } from "@/lib/db/prisma";
-import { PlusIcon } from "@hugeicons/core-free-icons";
+import { Add01Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { Suspense } from "react";
 import { NewServiceContent } from "./new-client";
