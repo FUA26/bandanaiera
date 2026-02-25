@@ -133,7 +133,28 @@ export function EditServiceContent({ serviceId }: EditServiceContentProps) {
           }}
           mode="edit"
           serviceId={serviceId}
-          initialData={service}
+          initialData={{
+            name: service.name,
+            slug: service.slug,
+            icon: service.icon,
+            description: service.description,
+            categoryId: service.categoryId,
+            badge: service.badge ?? undefined,
+            stats: service.stats ?? undefined,
+            showInMenu: service.showInMenu,
+            order: service.order,
+            isIntegrated: service.isIntegrated,
+            status: service.status as "DRAFT" | "PUBLISHED" | "ARCHIVED",
+            detailedDescription: service.detailedDescription ?? undefined,
+            requirements: service.requirements ?? undefined,
+            process: service.process ?? undefined,
+            duration: service.duration ?? undefined,
+            cost: service.cost ?? undefined,
+            contactInfo: service.contactInfo ?? undefined,
+            faqs: service.faqs ?? undefined,
+            downloadForms: service.downloadForms ?? undefined,
+            relatedServices: service.relatedServices ?? undefined,
+          }}
           categories={categories}
           onSuccess={() => {
             router.push("/services");

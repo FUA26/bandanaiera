@@ -30,7 +30,19 @@ import { Delete01Icon, Edit01Icon, MoreVerticalIcon, EyeIcon } from "@hugeicons/
 import { HugeiconsIcon } from "@hugeicons/react";
 import { type ColumnDef } from "@tanstack/react-table";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { SERVICE_STATUS_LABELS, ServiceStatus } from "@/lib/services/types";
+import { ServiceDialog } from "@/components/admin/service-dialog";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 interface Service {
   id: string;
@@ -74,17 +86,11 @@ interface ServicesDataTableProps {
 }
 
 export function ServicesDataTable({ services, categories, onRefresh }: ServicesDataTableProps) {
-  const [editDialog, setEditDialog] = useState<{ open: boolean; serviceId: string }>({
+  const router = useRouter();
+  const [deleteDialog, setDeleteDialog] = useState<{ open: boolean; serviceId: string; serviceName: string }>({
     open: false,
     serviceId: "",
-  });
-  const [viewDialog, setViewDialog] = useState<{ open: boolean; serviceId: string }>({
-    open: false,
-    serviceId: "",
-  });
-  const [deleteDialog, setDeleteDialog] = useState<{ open: boolean; serviceId: string }>({
-    open: false,
-    serviceId: "",
+    serviceName: "",
   });
   const [selectedServiceIds, setSelectedServiceIds] = useState<string[]>([]);
 
@@ -232,12 +238,12 @@ export function ServicesDataTable({ services, categories, onRefresh }: ServicesD
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <DropdownMenuItem onClick={() => setViewDialog({ open: true, serviceId: service.id })}>
+              <DropdownMenuItem onClick={() => window.open(`/layanan/${service.slug}`, '_blank')}>
                 <HugeiconsIcon icon={EyeIcon} className="mr-2 h-4 w-4" />
                 View
               </DropdownMenuItem>
               {canUpdateAny && (
-                <DropdownMenuItem onClick={() => setEditDialog({ open: true, serviceId: service.id })}>
+                <DropdownMenuItem onClick={() => router.push(`/services/edit/${service.id}`)}>
                   <HugeiconsIcon icon={Edit01Icon} className="mr-2 h-4 w-4" />
                   Edit
                 </DropdownMenuItem>
@@ -254,7 +260,7 @@ export function ServicesDataTable({ services, categories, onRefresh }: ServicesD
               )}
               {canDeleteAny && (
                 <DropdownMenuItem
-                  onClick={() => setDeleteDialog({ open: true, serviceId: service.id })}
+                  onClick={() => setDeleteDialog({ open: true, serviceId: service.id, serviceName: service.name })}
                   className="text-destructive focus:text-destructive"
                 >
                   <HugeiconsIcon icon={Delete01Icon} className="mr-2 h-4 w-4" />
@@ -295,6 +301,20 @@ export function ServicesDataTable({ services, categories, onRefresh }: ServicesD
       }
     } catch (error) {
       console.error("Error unpublishing service:", error);
+    }
+  };
+
+  const handleDelete = async () => {
+    try {
+      const response = await fetch(`/api/services/${deleteDialog.serviceId}`, {
+        method: "DELETE",
+      });
+      if (response.ok) {
+        setDeleteDialog({ open: false, serviceId: "", serviceName: "" });
+        onRefresh?.();
+      }
+    } catch (error) {
+      console.error("Error deleting service:", error);
     }
   };
 
@@ -352,28 +372,23 @@ export function ServicesDataTable({ services, categories, onRefresh }: ServicesD
         )}
       />
 
-      {/* Dialogs will be added in Phase 9 */}
-      {/* <ServiceDialog
-        open={editDialog.open}
-        onOpenChange={(open) => setEditDialog({ open, serviceId: "" })}
-        mode="edit"
-        serviceId={editDialog.serviceId}
-        onSuccess={onRefresh}
-      />
-
-      <ServiceViewDialog
-        open={viewDialog.open}
-        onOpenChange={(open) => setViewDialog({ open, serviceId: "" })}
-        serviceId={viewDialog.serviceId}
-      />
-
-      <DeleteConfirmDialog
-        open={deleteDialog.open}
-        onOpenChange={(open) => setDeleteDialog({ open, serviceId: "" })}
-        serviceId={deleteDialog.serviceId}
-        serviceName={services.find((s) => s.id === deleteDialog.serviceId)?.name || ""}
-        onSuccess={onRefresh}
-      /> */}
+      {/* Delete Confirmation Dialog */}
+      <AlertDialog open={deleteDialog.open} onOpenChange={(open) => setDeleteDialog({ open, serviceId: "", serviceName: "" })}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete Service</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to delete "{deleteDialog.serviceName}"? This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={handleDelete} className="bg-destructive text-destructive-foreground">
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </>
   );
 }

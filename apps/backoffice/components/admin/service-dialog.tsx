@@ -16,7 +16,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { ServiceForm } from "@/components/admin/service-form";
-import type { ServiceInput } from "@/lib/services/validations";
+import type { ServiceInput, ServiceUpdateInput } from "@/lib/services/validations";
 import { useState } from "react";
 import { toast } from "sonner";
 
@@ -25,7 +25,7 @@ interface ServiceDialogProps {
   onOpenChange: (open: boolean) => void;
   mode: "create" | "edit";
   serviceId?: string;
-  initialData?: Partial<ServiceInput>;
+  initialData?: Partial<ServiceInput> | Partial<ServiceUpdateInput>;
   categories: Array<{ id: string; name: string; slug: string }>;
   onSuccess?: () => void;
 }
@@ -41,7 +41,7 @@ export function ServiceDialog({
 }: ServiceDialogProps) {
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubmit = async (data: ServiceInput) => {
+  const handleSubmit = async (data: ServiceInput | ServiceUpdateInput) => {
     setIsLoading(true);
     try {
       const url = mode === "create" ? "/api/services" : `/api/services/${serviceId}`;

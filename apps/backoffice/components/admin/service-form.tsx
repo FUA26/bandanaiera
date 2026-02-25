@@ -62,7 +62,7 @@ export function ServiceForm({
   const schema = mode === "create" ? serviceCreateSchema : serviceUpdateSchema;
 
   const form = useForm<ServiceInput | ServiceUpdateInput>({
-    resolver: zodResolver(schema),
+    resolver: zodResolver(schema) as any,
     defaultValues: initialData || {
       slug: "",
       icon: "",
@@ -81,25 +81,25 @@ export function ServiceForm({
     },
   });
 
-  // Field arrays for dynamic fields
+  // Field arrays for dynamic fields - use any to work with union type
   const requirementsArray = useFieldArray({
     control: form.control,
-    name: "requirements",
+    name: "requirements" as any,
   });
 
   const processArray = useFieldArray({
     control: form.control,
-    name: "process",
+    name: "process" as any,
   });
 
   const faqsArray = useFieldArray({
     control: form.control,
-    name: "faqs",
+    name: "faqs" as any,
   });
 
   const downloadFormsArray = useFieldArray({
     control: form.control,
-    name: "downloadForms",
+    name: "downloadForms" as any,
   });
 
   // Reset form when initialData changes
@@ -109,7 +109,7 @@ export function ServiceForm({
     }
   }, [initialData, form]);
 
-  const handleSubmit = async (data: ServiceInput | ServiceUpdateInput) => {
+  const handleSubmit = async (data: any) => {
     await onSubmit(data);
   };
 
@@ -349,7 +349,7 @@ export function ServiceForm({
                 type="button"
                 variant="outline"
                 size="sm"
-                onClick={() => requirementsArray.append("")}
+                onClick={() => requirementsArray.append("" as any)}
               >
                 <HugeiconsIcon icon={Add01Icon} className="h-4 w-4 mr-1" />
                 Add Requirement
@@ -385,7 +385,7 @@ export function ServiceForm({
                 type="button"
                 variant="outline"
                 size="sm"
-                onClick={() => processArray.append("")}
+                onClick={() => processArray.append("" as any)}
               >
                 <HugeiconsIcon icon={Add01Icon} className="h-4 w-4 mr-1" />
                 Add Step
@@ -461,7 +461,7 @@ export function ServiceForm({
                 type="button"
                 variant="outline"
                 size="sm"
-                onClick={() => faqsArray.append({ question: "", answer: "" })}
+                onClick={() => faqsArray.append({ question: "", answer: "" } as any)}
               >
                 <HugeiconsIcon icon={Add01Icon} className="h-4 w-4 mr-1" />
                 Add FAQ
@@ -509,7 +509,7 @@ export function ServiceForm({
                 type="button"
                 variant="outline"
                 size="sm"
-                onClick={() => downloadFormsArray.append({ type: "url", name: "", value: "" })}
+                onClick={() => downloadFormsArray.append({ type: "url", name: "", value: "" } as any)}
               >
                 <HugeiconsIcon icon={Add01Icon} className="h-4 w-4 mr-1" />
                 Add Form

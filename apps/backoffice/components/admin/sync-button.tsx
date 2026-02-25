@@ -61,8 +61,7 @@ export function SyncButton({
     >
       <HugeiconsIcon
         icon={RefreshIcon}
-        className={`h-4 w-4 ${size !== "icon" ? "mr-2" : ""}`}
-        className={isLoading ? "animate-spin" : ""}
+        className={`h-4 w-4 ${size !== "icon" ? "mr-2" : ""} ${isLoading ? "animate-spin" : ""}`}
       />
       {size !== "icon" && (isLoading ? "Syncing..." : "Sync to Landing")}
     </Button>

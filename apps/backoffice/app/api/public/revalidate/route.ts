@@ -71,17 +71,17 @@ export const POST = async (request: Request) => {
 
     // Revalidate by tag if provided
     if (tag) {
-      revalidateTag(tag);
+      revalidateTag(tag, type);
     }
 
     // Default revalidation paths for services
     if (!path && !tag) {
       // Revalidate all service-related paths
-      revalidatePath("/");
-      revalidatePath("/layanan");
-      revalidatePath("/informasi-publik");
-      revalidateTag("services");
-      revalidateTag("categories");
+      revalidatePath("/", type);
+      revalidatePath("/layanan", type);
+      revalidatePath("/informasi-publik", type);
+      revalidateTag("services", type);
+      revalidateTag("categories", type);
     }
 
     return NextResponse.json(
