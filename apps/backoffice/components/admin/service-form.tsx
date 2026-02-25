@@ -599,7 +599,6 @@ export function ServiceForm({
             </FieldContent>
           </Field>
             </TabsContent>
-          </div>
         </div>
       </Tabs>
 
