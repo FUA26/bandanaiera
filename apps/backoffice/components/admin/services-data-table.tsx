@@ -24,6 +24,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
+import { SyncButton } from "@/components/admin/sync-button";
 import { useCan } from "@/lib/rbac-client/hooks";
 import { Delete01Icon, Edit01Icon, MoreVerticalIcon, EyeIcon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
@@ -322,7 +323,10 @@ export function ServicesDataTable({ services, categories, onRefresh }: ServicesD
                 column={table.getColumn("category")}
               />
             </div>
-            <DataTableViewOptions table={table} />
+            <div className="flex items-center gap-2">
+              {canUpdateAny && <SyncButton onSyncComplete={onRefresh} />}
+              <DataTableViewOptions table={table} />
+            </div>
           </div>
         )}
         actionBar={(table) => (

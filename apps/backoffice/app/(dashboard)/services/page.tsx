@@ -6,6 +6,7 @@
  */
 
 import { ServicesTableSkeleton } from "@/components/admin/services-table-skeleton";
+import { SyncButton } from "@/components/admin/sync-button";
 import { ProtectedRoute } from "@/components/rbac/ProtectedRoute";
 import { Can } from "@/components/rbac/Can";
 import { Button } from "@/components/ui/button";
@@ -23,14 +24,19 @@ function ServicesContent() {
           <h1 className="text-3xl font-bold">Services Management</h1>
           <p className="text-muted-foreground">Manage public services, categories, and content</p>
         </div>
-        <Can permissions={["CONTENT_CREATE"]}>
-          <Link href="/services/new">
-            <Button>
-              <HugeiconsIcon icon={PlusIcon} className="h-4 w-4 mr-2" />
-              New Service
-            </Button>
-          </Link>
-        </Can>
+        <div className="flex gap-2">
+          <Can permissions={["CONTENT_UPDATE_ANY"]}>
+            <SyncButton />
+          </Can>
+          <Can permissions={["CONTENT_CREATE"]}>
+            <Link href="/services/new">
+              <Button>
+                <HugeiconsIcon icon={PlusIcon} className="h-4 w-4 mr-2" />
+                New Service
+              </Button>
+            </Link>
+          </Can>
+        </div>
       </div>
 
       <Suspense fallback={<ServicesTableSkeleton />}>
