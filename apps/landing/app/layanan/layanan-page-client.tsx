@@ -92,14 +92,16 @@ interface LayananPageClientProps {
       slug: string;
     };
   }>;
+  initialCategory?: string | null;
 }
 
 export function LayananPageClient({
   categories: rawCategories,
   services: rawServices,
+  initialCategory,
 }: LayananPageClientProps) {
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(initialCategory || null);
   const [integrationFilter, setIntegrationFilter] = useState<'all' | 'integrated' | 'non-integrated'>('all');
 
   // Transform categories with icon components
