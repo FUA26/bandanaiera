@@ -33,6 +33,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { SERVICE_STATUS_LABELS, ServiceStatus } from "@/lib/services/types";
 import { ServiceDialog } from "@/components/admin/service-dialog";
+import type { ServiceInput } from "@/lib/services/validations";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -87,6 +88,11 @@ interface ServicesDataTableProps {
 
 export function ServicesDataTable({ services, categories, onRefresh }: ServicesDataTableProps) {
   const router = useRouter();
+  const [editDialog, setEditDialog] = useState<{ open: boolean; serviceId: string; service: Service }>({
+    open: false,
+    serviceId: "",
+    service: null as any,
+  });
   const [deleteDialog, setDeleteDialog] = useState<{ open: boolean; serviceId: string; serviceName: string }>({
     open: false,
     serviceId: "",
@@ -243,7 +249,7 @@ export function ServicesDataTable({ services, categories, onRefresh }: ServicesD
                 View
               </DropdownMenuItem>
               {canUpdateAny && (
-                <DropdownMenuItem onClick={() => router.push(`/services/edit/${service.id}`)}>
+                <DropdownMenuItem onClick={() => setEditDialog({ open: true, serviceId: service.id, service })}>
                   <HugeiconsIcon icon={Edit01Icon} className="mr-2 h-4 w-4" />
                   Edit
                 </DropdownMenuItem>
@@ -371,6 +377,43 @@ export function ServicesDataTable({ services, categories, onRefresh }: ServicesD
           </DataTableActionBar>
         )}
       />
+
+      {/* Edit Service Dialog */}
+      {editDialog.service && (
+        <ServiceDialog
+          open={editDialog.open}
+          onOpenChange={(open) => setEditDialog({ ...editDialog, open })}
+          mode="edit"
+          serviceId={editDialog.serviceId}
+          initialData={{
+            name: editDialog.service.name,
+            slug: editDialog.service.slug,
+            icon: editDialog.service.icon,
+            description: editDialog.service.description,
+            categoryId: editDialog.service.categoryId,
+            badge: editDialog.service.badge ?? undefined,
+            stats: editDialog.service.stats ?? undefined,
+            showInMenu: editDialog.service.showInMenu,
+            order: editDialog.service.order,
+            isIntegrated: editDialog.service.isIntegrated,
+            status: editDialog.service.status,
+            detailedDescription: (editDialog.service as any).detailedDescription ?? undefined,
+            requirements: (editDialog.service as any).requirements ?? undefined,
+            process: (editDialog.service as any).process ?? undefined,
+            duration: (editDialog.service as any).duration ?? undefined,
+            cost: (editDialog.service as any).cost ?? undefined,
+            contactInfo: (editDialog.service as any).contactInfo ?? undefined,
+            faqs: (editDialog.service as any).faqs ?? undefined,
+            downloadForms: (editDialog.service as any).downloadForms ?? undefined,
+            relatedServices: (editDialog.service as any).relatedServices ?? undefined,
+          }}
+          categories={categories}
+          onSuccess={() => {
+            setEditDialog({ open: false, serviceId: "", service: null as any });
+            onRefresh?.();
+          }}
+        />
+      )}
 
       {/* Delete Confirmation Dialog */}
       <AlertDialog open={deleteDialog.open} onOpenChange={(open) => setDeleteDialog({ open, serviceId: "", serviceName: "" })}>

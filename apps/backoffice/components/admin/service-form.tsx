@@ -120,7 +120,15 @@ export function ServiceForm({
   };
 
   return (
-    <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">
+    <form
+      onSubmit={(e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        console.log("Form submit event triggered");
+        form.handleSubmit(handleSubmit)(e);
+      }}
+      className="space-y-6"
+    >
       <Tabs defaultValue="basic" className="w-full">
         <TabsList className="grid w-full grid-cols-4">
           <TabsTrigger value="basic">Basic Info</TabsTrigger>
