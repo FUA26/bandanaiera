@@ -55,10 +55,15 @@ model User {
   role                 Role             @relation(fields: [roleId], references: [id])
 
   // Avatar: Denormalized approach
-  avatarId             String?          @unique
-  avatar               File?            @relation("UserAvatar", fields: [avatarId], references: [id], onDelete: SetNull)
-  avatarUrl            String?          // Cache URL from File.cdnUrl
-  uploadedFiles        File[]
+  avatarId      String? @unique
+  avatar        File?   @relation("UserAvatar", fields: [avatarId], references: [id], onDelete: SetNull)
+  avatarUrl     String? // Cache URL from File.cdnUrl
+  uploadedFiles File[]
+
+  // Service Management Relations
+  createdServices Service[]            @relation("ServiceCreator")
+  updatedServices Service[]            @relation("ServiceUpdater")
+  activityLogs    ServiceActivityLog[]
 }
 
 model PermissionCache {
@@ -127,30 +132,32 @@ model File {
   category         FileCategory @default(OTHER)
 
   // Storage
-  bucketName       String       @default("naiera-uploads")
-  storagePath      String       // e.g., "users/123/avatar/abc123.jpg"
-  cdnUrl           String?
+  bucketName  String  @default("naiera-uploads")
+  storagePath String // e.g., "users/123/avatar/abc123.jpg"
+  cdnUrl      String?
 
   // Ownership
-  uploadedById     String
-  uploadedBy       User         @relation(fields: [uploadedById], references: [id], onDelete: Cascade)
+  uploadedById String
+  uploadedBy   User   @relation(fields: [uploadedById], references: [id], onDelete: Cascade)
 
   // Usage & Lifecycle
-  isPublic         Boolean      @default(false)
-  referenceCount   Int          @default(0)
-  lastAccessedAt   DateTime     @default(now())
-  expiresAt        DateTime?    // Auto-delete untuk temporary files
-  deletedAt        DateTime?    // Soft delete
+  isPublic       Boolean   @default(false)
+  referenceCount Int       @default(0)
+  lastAccessedAt DateTime  @default(now())
+  expiresAt      DateTime? // Auto-delete untuk temporary files
+  deletedAt      DateTime? // Soft delete
 
   // Metadata
-  width            Int?         // Untuk images
-  height           Int?
+  width  Int? // Untuk images
+  height Int?
 
-  createdAt        DateTime     @default(now())
-  updatedAt        DateTime     @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   // Relations
-  avatars          User[]       @relation("UserAvatar")
+  avatars            User[]    @relation("UserAvatar")
+  featuredInServices Service?  @relation("ServiceFeaturedImage")
+  attachedToServices Service[] @relation("ServiceAttachments")
 
   @@index([uploadedById])
   @@index([category])
@@ -166,4 +173,101 @@ enum FileCategory {
   AUDIO
   ARCHIVE
   OTHER
+}
+
+enum ServiceStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+model ServiceCategory {
+  id           String   @id @default(cuid())
+  name         String   @unique
+  slug         String   @unique
+  description  String?
+  icon         String? // Icon name or emoji
+  displayOrder Int      @default(0)
+  isActive     Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  // Relations
+  services Service[]
+
+  @@index([isActive])
+  @@index([displayOrder])
+}
+
+model Service {
+  id          String        @id @default(cuid())
+  title       String
+  slug        String        @unique
+  description String?
+  content     String?       @db.Text
+  status      ServiceStatus @default(DRAFT)
+
+  // Categorization
+  categoryId String
+  category   ServiceCategory @relation(fields: [categoryId], references: [id], onDelete: Restrict)
+
+  // Metadata
+  featuredImageId  String? @unique
+  featuredImage    File?   @relation("ServiceFeaturedImage", fields: [featuredImageId], references: [id], onDelete: SetNull)
+  featuredImageUrl String? // Cache URL from File.cdnUrl
+  attachments      File[]  @relation("ServiceAttachments")
+
+  // SEO
+  metaTitle       String?
+  metaDescription String?
+  metaKeywords    String?
+
+  // Display settings
+  isFeatured     Boolean @default(false)
+  displayOrder   Int     @default(0)
+  showOnHomepage Boolean @default(false)
+
+  // Audit
+  createdById String
+  createdBy   User      @relation("ServiceCreator", fields: [createdById], references: [id], onDelete: Restrict)
+  updatedById String
+  updatedBy   User      @relation("ServiceUpdater", fields: [updatedById], references: [id], onDelete: Restrict)
+  publishedAt DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  // Relations
+  activityLogs ServiceActivityLog[]
+
+  @@index([categoryId])
+  @@index([status])
+  @@index([slug])
+  @@index([isFeatured])
+  @@index([displayOrder])
+  @@index([createdById])
+  @@index([updatedById])
+}
+
+model ServiceActivityLog {
+  id        String  @id @default(cuid())
+  serviceId String
+  service   Service @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+
+  // Change details
+  action  String // CREATED, UPDATED, DELETED, PUBLISHED, ARCHIVED, etc.
+  changes Json? // Store the changes made (for UPDATE actions)
+  reason  String? // Optional reason for the change
+
+  // Audit
+  userId    String
+  user      User    @relation(fields: [userId], references: [id], onDelete: Restrict)
+  ipAddress String?
+  userAgent String?
+
+  createdAt DateTime @default(now())
+
+  @@index([serviceId])
+  @@index([userId])
+  @@index([action])
+  @@index([createdAt])
 }
