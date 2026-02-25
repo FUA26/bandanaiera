@@ -62,7 +62,8 @@ export function ServiceForm({
   const schema = mode === "create" ? serviceCreateSchema : serviceUpdateSchema;
 
   const form = useForm<ServiceInput | ServiceUpdateInput>({
-    resolver: zodResolver(schema) as any,
+    resolver: zodResolver(schema, { mode: "sync" }) as any,
+    mode: "onSubmit", // Only validate on submit, not on blur/change
     defaultValues: initialData || {
       slug: "",
       icon: "",
