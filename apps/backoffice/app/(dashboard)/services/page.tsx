@@ -7,6 +7,11 @@
 
 import { ServicesTableSkeleton } from "@/components/admin/services-table-skeleton";
 import { ProtectedRoute } from "@/components/rbac/ProtectedRoute";
+import { Can } from "@/components/rbac/Can";
+import { Button } from "@/components/ui/button";
+import { PlusIcon } from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react";
+import Link from "next/link";
 import { Suspense } from "react";
 import { ServicesTableWithActions } from "./services-table-actions";
 
@@ -18,7 +23,14 @@ function ServicesContent() {
           <h1 className="text-3xl font-bold">Services Management</h1>
           <p className="text-muted-foreground">Manage public services, categories, and content</p>
         </div>
-        {/* Add New Service Button will be added in Phase 9 */}
+        <Can permissions={["CONTENT_CREATE"]}>
+          <Link href="/services/new">
+            <Button>
+              <HugeiconsIcon icon={PlusIcon} className="h-4 w-4 mr-2" />
+              New Service
+            </Button>
+          </Link>
+        </Can>
       </div>
 
       <Suspense fallback={<ServicesTableSkeleton />}>
