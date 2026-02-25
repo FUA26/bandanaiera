@@ -110,7 +110,13 @@ export function ServiceForm({
   }, [initialData, form]);
 
   const handleSubmit = async (data: any) => {
-    await onSubmit(data);
+    console.log("Form submit clicked, data:", data);
+    try {
+      await onSubmit(data);
+    } catch (error) {
+      console.error("Submit error:", error);
+      throw error;
+    }
   };
 
   return (
