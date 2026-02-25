@@ -61,9 +61,9 @@ model User {
   uploadedFiles File[]
 
   // Service Management Relations
-  createdServices Service[]            @relation("ServiceCreator")
-  updatedServices Service[]            @relation("ServiceUpdater")
-  activityLogs    ServiceActivityLog[]
+  createdServices     Service[]            @relation("ServiceCreator")
+  updatedServices     Service[]            @relation("ServiceUpdater")
+  serviceActivityLogs ServiceActivityLog[] @relation("ServiceActivityLogs")
 }
 
 model PermissionCache {
@@ -155,9 +155,7 @@ model File {
   updatedAt DateTime @updatedAt
 
   // Relations
-  avatars            User[]    @relation("UserAvatar")
-  featuredInServices Service?  @relation("ServiceFeaturedImage")
-  attachedToServices Service[] @relation("ServiceAttachments")
+  avatars User[] @relation("UserAvatar")
 
   @@index([uploadedById])
   @@index([category])
@@ -182,92 +180,70 @@ enum ServiceStatus {
 }
 
 model ServiceCategory {
-  id           String   @id @default(cuid())
-  name         String   @unique
-  slug         String   @unique
-  description  String?
-  icon         String? // Icon name or emoji
-  displayOrder Int      @default(0)
-  isActive     Boolean  @default(true)
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  id         String    @id @default(cuid())
+  name       String
+  slug       String    @unique
+  icon       String
+  color      String
+  bgColor    String
+  showInMenu Boolean   @default(true)
+  order      Int
+  services   Service[]
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
 
-  // Relations
-  services Service[]
-
-  @@index([isActive])
-  @@index([displayOrder])
+  @@index([showInMenu])
+  @@index([order])
 }
 
 model Service {
-  id          String        @id @default(cuid())
-  title       String
-  slug        String        @unique
-  description String?
-  content     String?       @db.Text
-  status      ServiceStatus @default(DRAFT)
-
-  // Categorization
-  categoryId String
-  category   ServiceCategory @relation(fields: [categoryId], references: [id], onDelete: Restrict)
-
-  // Metadata
-  featuredImageId  String? @unique
-  featuredImage    File?   @relation("ServiceFeaturedImage", fields: [featuredImageId], references: [id], onDelete: SetNull)
-  featuredImageUrl String? // Cache URL from File.cdnUrl
-  attachments      File[]  @relation("ServiceAttachments")
-
-  // SEO
-  metaTitle       String?
-  metaDescription String?
-  metaKeywords    String?
-
-  // Display settings
-  isFeatured     Boolean @default(false)
-  displayOrder   Int     @default(0)
-  showOnHomepage Boolean @default(false)
-
-  // Audit
-  createdById String
-  createdBy   User      @relation("ServiceCreator", fields: [createdById], references: [id], onDelete: Restrict)
-  updatedById String
-  updatedBy   User      @relation("ServiceUpdater", fields: [updatedById], references: [id], onDelete: Restrict)
-  publishedAt DateTime?
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-
-  // Relations
-  activityLogs ServiceActivityLog[]
+  id                  String               @id @default(cuid())
+  slug                String               @unique
+  icon                String
+  name                String
+  description         String
+  categoryId          String
+  category            ServiceCategory      @relation(fields: [categoryId], references: [id])
+  badge               String?
+  stats               String?
+  showInMenu          Boolean              @default(true)
+  order               Int                  @default(0)
+  isIntegrated        Boolean              @default(false)
+  detailedDescription String?
+  requirements        Json?
+  process             Json?
+  duration            String?
+  cost                String?
+  contactInfo         Json?
+  faqs                Json?
+  downloadForms       Json?
+  relatedServices     Json?
+  status              ServiceStatus        @default(DRAFT)
+  createdById         String
+  createdBy           User                 @relation("ServiceCreator", fields: [createdById], references: [id])
+  updatedById         String?
+  updatedBy           User?                @relation("ServiceUpdater", fields: [updatedById], references: [id])
+  createdAt           DateTime             @default(now())
+  updatedAt           DateTime             @updatedAt
+  activityLogs        ServiceActivityLog[]
 
   @@index([categoryId])
   @@index([status])
+  @@index([order])
   @@index([slug])
-  @@index([isFeatured])
-  @@index([displayOrder])
-  @@index([createdById])
-  @@index([updatedById])
 }
 
 model ServiceActivityLog {
-  id        String  @id @default(cuid())
+  id        String   @id @default(cuid())
   serviceId String
-  service   Service @relation(fields: [serviceId], references: [id], onDelete: Cascade)
-
-  // Change details
-  action  String // CREATED, UPDATED, DELETED, PUBLISHED, ARCHIVED, etc.
-  changes Json? // Store the changes made (for UPDATE actions)
-  reason  String? // Optional reason for the change
-
-  // Audit
+  service   Service  @relation(fields: [serviceId], references: [id], onDelete: Cascade)
   userId    String
-  user      User    @relation(fields: [userId], references: [id], onDelete: Restrict)
-  ipAddress String?
-  userAgent String?
-
+  action    String
+  changes   Json?
   createdAt DateTime @default(now())
+  user      User     @relation("ServiceActivityLogs", fields: [userId], references: [id])
 
   @@index([serviceId])
   @@index([userId])
-  @@index([action])
   @@index([createdAt])
 }
