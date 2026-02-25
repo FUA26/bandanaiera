@@ -104,15 +104,18 @@ export function ServiceForm({
 
   // Reset form when initialData changes
   useEffect(() => {
+    console.log("initialData changed:", initialData);
     if (initialData) {
+      console.log("Resetting form with initialData");
       form.reset(initialData);
     }
   }, [initialData, form]);
 
   const handleSubmit = async (data: any) => {
-    console.log("Form submit clicked, data:", data);
+    console.log("handleSubmit called with data:", data);
     try {
       await onSubmit(data);
+      console.log("onSubmit completed successfully");
     } catch (error) {
       console.error("Submit error:", error);
       throw error;
@@ -125,7 +128,12 @@ export function ServiceForm({
         e.preventDefault();
         e.stopPropagation();
         console.log("Form submit event triggered");
-        form.handleSubmit(handleSubmit)(e);
+        console.log("Form errors:", form.formState.errors);
+        console.log("Form is valid:", form.formState.isValid);
+
+        form.handleSubmit(handleSubmit)(e).catch((err) => {
+          console.error("handleSubmit error:", err);
+        });
       }}
       className="space-y-6"
     >

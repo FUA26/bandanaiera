@@ -121,9 +121,42 @@ export const serviceCreateSchema = serviceSchema;
 
 /**
  * Schema for updating an existing service (all fields optional except id)
+ * Uses lax validation for nested objects to allow partial updates
  */
-export const serviceUpdateSchema = serviceCreateSchema.partial().extend({
+export const serviceUpdateSchema = z.object({
   id: z.string().cuid("Invalid service ID format"),
+  slug: z.string().optional(),
+  icon: z.string().optional(),
+  name: z.string().optional(),
+  description: z.string().optional(),
+  categoryId: z.string().cuid().optional(),
+  badge: z.string().optional(),
+  stats: z.string().optional(),
+  showInMenu: z.boolean().optional(),
+  order: z.number().int().min(0).optional(),
+  isIntegrated: z.boolean().optional(),
+  detailedDescription: z.string().optional(),
+  requirements: z.array(z.string()).optional(),
+  process: z.array(z.string()).optional(),
+  duration: z.string().optional(),
+  cost: z.string().optional(),
+  contactInfo: z.object({
+    office: z.string().optional(),
+    phone: z.string().optional(),
+    email: z.string().email().optional(),
+  }).optional(),
+  faqs: z.array(z.object({
+    question: z.string().optional(),
+    answer: z.string().optional(),
+  })).optional(),
+  downloadForms: z.array(z.object({
+    type: z.enum(["file", "url"]).optional(),
+    name: z.string().optional(),
+    value: z.string().optional(),
+    fileId: z.string().cuid().optional(),
+  })).optional(),
+  relatedServices: z.array(z.string()).optional(),
+  status: z.enum(["DRAFT", "PUBLISHED", "ARCHIVED"]).optional(),
 });
 
 /**
