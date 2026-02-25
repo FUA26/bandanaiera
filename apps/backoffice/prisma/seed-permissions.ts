@@ -13,7 +13,11 @@
  *   }
  */
 
+import { config } from "dotenv";
 import { PrismaClient } from "@prisma/client";
+
+// Load environment variables
+config({ path: ".env.local" });
 
 const prisma = new PrismaClient();
 
@@ -55,6 +59,19 @@ const permissions = [
   // Analytics
   { name: "ANALYTICS_VIEW", category: "ANALYTICS", description: "View analytics" },
   { name: "ANALYTICS_EXPORT", category: "ANALYTICS", description: "Export analytics data" },
+
+  // Services Management
+  { name: "SERVICES_VIEW", category: "SERVICES", description: "View services" },
+  { name: "SERVICES_CREATE", category: "SERVICES", description: "Create new services" },
+  { name: "SERVICES_EDIT", category: "SERVICES", description: "Edit services" },
+  { name: "SERVICES_PUBLISH", category: "SERVICES", description: "Publish/unpublish services" },
+  { name: "SERVICES_DELETE", category: "SERVICES", description: "Delete services" },
+  { name: "SERVICES_REORDER", category: "SERVICES", description: "Reorder services" },
+  {
+    name: "CATEGORIES_MANAGE",
+    category: "SERVICES",
+    description: "Manage service categories",
+  },
 
   // Admin
   { name: "ADMIN_PANEL_ACCESS", category: "ADMIN", description: "Access admin panel" },

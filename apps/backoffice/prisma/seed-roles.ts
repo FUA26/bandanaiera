@@ -13,7 +13,11 @@
  *   }
  */
 
+import { config } from "dotenv";
 import { PrismaClient } from "@prisma/client";
+
+// Load environment variables
+config({ path: ".env.local" });
 
 const prisma = new PrismaClient();
 
@@ -110,6 +114,14 @@ const roles = [
       "ADMIN_ROLES_MANAGE",
       "ADMIN_PERMISSIONS_MANAGE",
       "ADMIN_SYSTEM_SETTINGS_MANAGE",
+      // All services permissions
+      "SERVICES_VIEW",
+      "SERVICES_CREATE",
+      "SERVICES_EDIT",
+      "SERVICES_PUBLISH",
+      "SERVICES_DELETE",
+      "SERVICES_REORDER",
+      "CATEGORIES_MANAGE",
     ],
   },
 ];
