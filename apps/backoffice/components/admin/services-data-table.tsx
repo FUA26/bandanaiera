@@ -26,7 +26,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { SyncButton } from "@/components/admin/sync-button";
 import { useCan } from "@/lib/rbac-client/hooks";
-import { Delete01Icon, Edit01Icon, MoreVerticalIcon, EyeIcon } from "@hugeicons/core-free-icons";
+import { Add01Icon, Delete01Icon, Edit01Icon, MoreVerticalIcon, EyeIcon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { type ColumnDef } from "@tanstack/react-table";
 import { useState } from "react";
