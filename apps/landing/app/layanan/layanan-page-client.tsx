@@ -200,7 +200,26 @@ export function LayananPageClient({
                 Beranda
               </Link>
               <span>/</span>
-              <span className="text-white">Layanan</span>
+              <Link
+                href="/layanan"
+                className={selectedCategory ? "hover:text-white" : "text-white"}
+                onClick={(e) => {
+                  if (selectedCategory) {
+                    e.preventDefault();
+                    updateCategory(null);
+                  }
+                }}
+              >
+                Layanan
+              </Link>
+              {selectedCategory && (
+                <>
+                  <span>/</span>
+                  <span className="text-white">
+                    {categories.find((c) => c.slug === selectedCategory)?.name || selectedCategory}
+                  </span>
+                </>
+              )}
             </nav>
 
             <h1 className="mb-4 text-3xl font-bold md:text-4xl">
@@ -311,8 +330,9 @@ export function LayananPageClient({
               Menampilkan {filteredServices.length} layanan
               {selectedCategory &&
                 ` dalam kategori "${
-                  categories.find((c) => c.slug === selectedCategory)?.name
-                }"`}
+                  categories.find((c) => c.slug === selectedCategory)?.name || selectedCategory
+                }"`
+              }
               {searchQuery && ` untuk "${searchQuery}"`}
             </p>
 
