@@ -138,17 +138,19 @@ export function ServiceForm({
       }}
       className="space-y-6"
     >
-      <Tabs defaultValue="basic" className="w-full" orientation="horizontal">
-        <TabsList className="w-full h-auto flex-wrap justify-start bg-muted/50 p-1 rounded-lg">
-          <TabsTrigger value="basic" className="flex-1 min-w-max">Basic Info</TabsTrigger>
-          <TabsTrigger value="details" className="flex-1 min-w-max">Details</TabsTrigger>
-          <TabsTrigger value="contact" className="flex-1 min-w-max">Contact</TabsTrigger>
-          <TabsTrigger value="advanced" className="flex-1 min-w-max">Advanced</TabsTrigger>
-        </TabsList>
+      <Tabs defaultValue="basic" className="w-full">
+        <div className="flex flex-col md:flex-row gap-6">
+          <TabsList className="w-full md:w-48 bg-muted/50 p-2 rounded-lg flex flex-col gap-2">
+            <TabsTrigger value="basic">Basic Info</TabsTrigger>
+            <TabsTrigger value="details">Details</TabsTrigger>
+            <TabsTrigger value="contact">Contact</TabsTrigger>
+            <TabsTrigger value="advanced">Advanced</TabsTrigger>
+          </TabsList>
 
-        {/* Basic Info Tab */}
-        <TabsContent value="basic" className="space-y-4 mt-6">
-          <div className="grid grid-cols-2 gap-4">
+          <div className="flex-1 space-y-4">
+            {/* Basic Info Tab */}
+            <TabsContent value="basic">
+              <div className="grid grid-cols-2 gap-4">
             <Field>
               <FieldLabel htmlFor="name">Service Name *</FieldLabel>
               <FieldContent>
@@ -310,10 +312,10 @@ export function ServiceForm({
               </label>
             </div>
           </div>
-        </TabsContent>
+            </TabsContent>
 
-        {/* Details Tab */}
-        <TabsContent value="details" className="space-y-4 mt-4">
+            {/* Details Tab */}
+            <TabsContent value="details">
           <Field>
             <FieldLabel htmlFor="detailedDescription">Detailed Description</FieldLabel>
             <FieldContent>
@@ -437,8 +439,8 @@ export function ServiceForm({
           </div>
         </TabsContent>
 
-        {/* Contact Tab */}
-        <TabsContent value="contact" className="space-y-4 mt-4">
+            {/* Contact Tab */}
+            <TabsContent value="contact">
           <Field>
             <FieldLabel htmlFor="contactOffice">Office Name</FieldLabel>
             <FieldContent>
@@ -522,8 +524,8 @@ export function ServiceForm({
           </div>
         </TabsContent>
 
-        {/* Advanced Tab */}
-        <TabsContent value="advanced" className="space-y-4 mt-4">
+            {/* Advanced Tab */}
+            <TabsContent value="advanced">
           {/* Download Forms */}
           <div className="space-y-2">
             <div className="flex items-center justify-between">
@@ -595,7 +597,9 @@ export function ServiceForm({
               </p>
             </FieldContent>
           </Field>
-        </TabsContent>
+            </TabsContent>
+          </div>
+        </div>
       </Tabs>
 
       {/* Form Actions */}
