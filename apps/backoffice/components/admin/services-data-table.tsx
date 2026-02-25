@@ -88,6 +88,7 @@ interface ServicesDataTableProps {
 
 export function ServicesDataTable({ services, categories, onRefresh }: ServicesDataTableProps) {
   const router = useRouter();
+  const [createDialog, setCreateDialog] = useState(false);
   const [editDialog, setEditDialog] = useState<{ open: boolean; serviceId: string; service: Service }>({
     open: false,
     serviceId: "",
@@ -350,6 +351,12 @@ export function ServicesDataTable({ services, categories, onRefresh }: ServicesD
               />
             </div>
             <div className="flex items-center gap-2">
+              {canUpdateAny && (
+                <Button onClick={() => setCreateDialog(true)} size="sm">
+                  <HugeiconsIcon icon={Add01Icon} className="h-4 w-4 mr-2" />
+                  New Service
+                </Button>
+              )}
               {canUpdateAny && <SyncButton onSyncComplete={onRefresh} />}
               <DataTableViewOptions table={table} />
             </div>
@@ -376,6 +383,18 @@ export function ServicesDataTable({ services, categories, onRefresh }: ServicesD
             )}
           </DataTableActionBar>
         )}
+      />
+
+      {/* Create Service Dialog */}
+      <ServiceDialog
+        open={createDialog}
+        onOpenChange={setCreateDialog}
+        mode="create"
+        categories={categories}
+        onSuccess={() => {
+          setCreateDialog(false);
+          onRefresh?.();
+        }}
       />
 
       {/* Edit Service Dialog */}
