@@ -138,16 +138,16 @@ export function ServiceForm({
       }}
       className="space-y-6"
     >
-      <Tabs defaultValue="basic" className="w-full">
-        <TabsList className="grid w-full grid-cols-4">
-          <TabsTrigger value="basic">Basic Info</TabsTrigger>
-          <TabsTrigger value="details">Details</TabsTrigger>
-          <TabsTrigger value="contact">Contact</TabsTrigger>
-          <TabsTrigger value="advanced">Advanced</TabsTrigger>
+      <Tabs defaultValue="basic" className="w-full" orientation="horizontal">
+        <TabsList className="w-full h-auto flex-wrap justify-start bg-muted/50 p-1 rounded-lg">
+          <TabsTrigger value="basic" className="flex-1 min-w-max">Basic Info</TabsTrigger>
+          <TabsTrigger value="details" className="flex-1 min-w-max">Details</TabsTrigger>
+          <TabsTrigger value="contact" className="flex-1 min-w-max">Contact</TabsTrigger>
+          <TabsTrigger value="advanced" className="flex-1 min-w-max">Advanced</TabsTrigger>
         </TabsList>
 
         {/* Basic Info Tab */}
-        <TabsContent value="basic" className="space-y-4 mt-4">
+        <TabsContent value="basic" className="space-y-4 mt-6">
           <div className="grid grid-cols-2 gap-4">
             <Field>
               <FieldLabel htmlFor="name">Service Name *</FieldLabel>

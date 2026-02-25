@@ -52,12 +52,12 @@ export function ProfileClient({ user }: ProfileClientProps) {
       {/* suppressHydrationWarning: Radix UI generates random IDs for accessibility, causing hydration mismatch */}
       <div suppressHydrationWarning>
         <Tabs defaultValue="profile" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-2 lg:w-[400px]">
-            <TabsTrigger value="profile" className="gap-2">
+          <TabsList className="w-full h-auto flex-wrap justify-start bg-muted/50 p-1 rounded-lg lg:w-[400px]">
+            <TabsTrigger value="profile" className="flex-1 min-w-max gap-2">
               <HugeiconsIcon icon={UserCircleIcon} className="h-4 w-4" />
               Profile
             </TabsTrigger>
-            <TabsTrigger value="password" className="gap-2">
+            <TabsTrigger value="password" className="flex-1 min-w-max gap-2">
               <HugeiconsIcon icon={LockPasswordIcon} className="h-4 w-4" />
               Password
             </TabsTrigger>
