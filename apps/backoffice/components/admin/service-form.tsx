@@ -139,19 +139,18 @@ export function ServiceForm({
       className="space-y-6"
     >
       <Tabs defaultValue="basic" className="w-full">
-        <div className="flex flex-col md:flex-row gap-4">
-          {/* Tabs List - Vertikal di samping */}
-          <TabsList className="w-full md:w-48 bg-muted/50 p-2 rounded-lg flex flex-row md:flex-col gap-2">
-            <TabsTrigger value="basic">Basic Info</TabsTrigger>
-            <TabsTrigger value="details">Details</TabsTrigger>
-            <TabsTrigger value="contact">Contact</TabsTrigger>
-            <TabsTrigger value="advanced">Advanced</TabsTrigger>
-          </TabsList>
+        {/* Tabs List - Horizontal di atas */}
+        <TabsList className="w-full bg-muted/50 p-1 rounded-lg flex flex-row gap-2">
+          <TabsTrigger value="basic">Basic Info</TabsTrigger>
+          <TabsTrigger value="details">Details</TabsTrigger>
+          <TabsTrigger value="contact">Contact</TabsTrigger>
+          <TabsTrigger value="advanced">Advanced</TabsTrigger>
+        </TabsList>
 
-          {/* Tab Content - Di sebelah kanan */}
-          <div className="flex-1">
-            {/* Basic Info Tab */}
-            <TabsContent value="basic">
+        {/* Tab Content - Di bawah tabs */}
+        <div className="mt-6">
+          {/* Basic Info Tab */}
+          <TabsContent value="basic">
               <div className="grid grid-cols-2 gap-4">
             <Field>
               <FieldLabel htmlFor="name">Service Name *</FieldLabel>
