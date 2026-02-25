@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { useSearchParams, usePathname, useRouter } from "next/navigation";
 import {
   CreditCard,
   FileCheck,
@@ -100,6 +101,10 @@ export function LayananPageClient({
   services: rawServices,
   initialCategory,
 }: LayananPageClientProps) {
+  const searchParams = useSearchParams();
+  const pathname = usePathname();
+  const router = useRouter();
+
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string | null>(initialCategory || null);
   const [integrationFilter, setIntegrationFilter] = useState<'all' | 'integrated' | 'non-integrated'>('all');
@@ -110,6 +115,23 @@ export function LayananPageClient({
       setSelectedCategory(initialCategory);
     }
   }, [initialCategory]);
+
+  // Update category and sync with URL
+  const updateCategory = (slug: string | null) => {
+    setSelectedCategory(slug);
+
+    // Update URL query param
+    const params = new URLSearchParams(searchParams.toString());
+    if (slug) {
+      params.set('kategori', slug);
+    } else {
+      params.delete('kategori');
+    }
+
+    // Build new URL, preserve search param if exists
+    const newUrl = params.toString() ? `${pathname}?${params.toString()}` : pathname;
+    router.replace(newUrl, { scroll: false });
+  };
 
   // Transform categories with icon components
   const categories = rawCategories.map((cat) => ({
@@ -183,7 +205,7 @@ export function LayananPageClient({
           <div className="container mx-auto max-w-6xl px-4">
             <div className="flex flex-wrap items-center gap-3">
               <button
-                onClick={() => setSelectedCategory(null)}
+                onClick={() => updateCategory(null)}
                 className={`rounded-full px-4 py-2 text-sm font-medium transition-all ${
                   selectedCategory === null
                     ? "bg-primary text-white shadow-md"
@@ -197,7 +219,7 @@ export function LayananPageClient({
                 return (
                   <button
                     key={cat.slug}
-                    onClick={() => setSelectedCategory(cat.slug)}
+                    onClick={() => updateCategory(cat.slug)}
                     className={`inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium transition-all ${
                       selectedCategory === cat.slug
                         ? "bg-primary text-white shadow-md"
