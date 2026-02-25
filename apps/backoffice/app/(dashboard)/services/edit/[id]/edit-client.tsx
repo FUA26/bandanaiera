@@ -7,7 +7,7 @@
 "use client";
 
 import { ServiceDialog } from "@/components/admin/service-dialog";
-import { prisma } from "@/lib/db/prisma";
+import { ServiceStatus } from "@/lib/services/types";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -144,7 +144,7 @@ export function EditServiceContent({ serviceId }: EditServiceContentProps) {
             showInMenu: service.showInMenu,
             order: service.order,
             isIntegrated: service.isIntegrated,
-            status: service.status as "DRAFT" | "PUBLISHED" | "ARCHIVED",
+            status: service.status as ServiceStatus,
             detailedDescription: service.detailedDescription ?? undefined,
             requirements: service.requirements ?? undefined,
             process: service.process ?? undefined,
