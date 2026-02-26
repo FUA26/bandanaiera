@@ -8,6 +8,7 @@ import { useTranslations } from "next-intl";
 import { LanguageSwitcher } from "@/components/shared/language-switcher";
 import { MegaMenuClient } from "@/components/landing/layout/mega-menu-client";
 import type { ServiceCategory } from "@/lib/services-data";
+import { useSettings } from "@/components/providers";
 
 interface HeaderProps {
   servicesByCategory?: Array<ServiceCategory & { services: any[] }>;
@@ -15,6 +16,7 @@ interface HeaderProps {
 
 export function Header({ servicesByCategory = [] }: HeaderProps) {
   const t = useTranslations("Navigation");
+  const { settings } = useSettings();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   // Mobile menu items (simplified version of mega menu)
@@ -37,18 +39,18 @@ export function Header({ servicesByCategory = [] }: HeaderProps) {
           <Link href="/" className="flex items-center gap-3">
             <div className="bg-card ring-border relative flex h-10 w-10 items-center justify-center rounded-lg shadow-sm ring-1">
               <Image
-                src="/naiera.png"
-                alt="Naiera Logo"
+                src={settings?.siteLogoUrl || "/naiera.png"}
+                alt={settings?.siteName || "Naiera"}
                 fill
                 className="object-contain p-1.5"
               />
             </div>
             <div className="flex flex-col">
               <span className="text-foreground text-xl font-bold">
-                {t("brandName")}
+                {settings?.siteName || t("brandName")}
               </span>
               <span className="text-muted-foreground hidden text-xs sm:block">
-                {t("brandSubtitle")}
+                {settings?.siteSubtitle || t("brandSubtitle")}
               </span>
             </div>
           </Link>
