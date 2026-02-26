@@ -23,28 +23,21 @@ export interface PublicSettings {
 
 const BACKOFFICE_API_URL = process.env.BACKOFFICE_API_URL || 'http://localhost:3001';
 
-const cache = new Map<string, { data: PublicSettings; expires: number }>();
-const CACHE_DURATION = 300; // 5 minutes
-
 export async function getPublicSettings(): Promise<PublicSettings> {
-  // Return defaults immediately if BACKOFFICE_API_URL is not set (during build)
-  if (typeof window !== 'undefined' || !process.env.BACKOFFICE_API_URL) {
+  // Return defaults immediately if BACKOFFICE_API_URL is not set (during build or if env missing)
+  if (!BACKOFFICE_API_URL || BACKOFFICE_API_URL === 'http://localhost:3001' && process.env.NODE_ENV === 'production') {
     return getDefaultSettings();
-  }
-
-  const cached = cache.get('settings');
-  if (cached && cached.expires > Date.now()) {
-    return cached.data;
   }
 
   try {
     // Add timeout to prevent hanging
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 5000); // 5 second timeout
+    const timeoutId = setTimeout(() => controller.abort(), 3000); // 3 second timeout
 
     const response = await fetch(`${BACKOFFICE_API_URL}/api/public/settings`, {
       cache: 'no-store',
       signal: controller.signal,
+      next: { revalidate: 60 } // Revalidate every minute
     });
 
     clearTimeout(timeoutId);
@@ -59,11 +52,6 @@ export async function getPublicSettings(): Promise<PublicSettings> {
     if (!data || typeof data !== 'object') {
       throw new Error('Invalid response');
     }
-
-    cache.set('settings', {
-      data,
-      expires: Date.now() + CACHE_DURATION * 1000,
-    });
 
     return data;
   } catch (error) {
