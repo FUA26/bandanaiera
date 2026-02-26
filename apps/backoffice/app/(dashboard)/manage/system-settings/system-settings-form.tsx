@@ -25,8 +25,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState } from "react";
 import { useForm, useFieldArray } from "react-hook-form";
 import { toast } from "sonner";
-import { PlusIcon, TrashIcon } from "@hugeicons/core-free-icons";
-import { HugeiconsIcon } from "@hugeicons/react";
+import { Plus, Trash2 } from "lucide-react";
+import { Plus, Trash2 } from "lucide-react";
 
 interface Role {
   id: string;
@@ -413,7 +413,7 @@ export function SystemSettingsForm() {
                     size="sm"
                     onClick={() => phonesArray.append("")}
                   >
-                    <HugeiconsIcon icon={PlusIcon} className="h-4 w-4 mr-1" />
+                    <Plus className="h-4 w-4 mr-1" />
                     Add Phone
                   </Button>
                 </div>
@@ -430,7 +430,7 @@ export function SystemSettingsForm() {
                         size="icon"
                         onClick={() => phonesArray.remove(index)}
                       >
-                        <HugeiconsIcon icon={TrashIcon} className="h-4 w-4 text-destructive" />
+                        <Trash2 className="h-4 w-4 text-destructive" />
                       </Button>
                     </div>
                   ))}
@@ -446,7 +446,7 @@ export function SystemSettingsForm() {
                     size="sm"
                     onClick={() => emailsArray.append("")}
                   >
-                    <HugeiconsIcon icon={PlusIcon} className="h-4 w-4 mr-1" />
+                    <Plus className="h-4 w-4 mr-1" />
                     Add Email
                   </Button>
                 </div>
@@ -464,7 +464,7 @@ export function SystemSettingsForm() {
                         size="icon"
                         onClick={() => emailsArray.remove(index)}
                       >
-                        <HugeiconsIcon icon={TrashIcon} className="h-4 w-4 text-destructive" />
+                        <Trash2 className="h-4 w-4 text-destructive" />
                       </Button>
                     </div>
                   ))}
