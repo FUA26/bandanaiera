@@ -14,9 +14,11 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
+import { useSettings } from "@/components/providers";
 
 export function Footer() {
   const t = useTranslations("Footer");
+  const { settings } = useSettings();
   const currentYear = new Date().getFullYear();
 
   return (
@@ -29,23 +31,23 @@ export function Footer() {
             <div className="mb-6 flex items-center gap-3">
               <div className="relative flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-white/10 shadow-sm ring-1 ring-white/20">
                 <Image
-                  src="/naiera.png"
-                  alt="Naiera Logo"
+                  src={settings?.siteLogoUrl || "/naiera.png"}
+                  alt={settings?.siteName || "Naiera Logo"}
                   fill
                   className="object-contain p-2"
                 />
               </div>
               <div>
                 <h3 className="text-xl font-bold text-white">
-                  {t("brandName")}
+                  {settings?.siteName || t("brandName")}
                 </h3>
                 <p className="text-primary-foreground/70 text-sm">
-                  {t("brandSubtitle")}
+                  {settings?.siteSubtitle || t("brandSubtitle")}
                 </p>
               </div>
             </div>
             <p className="text-primary-foreground/80 mb-6 leading-relaxed">
-              {t("brandDescription")}
+              {settings?.siteDescription || t("brandDescription")}
             </p>
 
             {/* Social Media */}
@@ -54,46 +56,62 @@ export function Footer() {
                 {t("followUs")}
               </p>
               <div className="flex items-center gap-3">
-                <a
-                  href="#facebook"
-                  className="group hover:bg-primary flex h-10 w-10 items-center justify-center rounded-lg bg-white/10 transition-all duration-300"
-                  aria-label="Facebook"
-                >
-                  <Facebook
-                    size={18}
-                    className="transition-transform group-hover:scale-110"
-                  />
-                </a>
-                <a
-                  href="#twitter"
-                  className="group hover:bg-primary flex h-10 w-10 items-center justify-center rounded-lg bg-white/10 transition-all duration-300"
-                  aria-label="Twitter"
-                >
-                  <Twitter
-                    size={18}
-                    className="transition-transform group-hover:scale-110"
-                  />
-                </a>
-                <a
-                  href="#instagram"
-                  className="group hover:bg-primary flex h-10 w-10 items-center justify-center rounded-lg bg-white/10 transition-all duration-300"
-                  aria-label="Instagram"
-                >
-                  <Instagram
-                    size={18}
-                    className="transition-transform group-hover:scale-110"
-                  />
-                </a>
-                <a
-                  href="#youtube"
-                  className="group hover:bg-primary flex h-10 w-10 items-center justify-center rounded-lg bg-white/10 transition-all duration-300"
-                  aria-label="Youtube"
-                >
-                  <Youtube
-                    size={18}
-                    className="transition-transform group-hover:scale-110"
-                  />
-                </a>
+                {settings?.socialFacebook && (
+                  <a
+                    href={settings.socialFacebook}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group hover:bg-primary flex h-10 w-10 items-center justify-center rounded-lg bg-white/10 transition-all duration-300"
+                    aria-label="Facebook"
+                  >
+                    <Facebook
+                      size={18}
+                      className="transition-transform group-hover:scale-110"
+                    />
+                  </a>
+                )}
+                {settings?.socialTwitter && (
+                  <a
+                    href={settings.socialTwitter}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group hover:bg-primary flex h-10 w-10 items-center justify-center rounded-lg bg-white/10 transition-all duration-300"
+                    aria-label="Twitter"
+                  >
+                    <Twitter
+                      size={18}
+                      className="transition-transform group-hover:scale-110"
+                    />
+                  </a>
+                )}
+                {settings?.socialInstagram && (
+                  <a
+                    href={settings.socialInstagram}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group hover:bg-primary flex h-10 w-10 items-center justify-center rounded-lg bg-white/10 transition-all duration-300"
+                    aria-label="Instagram"
+                  >
+                    <Instagram
+                      size={18}
+                      className="transition-transform group-hover:scale-110"
+                    />
+                  </a>
+                )}
+                {settings?.socialYouTube && (
+                  <a
+                    href={settings.socialYouTube}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group hover:bg-primary flex h-10 w-10 items-center justify-center rounded-lg bg-white/10 transition-all duration-300"
+                    aria-label="Youtube"
+                  >
+                    <Youtube
+                      size={18}
+                      className="transition-transform group-hover:scale-110"
+                    />
+                  </a>
+                )}
               </div>
             </div>
           </div>
@@ -254,59 +272,57 @@ export function Footer() {
               {t("contact.title")}
             </h3>
             <ul className="space-y-4">
-              <li className="group flex items-start gap-3">
-                <MapPin size={18} className="mt-1 shrink-0 text-blue-400" />
-                <div>
-                  <p className="mb-1 text-sm font-medium text-white">
-                    {t("contact.address")}
-                  </p>
-                  <div className="text-sm leading-relaxed whitespace-pre-line text-blue-100/80">
-                    {t("contact.addressContent")}
+              {settings?.contactAddress && (
+                <li className="group flex items-start gap-3">
+                  <MapPin size={18} className="mt-1 shrink-0 text-blue-400" />
+                  <div>
+                    <p className="mb-1 text-sm font-medium text-white">
+                      {t("contact.address")}
+                    </p>
+                    <div className="text-sm leading-relaxed whitespace-pre-line text-blue-100/80">
+                      {settings.contactAddress}
+                    </div>
                   </div>
-                </div>
-              </li>
-              <li className="group flex items-start gap-3">
-                <Phone size={18} className="mt-1 shrink-0 text-blue-400" />
-                <div>
-                  <p className="mb-1 text-sm font-medium text-white">
-                    {t("contact.phone")}
-                  </p>
-                  <a
-                    href="tel:+622112345678"
-                    className="text-sm text-blue-100/80 transition-colors hover:text-white"
-                  >
-                    (021) 1234-5678
-                  </a>
-                  <br />
-                  <a
-                    href="tel:+622198765432"
-                    className="text-sm text-blue-100/80 transition-colors hover:text-white"
-                  >
-                    (021) 9876-5432
-                  </a>
-                </div>
-              </li>
-              <li className="group flex items-start gap-3">
-                <Mail size={18} className="mt-1 shrink-0 text-blue-400" />
-                <div>
-                  <p className="mb-1 text-sm font-medium text-white">
-                    {t("contact.email")}
-                  </p>
-                  <a
-                    href="mailto:info@naiera.go.id"
-                    className="text-sm text-blue-100/80 transition-colors hover:text-white"
-                  >
-                    info@naiera.go.id
-                  </a>
-                  <br />
-                  <a
-                    href="mailto:layanan@naiera.go.id"
-                    className="text-sm text-blue-100/80 transition-colors hover:text-white"
-                  >
-                    layanan@naiera.go.id
-                  </a>
-                </div>
-              </li>
+                </li>
+              )}
+              {settings?.contactPhones && settings.contactPhones.length > 0 && (
+                <li className="group flex items-start gap-3">
+                  <Phone size={18} className="mt-1 shrink-0 text-blue-400" />
+                  <div>
+                    <p className="mb-1 text-sm font-medium text-white">
+                      {t("contact.phone")}
+                    </p>
+                    {settings.contactPhones.map((phone, index) => (
+                      <a
+                        key={index}
+                        href={`tel:${phone}`}
+                        className="text-sm text-blue-100/80 transition-colors hover:text-white block"
+                      >
+                        {phone}
+                      </a>
+                    ))}
+                  </div>
+                </li>
+              )}
+              {settings?.contactEmails && settings.contactEmails.length > 0 && (
+                <li className="group flex items-start gap-3">
+                  <Mail size={18} className="mt-1 shrink-0 text-blue-400" />
+                  <div>
+                    <p className="mb-1 text-sm font-medium text-white">
+                      {t("contact.email")}
+                    </p>
+                    {settings.contactEmails.map((email, index) => (
+                      <a
+                        key={index}
+                        href={`mailto:${email}`}
+                        className="text-sm text-blue-100/80 transition-colors hover:text-white block"
+                      >
+                        {email}
+                      </a>
+                    ))}
+                  </div>
+                </li>
+              )}
             </ul>
           </div>
         </div>
@@ -344,7 +360,7 @@ export function Footer() {
           <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
             {/* Copyright */}
             <p className="text-center text-sm text-blue-200/70 md:text-left">
-              {t("copyright", { year: currentYear })}
+              {settings?.copyrightText || t("copyright", { year: currentYear })}
             </p>
 
             {/* Legal Links */}
@@ -382,7 +398,7 @@ export function Footer() {
           {/* Version & Build Info */}
           <div className="mt-4 border-t border-white/10 pt-4 text-center">
             <p className="text-xs text-blue-200/50">
-              {t("brandName")} v1.0.0 | Build: 2026.01.06 | {t("version")}
+              {settings?.siteName || t("brandName")} v{settings?.versionNumber || "1.0.0"} | {t("version")}
             </p>
           </div>
         </div>
