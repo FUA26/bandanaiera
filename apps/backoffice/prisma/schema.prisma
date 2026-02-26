@@ -121,6 +121,27 @@ model SystemSettings {
   createdAt                    DateTime @default(now())
   updatedAt                    DateTime @updatedAt
   defaultUserRole              Role     @relation("DefaultUserRole", fields: [defaultUserRoleId], references: [id])
+
+  // NEW: Site Identity
+  siteLogoId       String?           @unique
+  siteLogo         File?             @relation("SiteLogo", fields: [siteLogoId], references: [id])
+  siteSubtitle     String?
+  citizenName      String?  @default("Warga")
+
+  // NEW: Contact Info
+  contactAddress   String?
+  contactPhones    Json?
+  contactEmails    Json?
+
+  // NEW: Social Media
+  socialFacebook   String?
+  socialTwitter    String?
+  socialInstagram  String?
+  socialYouTube    String?
+
+  // NEW: Footer
+  copyrightText    String?
+  versionNumber    String?  @default("1.0.0")
 }
 
 model File {
@@ -156,6 +177,7 @@ model File {
 
   // Relations
   avatars User[] @relation("UserAvatar")
+  siteLogos SystemSettings[] @relation("SiteLogo")
 
   @@index([uploadedById])
   @@index([category])
