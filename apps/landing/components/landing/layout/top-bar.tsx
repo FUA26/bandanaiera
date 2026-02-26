@@ -2,10 +2,12 @@
 
 import { useEffect, useState } from "react";
 import { useTranslations, useLocale } from "next-intl";
+import { useSettings } from "@/components/providers";
 
 export function TopBar() {
   const t = useTranslations("TopBar");
   const locale = useLocale();
+  const { settings } = useSettings();
   const [currentDate, setCurrentDate] = useState("");
   const [greetingKey, setGreetingKey] = useState<
     "morning" | "afternoon" | "evening" | "night"
@@ -49,7 +51,7 @@ export function TopBar() {
           <span className="text-xs font-medium md:text-sm">{currentDate}</span>
           <span className="border-border hidden h-4 border-l md:block" />
           <span className="hidden text-sm md:block">
-            {t(`greeting.${greetingKey}`)}, {t("citizen")}
+            {t(`greeting.${greetingKey}`)}, {settings?.citizenName || t("citizen")}
           </span>
         </div>
         <div className="flex items-center gap-3 text-xs md:gap-4 md:text-sm">
