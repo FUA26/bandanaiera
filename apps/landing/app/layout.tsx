@@ -6,6 +6,7 @@ import { getLocale, getMessages } from "next-intl/server";
 
 import "./globals.css";
 import { Providers } from "@/components/providers";
+import { getPublicSettings } from "@/lib/settings-data";
 
 const fontSans = Inter({
   subsets: ["latin"],
@@ -27,12 +28,13 @@ export default async function RootLayout({
 }>) {
   const locale = await getLocale();
   const messages = await getMessages();
+  const settings = await getPublicSettings();
 
   return (
     <html lang={locale} className="light">
       <body className={`${fontSans.variable} font-sans antialiased`}>
         <NextIntlClientProvider messages={messages}>
-          <Providers>
+          <Providers settings={settings}>
             <NuqsAdapter>{children}</NuqsAdapter>
           </Providers>
         </NextIntlClientProvider>
