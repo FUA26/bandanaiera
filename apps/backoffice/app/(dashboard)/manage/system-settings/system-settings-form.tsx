@@ -26,7 +26,6 @@ import { useEffect, useState } from "react";
 import { useForm, useFieldArray } from "react-hook-form";
 import { toast } from "sonner";
 import { Plus, Trash2 } from "lucide-react";
-import { Plus, Trash2 } from "lucide-react";
 
 interface Role {
   id: string;
