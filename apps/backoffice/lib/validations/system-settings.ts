@@ -18,21 +18,43 @@ export const systemSettingsSchema = z.object({
 
   // Contact Info (new)
   contactAddress: z.string().optional(),
-  contactPhones: z.array(z.string().max(50)).optional(),
-  contactEmails: z.array(z.string().email().max(100)).optional(),
+  contactPhones: z.array(z.string().max(50)),
+  contactEmails: z.array(z.string().email().max(100)),
 
-  // Social Media (new)
-  socialFacebook: z.string().url().optional().or(z.literal("")),
-  socialTwitter: z.string().url().optional().or(z.literal("")),
-  socialInstagram: z.string().url().optional().or(z.literal("")),
-  socialYouTube: z.string().url().optional().or(z.literal("")),
+  // Social Media (new) - optional URLs (empty string or valid URL)
+  socialFacebook: z.union([z.literal(""), z.string().url()]).optional(),
+  socialTwitter: z.union([z.literal(""), z.string().url()]).optional(),
+  socialInstagram: z.union([z.literal(""), z.string().url()]).optional(),
+  socialYouTube: z.union([z.literal(""), z.string().url()]).optional(),
 
   // Footer (new)
   copyrightText: z.string().max(200).optional(),
   versionNumber: z.string().max(20).optional(),
 });
 
-export type SystemSettingsInput = z.infer<typeof systemSettingsSchema>;
+// Type definition for the form - explicitly defining array types as mutable
+export interface SystemSettingsInput {
+  allowRegistration: boolean;
+  requireEmailVerification: boolean;
+  defaultUserRoleId: string;
+  emailVerificationExpiryHours: number;
+  minPasswordLength: number;
+  requireStrongPassword: boolean;
+  siteName: string;
+  siteDescription?: string;
+  siteLogoId?: string;
+  siteSubtitle?: string;
+  citizenName?: string;
+  contactAddress?: string;
+  contactPhones: string[];
+  contactEmails: string[];
+  socialFacebook?: string | "";
+  socialTwitter?: string | "";
+  socialInstagram?: string | "";
+  socialYouTube?: string | "";
+  copyrightText?: string;
+  versionNumber?: string;
+}
 
 // Public-facing settings (safe to expose)
 export const publicSettingsSchema = z.object({
@@ -40,7 +62,7 @@ export const publicSettingsSchema = z.object({
   siteSubtitle: z.string().nullable(),
   siteDescription: z.string().nullable(),
   siteLogoUrl: z.string().url().nullable(),
-  citizenName: z.string().nullable(),
+  citizenName: z.string(),
   contactAddress: z.string().nullable(),
   contactPhones: z.array(z.string()),
   contactEmails: z.array(z.string()),
