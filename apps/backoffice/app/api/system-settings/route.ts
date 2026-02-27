@@ -67,6 +67,13 @@ export const PUT = protectApiRoute({
         );
       }
 
+      // Convert empty strings to null for optional fields
+      const siteLogoId = validatedData.siteLogoId === "" ? null : validatedData.siteLogoId;
+      const socialFacebook = validatedData.socialFacebook === "" ? null : validatedData.socialFacebook;
+      const socialTwitter = validatedData.socialTwitter === "" ? null : validatedData.socialTwitter;
+      const socialInstagram = validatedData.socialInstagram === "" ? null : validatedData.socialInstagram;
+      const socialYouTube = validatedData.socialYouTube === "" ? null : validatedData.socialYouTube;
+
       // Get existing settings
       const existingSettings = await prisma.systemSettings.findFirst();
 
@@ -82,16 +89,16 @@ export const PUT = protectApiRoute({
           requireStrongPassword: validatedData.requireStrongPassword,
           siteName: validatedData.siteName,
           siteDescription: validatedData.siteDescription,
-          siteLogoId: validatedData.siteLogoId,
+          siteLogoId,
           siteSubtitle: validatedData.siteSubtitle,
           citizenName: validatedData.citizenName,
           contactAddress: validatedData.contactAddress,
           contactPhones: validatedData.contactPhones,
           contactEmails: validatedData.contactEmails,
-          socialFacebook: validatedData.socialFacebook,
-          socialTwitter: validatedData.socialTwitter,
-          socialInstagram: validatedData.socialInstagram,
-          socialYouTube: validatedData.socialYouTube,
+          socialFacebook,
+          socialTwitter,
+          socialInstagram,
+          socialYouTube,
           copyrightText: validatedData.copyrightText,
           versionNumber: validatedData.versionNumber,
         },
@@ -104,16 +111,16 @@ export const PUT = protectApiRoute({
           requireStrongPassword: validatedData.requireStrongPassword,
           siteName: validatedData.siteName,
           siteDescription: validatedData.siteDescription,
-          siteLogoId: validatedData.siteLogoId,
+          siteLogoId,
           siteSubtitle: validatedData.siteSubtitle,
           citizenName: validatedData.citizenName,
           contactAddress: validatedData.contactAddress,
           contactPhones: validatedData.contactPhones,
           contactEmails: validatedData.contactEmails,
-          socialFacebook: validatedData.socialFacebook,
-          socialTwitter: validatedData.socialTwitter,
-          socialInstagram: validatedData.socialInstagram,
-          socialYouTube: validatedData.socialYouTube,
+          socialFacebook,
+          socialTwitter,
+          socialInstagram,
+          socialYouTube,
           copyrightText: validatedData.copyrightText,
           versionNumber: validatedData.versionNumber,
         },

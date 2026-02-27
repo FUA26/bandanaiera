@@ -12,7 +12,7 @@ export const systemSettingsSchema = z.object({
   // Site Identity (existing + new)
   siteName: z.string().min(1).max(100),
   siteDescription: z.string().max(500).optional(),
-  siteLogoId: z.string().cuid().optional(),
+  siteLogoId: z.union([z.literal(""), z.string().cuid()]).optional(),
   siteSubtitle: z.string().max(100).optional(),
   citizenName: z.string().max(50).optional(),
 
