@@ -26,6 +26,7 @@ import { useEffect, useState } from "react";
 import { useForm, useFieldArray } from "react-hook-form";
 import { toast } from "sonner";
 import { Plus, Trash2 } from "lucide-react";
+import type { FieldPath } from "react-hook-form";
 
 interface Role {
   id: string;
@@ -93,14 +94,18 @@ export function SystemSettingsForm() {
     },
   });
 
+  // useFieldArray has type inference issues with Zod schemas containing optional union types
+  // The runtime behavior is correct - this is a TypeScript limitation
   const phonesArray = useFieldArray({
     control: form.control,
-    name: "contactPhones" as any,
+    // @ts-expect-error - contactPhones is an array field, TypeScript can't infer from Zod schema
+    name: "contactPhones",
   });
 
   const emailsArray = useFieldArray({
     control: form.control,
-    name: "contactEmails" as any,
+    // @ts-expect-error - contactEmails is an array field, TypeScript can't infer from Zod schema
+    name: "contactEmails",
   });
 
   // Fetch roles and settings on mount

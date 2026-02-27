@@ -60,8 +60,9 @@ export const GET = async () => {
     return NextResponse.json(response, { headers: corsHeaders });
   } catch (error) {
     console.error("Error fetching public settings:", error);
+    console.error("Error details:", JSON.stringify(error, null, 2));
     return NextResponse.json(
-      { error: "Internal Server Error" },
+      { error: "Internal Server Error", details: error instanceof Error ? error.message : "Unknown error" },
       { status: 500, headers: corsHeaders }
     );
   }

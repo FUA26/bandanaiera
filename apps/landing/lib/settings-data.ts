@@ -9,7 +9,7 @@ export interface PublicSettings {
   siteSubtitle: string | null;
   siteDescription: string | null;
   siteLogoUrl: string | null;
-  citizenName: string;
+  citizenName: string | null;
   contactAddress: string | null;
   contactPhones: string[] | null;
   contactEmails: string[] | null;
