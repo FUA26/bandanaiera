@@ -138,467 +138,475 @@ export function ServiceForm({
       }}
       className="space-y-6"
     >
-      <Tabs defaultValue="basic" className="w-full">
-        {/* Tabs List - Horizontal di atas */}
-        <TabsList className="w-full bg-muted/50 p-1 rounded-lg flex flex-row gap-2">
-          <TabsTrigger value="basic">Basic Info</TabsTrigger>
-          <TabsTrigger value="details">Details</TabsTrigger>
-          <TabsTrigger value="contact">Contact</TabsTrigger>
-          <TabsTrigger value="advanced">Advanced</TabsTrigger>
+      <Tabs defaultValue="basic" className="w-full space-y-6">
+        {/* Tabs List */}
+        <TabsList className="w-full flex flex-row flex-wrap justify-start bg-muted/50 p-1 rounded-lg gap-1">
+          <TabsTrigger value="basic" className="flex-1 min-w-max data-active:bg-background data-active:text-foreground">
+            Basic Info
+          </TabsTrigger>
+          <TabsTrigger value="details" className="flex-1 min-w-max data-active:bg-background data-active:text-foreground">
+            Details
+          </TabsTrigger>
+          <TabsTrigger value="contact" className="flex-1 min-w-max data-active:bg-background data-active:text-foreground">
+            Contact
+          </TabsTrigger>
+          <TabsTrigger value="advanced" className="flex-1 min-w-max data-active:bg-background data-active:text-foreground">
+            Advanced
+          </TabsTrigger>
         </TabsList>
 
-        {/* Tab Content - Di bawah tabs */}
-        <div className="mt-6">
+        {/* Tab Content */}
+        <div className="w-full">
           {/* Basic Info Tab */}
-          <TabsContent value="basic">
-              <div className="grid grid-cols-2 gap-4">
-            <Field>
-              <FieldLabel htmlFor="name">Service Name *</FieldLabel>
-              <FieldContent>
-                <Input
-                  id="name"
-                  placeholder="e.g., E-KTP"
-                  {...form.register("name")}
-                  disabled={isLoading}
+          <TabsContent value="basic" className="mt-0">
+            <div className="grid grid-cols-2 gap-4">
+              <Field>
+                <FieldLabel htmlFor="name">Service Name *</FieldLabel>
+                <FieldContent>
+                  <Input
+                    id="name"
+                    placeholder="e.g., E-KTP"
+                    {...form.register("name")}
+                    disabled={isLoading}
+                  />
+                </FieldContent>
+                <FieldError errors={form.formState.errors.name ? [form.formState.errors.name] : undefined} />
+              </Field>
+
+              <Field>
+                <FieldLabel htmlFor="slug">Slug *</FieldLabel>
+                <FieldContent>
+                  <Input
+                    id="slug"
+                    placeholder="e-ktp"
+                    {...form.register("slug")}
+                    disabled={isLoading || mode === "edit"}
+                  />
+                </FieldContent>
+                <FieldError errors={form.formState.errors.slug ? [form.formState.errors.slug] : undefined} />
+              </Field>
+
+              <Field>
+                <FieldLabel htmlFor="icon">Icon</FieldLabel>
+                <FieldContent>
+                  <Input
+                    id="icon"
+                    placeholder="e.g., UserCardIcon"
+                    {...form.register("icon")}
+                    disabled={isLoading}
+                  />
+                </FieldContent>
+                <FieldError errors={form.formState.errors.icon ? [form.formState.errors.icon] : undefined} />
+              </Field>
+
+              <Field>
+                <FieldLabel htmlFor="categoryId">Category *</FieldLabel>
+                <FieldContent>
+                  <Select
+                    onValueChange={(value) => form.setValue("categoryId", value)}
+                    value={form.watch("categoryId")}
+                    disabled={isLoading}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select a category" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {categories.map((cat) => (
+                        <SelectItem key={cat.id} value={cat.id}>
+                          {cat.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </FieldContent>
+                <FieldError
+                  errors={form.formState.errors.categoryId ? [form.formState.errors.categoryId] : undefined}
                 />
-              </FieldContent>
-              <FieldError errors={form.formState.errors.name ? [form.formState.errors.name] : undefined} />
-            </Field>
+              </Field>
+            </div>
 
             <Field>
-              <FieldLabel htmlFor="slug">Slug *</FieldLabel>
+              <FieldLabel htmlFor="description">Description *</FieldLabel>
               <FieldContent>
-                <Input
-                  id="slug"
-                  placeholder="e-ktp"
-                  {...form.register("slug")}
-                  disabled={isLoading || mode === "edit"}
-                />
-              </FieldContent>
-              <FieldError errors={form.formState.errors.slug ? [form.formState.errors.slug] : undefined} />
-            </Field>
-
-            <Field>
-              <FieldLabel htmlFor="icon">Icon</FieldLabel>
-              <FieldContent>
-                <Input
-                  id="icon"
-                  placeholder="e.g., UserCardIcon"
-                  {...form.register("icon")}
+                <Textarea
+                  id="description"
+                  placeholder="Brief description of the service"
+                  rows={2}
+                  {...form.register("description")}
                   disabled={isLoading}
                 />
-              </FieldContent>
-              <FieldError errors={form.formState.errors.icon ? [form.formState.errors.icon] : undefined} />
-            </Field>
-
-            <Field>
-              <FieldLabel htmlFor="categoryId">Category *</FieldLabel>
-              <FieldContent>
-                <Select
-                  onValueChange={(value) => form.setValue("categoryId", value)}
-                  value={form.watch("categoryId")}
-                  disabled={isLoading}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select a category" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {categories.map((cat) => (
-                      <SelectItem key={cat.id} value={cat.id}>
-                        {cat.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
               </FieldContent>
               <FieldError
-                errors={form.formState.errors.categoryId ? [form.formState.errors.categoryId] : undefined}
+                errors={form.formState.errors.description ? [form.formState.errors.description] : undefined}
               />
             </Field>
-          </div>
 
-          <Field>
-            <FieldLabel htmlFor="description">Description *</FieldLabel>
-            <FieldContent>
-              <Textarea
-                id="description"
-                placeholder="Brief description of the service"
-                rows={2}
-                {...form.register("description")}
-                disabled={isLoading}
-              />
-            </FieldContent>
-            <FieldError
-              errors={form.formState.errors.description ? [form.formState.errors.description] : undefined}
-            />
-          </Field>
+            <div className="grid grid-cols-3 gap-4">
+              <Field>
+                <FieldLabel htmlFor="badge">Badge</FieldLabel>
+                <FieldContent>
+                  <Input
+                    id="badge"
+                    placeholder="e.g., Popular"
+                    {...form.register("badge")}
+                    disabled={isLoading}
+                  />
+                </FieldContent>
+                <FieldError errors={form.formState.errors.badge ? [form.formState.errors.badge] : undefined} />
+              </Field>
 
-          <div className="grid grid-cols-3 gap-4">
-            <Field>
-              <FieldLabel htmlFor="badge">Badge</FieldLabel>
-              <FieldContent>
-                <Input
-                  id="badge"
-                  placeholder="e.g., Popular"
-                  {...form.register("badge")}
-                  disabled={isLoading}
-                />
-              </FieldContent>
-              <FieldError errors={form.formState.errors.badge ? [form.formState.errors.badge] : undefined} />
-            </Field>
+              <Field>
+                <FieldLabel htmlFor="stats">Stats</FieldLabel>
+                <FieldContent>
+                  <Input
+                    id="stats"
+                    placeholder="e.g., 10k+ users"
+                    {...form.register("stats")}
+                    disabled={isLoading}
+                  />
+                </FieldContent>
+                <FieldError errors={form.formState.errors.stats ? [form.formState.errors.stats] : undefined} />
+              </Field>
 
-            <Field>
-              <FieldLabel htmlFor="stats">Stats</FieldLabel>
-              <FieldContent>
-                <Input
-                  id="stats"
-                  placeholder="e.g., 10k+ users"
-                  {...form.register("stats")}
-                  disabled={isLoading}
-                />
-              </FieldContent>
-              <FieldError errors={form.formState.errors.stats ? [form.formState.errors.stats] : undefined} />
-            </Field>
-
-            <Field>
-              <FieldLabel htmlFor="order">Display Order</FieldLabel>
-              <FieldContent>
-                <Input
-                  id="order"
-                  type="number"
-                  {...form.register("order", { valueAsNumber: true })}
-                  disabled={isLoading}
-                />
-              </FieldContent>
-              <FieldError errors={form.formState.errors.order ? [form.formState.errors.order] : undefined} />
-            </Field>
-          </div>
-
-          <div className="flex gap-4">
-            <div className="flex items-center space-x-2">
-              <Checkbox
-                id="showInMenu"
-                checked={form.watch("showInMenu")}
-                onCheckedChange={(checked) => form.setValue("showInMenu", checked as boolean)}
-                disabled={isLoading}
-              />
-              <label htmlFor="showInMenu" className="text-sm font-medium">
-                Show in Menu
-              </label>
+              <Field>
+                <FieldLabel htmlFor="order">Display Order</FieldLabel>
+                <FieldContent>
+                  <Input
+                    id="order"
+                    type="number"
+                    {...form.register("order", { valueAsNumber: true })}
+                    disabled={isLoading}
+                  />
+                </FieldContent>
+                <FieldError errors={form.formState.errors.order ? [form.formState.errors.order] : undefined} />
+              </Field>
             </div>
 
-            <div className="flex items-center space-x-2">
-              <Checkbox
-                id="isIntegrated"
-                checked={form.watch("isIntegrated")}
-                onCheckedChange={(checked) => form.setValue("isIntegrated", checked as boolean)}
-                disabled={isLoading}
-              />
-              <label htmlFor="isIntegrated" className="text-sm font-medium">
-                Integrated Service
-              </label>
-            </div>
+            <div className="flex gap-4">
+              <div className="flex items-center space-x-2">
+                <Checkbox
+                  id="showInMenu"
+                  checked={form.watch("showInMenu")}
+                  onCheckedChange={(checked) => form.setValue("showInMenu", checked as boolean)}
+                  disabled={isLoading}
+                />
+                <label htmlFor="showInMenu" className="text-sm font-medium">
+                  Show in Menu
+                </label>
+              </div>
 
-            <div className="flex items-center space-x-2">
-              <Checkbox
-                id="statusPublished"
-                checked={form.watch("status") === "PUBLISHED"}
-                onCheckedChange={(checked) =>
-                  form.setValue("status", checked ? "PUBLISHED" : "DRAFT")
+              <div className="flex items-center space-x-2">
+                <Checkbox
+                  id="isIntegrated"
+                  checked={form.watch("isIntegrated")}
+                  onCheckedChange={(checked) => form.setValue("isIntegrated", checked as boolean)}
+                  disabled={isLoading}
+                />
+                <label htmlFor="isIntegrated" className="text-sm font-medium">
+                  Integrated Service
+                </label>
+              </div>
+
+              <div className="flex items-center space-x-2">
+                <Checkbox
+                  id="statusPublished"
+                  checked={form.watch("status") === "PUBLISHED"}
+                  onCheckedChange={(checked) =>
+                    form.setValue("status", checked ? "PUBLISHED" : "DRAFT")
+                  }
+                  disabled={isLoading}
+                />
+                <label htmlFor="statusPublished" className="text-sm font-medium">
+                  Published
+                </label>
+              </div>
+            </div>
+          </TabsContent>
+
+          {/* Details Tab */}
+          <TabsContent value="details" className="mt-0">
+            <Field>
+              <FieldLabel htmlFor="detailedDescription">Detailed Description</FieldLabel>
+              <FieldContent>
+                <Textarea
+                  id="detailedDescription"
+                  placeholder="Full description of the service"
+                  rows={4}
+                  {...form.register("detailedDescription")}
+                  disabled={isLoading}
+                />
+              </FieldContent>
+              <FieldError
+                errors={
+                  form.formState.errors.detailedDescription
+                    ? [form.formState.errors.detailedDescription]
+                    : undefined
                 }
-                disabled={isLoading}
-              />
-              <label htmlFor="statusPublished" className="text-sm font-medium">
-                Published
-              </label>
-            </div>
-          </div>
-            </TabsContent>
-
-            {/* Details Tab */}
-            <TabsContent value="details">
-          <Field>
-            <FieldLabel htmlFor="detailedDescription">Detailed Description</FieldLabel>
-            <FieldContent>
-              <Textarea
-                id="detailedDescription"
-                placeholder="Full description of the service"
-                rows={4}
-                {...form.register("detailedDescription")}
-                disabled={isLoading}
-              />
-            </FieldContent>
-            <FieldError
-              errors={
-                form.formState.errors.detailedDescription
-                  ? [form.formState.errors.detailedDescription]
-                  : undefined
-              }
-            />
-          </Field>
-
-          <div className="grid grid-cols-2 gap-4">
-            <Field>
-              <FieldLabel htmlFor="duration">Duration</FieldLabel>
-              <FieldContent>
-                <Input
-                  id="duration"
-                  placeholder="e.g., 1-2 days"
-                  {...form.register("duration")}
-                  disabled={isLoading}
-                />
-              </FieldContent>
-              <FieldError
-                errors={form.formState.errors.duration ? [form.formState.errors.duration] : undefined}
               />
             </Field>
 
-            <Field>
-              <FieldLabel htmlFor="cost">Cost</FieldLabel>
-              <FieldContent>
-                <Input
-                  id="cost"
-                  placeholder="e.g., Free or Rp 50.000"
-                  {...form.register("cost")}
-                  disabled={isLoading}
+            <div className="grid grid-cols-2 gap-4">
+              <Field>
+                <FieldLabel htmlFor="duration">Duration</FieldLabel>
+                <FieldContent>
+                  <Input
+                    id="duration"
+                    placeholder="e.g., 1-2 days"
+                    {...form.register("duration")}
+                    disabled={isLoading}
+                  />
+                </FieldContent>
+                <FieldError
+                  errors={form.formState.errors.duration ? [form.formState.errors.duration] : undefined}
                 />
-              </FieldContent>
-              <FieldError errors={form.formState.errors.cost ? [form.formState.errors.cost] : undefined} />
-            </Field>
-          </div>
+              </Field>
 
-          {/* Requirements */}
-          <div className="space-y-2">
-            <div className="flex items-center justify-between">
-              <FieldLabel>Requirements</FieldLabel>
-              <Button
-                type="button"
-                variant="outline"
-                size="sm"
-                onClick={() => requirementsArray.append("" as any)}
-              >
-                <HugeiconsIcon icon={Add01Icon} className="h-4 w-4 mr-1" />
-                Add Requirement
-              </Button>
-            </div>
-            <div className="space-y-2">
-              {requirementsArray.fields.map((field, index) => (
-                <div key={field.id} className="flex gap-2">
+              <Field>
+                <FieldLabel htmlFor="cost">Cost</FieldLabel>
+                <FieldContent>
                   <Input
-                    {...form.register(`requirements.${index}`)}
-                    placeholder="e.g., KTP asli"
+                    id="cost"
+                    placeholder="e.g., Free or Rp 50.000"
+                    {...form.register("cost")}
                     disabled={isLoading}
                   />
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="icon"
-                    onClick={() => requirementsArray.remove(index)}
-                    disabled={isLoading}
-                  >
-                    <HugeiconsIcon icon={Delete01Icon} className="h-4 w-4" />
-                  </Button>
-                </div>
-              ))}
+                </FieldContent>
+                <FieldError errors={form.formState.errors.cost ? [form.formState.errors.cost] : undefined} />
+              </Field>
             </div>
-          </div>
 
-          {/* Process Steps */}
-          <div className="space-y-2">
-            <div className="flex items-center justify-between">
-              <FieldLabel>Process Steps</FieldLabel>
-              <Button
-                type="button"
-                variant="outline"
-                size="sm"
-                onClick={() => processArray.append("" as any)}
-              >
-                <HugeiconsIcon icon={Add01Icon} className="h-4 w-4 mr-1" />
-                Add Step
-              </Button>
-            </div>
+            {/* Requirements */}
             <div className="space-y-2">
-              {processArray.fields.map((field, index) => (
-                <div key={field.id} className="flex gap-2">
-                  <Input
-                    {...form.register(`process.${index}`)}
-                    placeholder={`Step ${index + 1}`}
-                    disabled={isLoading}
-                  />
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="icon"
-                    onClick={() => processArray.remove(index)}
-                    disabled={isLoading}
-                  >
-                    <HugeiconsIcon icon={Delete01Icon} className="h-4 w-4" />
-                  </Button>
-                </div>
-              ))}
-            </div>
-          </div>
-        </TabsContent>
-
-            {/* Contact Tab */}
-            <TabsContent value="contact">
-          <Field>
-            <FieldLabel htmlFor="contactOffice">Office Name</FieldLabel>
-            <FieldContent>
-              <Input
-                id="contactOffice"
-                placeholder="e.g., Dinas Kependudukan"
-                {...form.register("contactInfo.office")}
-                disabled={isLoading}
-              />
-            </FieldContent>
-          </Field>
-
-          <Field>
-            <FieldLabel htmlFor="contactPhone">Phone</FieldLabel>
-            <FieldContent>
-              <Input
-                id="contactPhone"
-                placeholder="e.g., (021) 1234-5678"
-                {...form.register("contactInfo.phone")}
-                disabled={isLoading}
-              />
-            </FieldContent>
-          </Field>
-
-          <Field>
-            <FieldLabel htmlFor="contactEmail">Email</FieldLabel>
-            <FieldContent>
-              <Input
-                id="contactEmail"
-                type="email"
-                placeholder="e.g., layanan@example.com"
-                {...form.register("contactInfo.email")}
-                disabled={isLoading}
-              />
-            </FieldContent>
-          </Field>
-
-          {/* FAQs */}
-          <div className="space-y-2">
-            <div className="flex items-center justify-between">
-              <FieldLabel>FAQs</FieldLabel>
-              <Button
-                type="button"
-                variant="outline"
-                size="sm"
-                onClick={() => faqsArray.append({ question: "", answer: "" } as any)}
-              >
-                <HugeiconsIcon icon={Add01Icon} className="h-4 w-4 mr-1" />
-                Add FAQ
-              </Button>
-            </div>
-            <div className="space-y-4">
-              {faqsArray.fields.map((field, index) => (
-                <div key={field.id} className="space-y-2 p-4 border rounded-lg">
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm font-medium">FAQ {index + 1}</span>
+              <div className="flex items-center justify-between">
+                <FieldLabel>Requirements</FieldLabel>
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={() => requirementsArray.append("" as any)}
+                >
+                  <HugeiconsIcon icon={Add01Icon} className="h-4 w-4 mr-1" />
+                  Add Requirement
+                </Button>
+              </div>
+              <div className="space-y-2">
+                {requirementsArray.fields.map((field, index) => (
+                  <div key={field.id} className="flex gap-2">
+                    <Input
+                      {...form.register(`requirements.${index}`)}
+                      placeholder="e.g., KTP asli"
+                      disabled={isLoading}
+                    />
                     <Button
                       type="button"
                       variant="ghost"
                       size="icon"
-                      onClick={() => faqsArray.remove(index)}
+                      onClick={() => requirementsArray.remove(index)}
                       disabled={isLoading}
                     >
                       <HugeiconsIcon icon={Delete01Icon} className="h-4 w-4" />
                     </Button>
                   </div>
-                  <Input
-                    {...form.register(`faqs.${index}.question`)}
-                    placeholder="Question"
-                    disabled={isLoading}
-                  />
-                  <Textarea
-                    {...form.register(`faqs.${index}.answer`)}
-                    placeholder="Answer"
-                    rows={2}
-                    disabled={isLoading}
-                  />
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
-          </div>
-        </TabsContent>
 
-            {/* Advanced Tab */}
-            <TabsContent value="advanced">
-          {/* Download Forms */}
-          <div className="space-y-2">
-            <div className="flex items-center justify-between">
-              <FieldLabel>Download Forms</FieldLabel>
-              <Button
-                type="button"
-                variant="outline"
-                size="sm"
-                onClick={() => downloadFormsArray.append({ type: "url", name: "", value: "" } as any)}
-              >
-                <HugeiconsIcon icon={Add01Icon} className="h-4 w-4 mr-1" />
-                Add Form
-              </Button>
-            </div>
+            {/* Process Steps */}
             <div className="space-y-2">
-              {downloadFormsArray.fields.map((field, index) => (
-                <div key={field.id} className="flex gap-2 items-start p-4 border rounded-lg">
-                  <Select
-                    onValueChange={(value: "file" | "url") =>
-                      form.setValue(`downloadForms.${index}.type`, value)
-                    }
-                    value={form.watch(`downloadForms.${index}.type`)}
-                    disabled={isLoading}
-                  >
-                    <SelectTrigger className="w-32">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="url">URL</SelectItem>
-                      <SelectItem value="file">File</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  <Input
-                    {...form.register(`downloadForms.${index}.name`)}
-                    placeholder="Form name"
-                    disabled={isLoading}
-                  />
-                  <Input
-                    {...form.register(`downloadForms.${index}.value`)}
-                    placeholder={form.watch(`downloadForms.${index}.type`) === "url" ? "URL" : "File ID"}
-                    disabled={isLoading}
-                    className="flex-1"
-                  />
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="icon"
-                    onClick={() => downloadFormsArray.remove(index)}
-                    disabled={isLoading}
-                  >
-                    <HugeiconsIcon icon={Delete01Icon} className="h-4 w-4" />
-                  </Button>
-                </div>
-              ))}
+              <div className="flex items-center justify-between">
+                <FieldLabel>Process Steps</FieldLabel>
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={() => processArray.append("" as any)}
+                >
+                  <HugeiconsIcon icon={Add01Icon} className="h-4 w-4 mr-1" />
+                  Add Step
+                </Button>
+              </div>
+              <div className="space-y-2">
+                {processArray.fields.map((field, index) => (
+                  <div key={field.id} className="flex gap-2">
+                    <Input
+                      {...form.register(`process.${index}`)}
+                      placeholder={`Step ${index + 1}`}
+                      disabled={isLoading}
+                    />
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => processArray.remove(index)}
+                      disabled={isLoading}
+                    >
+                      <HugeiconsIcon icon={Delete01Icon} className="h-4 w-4" />
+                    </Button>
+                  </div>
+                ))}
+              </div>
             </div>
-          </div>
+          </TabsContent>
 
-          {/* Related Services */}
-          <Field>
-            <FieldLabel>Related Services</FieldLabel>
-            <FieldContent>
-              <Input
-                placeholder="Comma-separated service IDs (to be implemented with selector)"
-                {...form.register("relatedServices")}
-                disabled={isLoading}
-              />
-              <p className="text-xs text-muted-foreground mt-1">
-                Enter service IDs separated by commas
-              </p>
-            </FieldContent>
-          </Field>
-            </TabsContent>
+          {/* Contact Tab */}
+          <TabsContent value="contact" className="mt-0">
+            <Field>
+              <FieldLabel htmlFor="contactOffice">Office Name</FieldLabel>
+              <FieldContent>
+                <Input
+                  id="contactOffice"
+                  placeholder="e.g., Dinas Kependudukan"
+                  {...form.register("contactInfo.office")}
+                  disabled={isLoading}
+                />
+              </FieldContent>
+            </Field>
+
+            <Field>
+              <FieldLabel htmlFor="contactPhone">Phone</FieldLabel>
+              <FieldContent>
+                <Input
+                  id="contactPhone"
+                  placeholder="e.g., (021) 1234-5678"
+                  {...form.register("contactInfo.phone")}
+                  disabled={isLoading}
+                />
+              </FieldContent>
+            </Field>
+
+            <Field>
+              <FieldLabel htmlFor="contactEmail">Email</FieldLabel>
+              <FieldContent>
+                <Input
+                  id="contactEmail"
+                  type="email"
+                  placeholder="e.g., layanan@example.com"
+                  {...form.register("contactInfo.email")}
+                  disabled={isLoading}
+                />
+              </FieldContent>
+            </Field>
+
+            {/* FAQs */}
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <FieldLabel>FAQs</FieldLabel>
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={() => faqsArray.append({ question: "", answer: "" } as any)}
+                >
+                  <HugeiconsIcon icon={Add01Icon} className="h-4 w-4 mr-1" />
+                  Add FAQ
+                </Button>
+              </div>
+              <div className="space-y-4">
+                {faqsArray.fields.map((field, index) => (
+                  <div key={field.id} className="space-y-2 p-4 border rounded-lg">
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm font-medium">FAQ {index + 1}</span>
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => faqsArray.remove(index)}
+                        disabled={isLoading}
+                      >
+                        <HugeiconsIcon icon={Delete01Icon} className="h-4 w-4" />
+                      </Button>
+                    </div>
+                    <Input
+                      {...form.register(`faqs.${index}.question`)}
+                      placeholder="Question"
+                      disabled={isLoading}
+                    />
+                    <Textarea
+                      {...form.register(`faqs.${index}.answer`)}
+                      placeholder="Answer"
+                      rows={2}
+                      disabled={isLoading}
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
+          </TabsContent>
+
+          {/* Advanced Tab */}
+          <TabsContent value="advanced" className="mt-0">
+            {/* Download Forms */}
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <FieldLabel>Download Forms</FieldLabel>
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={() => downloadFormsArray.append({ type: "url", name: "", value: "" } as any)}
+                >
+                  <HugeiconsIcon icon={Add01Icon} className="h-4 w-4 mr-1" />
+                  Add Form
+                </Button>
+              </div>
+              <div className="space-y-2">
+                {downloadFormsArray.fields.map((field, index) => (
+                  <div key={field.id} className="flex gap-2 items-start p-4 border rounded-lg">
+                    <Select
+                      onValueChange={(value: "file" | "url") =>
+                        form.setValue(`downloadForms.${index}.type`, value)
+                      }
+                      value={form.watch(`downloadForms.${index}.type`)}
+                      disabled={isLoading}
+                    >
+                      <SelectTrigger className="w-32">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="url">URL</SelectItem>
+                        <SelectItem value="file">File</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <Input
+                      {...form.register(`downloadForms.${index}.name`)}
+                      placeholder="Form name"
+                      disabled={isLoading}
+                    />
+                    <Input
+                      {...form.register(`downloadForms.${index}.value`)}
+                      placeholder={form.watch(`downloadForms.${index}.type`) === "url" ? "URL" : "File ID"}
+                      disabled={isLoading}
+                      className="flex-1"
+                    />
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => downloadFormsArray.remove(index)}
+                      disabled={isLoading}
+                    >
+                      <HugeiconsIcon icon={Delete01Icon} className="h-4 w-4" />
+                    </Button>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Related Services */}
+            <Field>
+              <FieldLabel>Related Services</FieldLabel>
+              <FieldContent>
+                <Input
+                  placeholder="Comma-separated service IDs (to be implemented with selector)"
+                  {...form.register("relatedServices")}
+                  disabled={isLoading}
+                />
+                <p className="text-xs text-muted-foreground mt-1">
+                  Enter service IDs separated by commas
+                </p>
+              </FieldContent>
+            </Field>
+          </TabsContent>
         </div>
       </Tabs>
 

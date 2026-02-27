@@ -121,55 +121,54 @@ export function PermissionMatrix({
   }
 
   return (
-    <Tabs defaultValue={categories[0]?.name ?? ""}>
-      <TabsList
-        className={`grid w-full`}
-        style={{ gridTemplateColumns: `repeat(${categories.length}, minmax(0, 1fr))` }}
-      >
+    <Tabs defaultValue={categories[0]?.name ?? ""} orientation="vertical" className="flex flex-col md:flex-row gap-6 w-full items-start">
+      <TabsList className="flex w-full md:w-56 shrink-0 flex-row md:flex-col justify-start bg-transparent p-0 gap-1 overflow-x-auto border-b md:border-none pb-4 md:pb-0 text-left">
         {categories.map((cat) => (
-          <TabsTrigger key={cat.name} value={cat.name}>
+          <TabsTrigger key={cat.name} value={cat.name} className="justify-start md:w-full px-3 py-2 bg-transparent text-muted-foreground data-active:bg-muted data-active:text-foreground">
             {cat.name}
           </TabsTrigger>
         ))}
       </TabsList>
 
-      {categories.map((category) => (
-        <TabsContent key={category.name} value={category.name} className="space-y-4 mt-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <h3 className="font-semibold">{category.name} Permissions</h3>
-              <p className="text-sm text-muted-foreground">{category.description}</p>
-            </div>
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              onClick={() => toggleCategory(category)}
-              disabled={disabled}
-            >
-              {category.permissions.every((p) => selectedPermissions.includes(p))
-                ? "Deselect All"
-                : "Select All"}
-            </Button>
-          </div>
-
-          <div className="space-y-2">
-            {category.permissions.map((permission) => (
-              <div key={permission} className="flex items-center space-x-2">
-                <Checkbox
-                  id={permission}
-                  checked={selectedPermissions.includes(permission)}
-                  onCheckedChange={() => togglePermission(permission)}
-                  disabled={disabled}
-                />
-                <Label htmlFor={permission} className="flex-1 cursor-pointer font-normal text-sm">
-                  <code className="text-sm bg-muted px-1.5 py-0.5 rounded">{permission}</code>
-                </Label>
+      <div className="flex-1 w-full min-w-0 md:max-w-xl lg:max-w-4xl">
+        {categories.map((category) => (
+          <TabsContent key={category.name} value={category.name} className="space-y-4 mt-0">
+            <div className="flex items-center justify-between">
+              <div>
+                <h3 className="font-semibold">{category.name} Permissions</h3>
+                <p className="text-sm text-muted-foreground">{category.description}</p>
               </div>
-            ))}
-          </div>
-        </TabsContent>
-      ))}
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={() => toggleCategory(category)}
+                disabled={disabled}
+              >
+                {category.permissions.every((p) => selectedPermissions.includes(p))
+                  ? "Deselect All"
+                  : "Select All"}
+              </Button>
+            </div>
+
+            <div className="space-y-2">
+              {category.permissions.map((permission) => (
+                <div key={permission} className="flex items-center space-x-2">
+                  <Checkbox
+                    id={permission}
+                    checked={selectedPermissions.includes(permission)}
+                    onCheckedChange={() => togglePermission(permission)}
+                    disabled={disabled}
+                  />
+                  <Label htmlFor={permission} className="flex-1 cursor-pointer font-normal text-sm">
+                    <code className="text-sm bg-muted px-1.5 py-0.5 rounded">{permission}</code>
+                  </Label>
+                </div>
+              ))}
+            </div>
+          </TabsContent>
+        ))}
+      </div>
     </Tabs>
   );
 }

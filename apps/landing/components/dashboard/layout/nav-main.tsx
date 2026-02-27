@@ -98,7 +98,7 @@ export function NavMain({
                   <DropdownMenuTrigger asChild>
                     <SidebarMenuButton
                       tooltip={item.title}
-                      isActive={isSubActive}
+                      isActive={isItemActive}
                     >
                       <item.icon />
                       <span>{item.title}</span>
@@ -149,7 +149,7 @@ export function NavMain({
                   <SidebarMenuButton
                     tooltip={item.title}
                     className="w-full"
-                    isActive={isSubActive}
+                    isActive={isItemActive}
                   >
                     <item.icon />
                     <span>{item.title}</span>
