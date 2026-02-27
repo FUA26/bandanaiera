@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import { getServiceBySlug, getAllServices } from "@/lib/services-data";
+import { getServiceBySlug, getAllServices, type DownloadForm as ApiDownloadForm } from "@/lib/services-data";
 import { ServiceDetailClient } from "./service-detail-client";
 
 interface DownloadForm {
@@ -22,6 +22,15 @@ interface RelatedService {
   slug: string;
   iconName: string;
   name: string;
+}
+
+// Helper to map API DownloadForm to page DownloadForm
+function mapDownloadForms(forms: ApiDownloadForm[] | null | undefined): DownloadForm[] {
+  if (!forms || forms.length === 0) return [];
+  return forms.map((form) => ({
+    name: form.name,
+    url: form.type === 'url' ? form.value : `/api/files/${form.fileId}/serve`,
+  }));
 }
 
 export default async function ServiceDetailPage({
@@ -75,7 +84,7 @@ export default async function ServiceDetailPage({
       phone: "-",
       email: "-",
     },
-    downloadForms: service.downloadForms || [],
+    downloadForms: mapDownloadForms(service.downloadForms),
     relatedServices: relatedServicesData,
     faqs: service.faqs || [],
   };

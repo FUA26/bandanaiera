@@ -1,7 +1,6 @@
 "use client";
 
 import { Search } from "lucide-react";
-import Image from "next/image";
 import { useState } from "react";
 import { useTranslations } from "next-intl";
 
@@ -27,19 +26,14 @@ export function HeroSection() {
     <section className="relative flex min-h-screen flex-col items-center justify-center px-4 text-center">
       {/* Background Layers */}
       <div className="absolute inset-0 -z-10">
-        {/* Base Color (Fallback) */}
-        <div className="absolute inset-0 bg-slate-900" />
+        {/* Base Gradient Background */}
+        <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900" />
 
-        {/* Background Image */}
-        <Image
-          src="/images/background.png"
-          alt=""
-          fill
-          priority
-          quality={90}
-          className="object-cover"
-          sizes="100vw"
-        />
+        {/* Decorative Pattern */}
+        <div className="absolute inset-0 opacity-10" style={{
+          backgroundImage: `radial-gradient(circle at 20% 50%, rgba(59, 130, 246, 0.3) 0%, transparent 50%),
+                           radial-gradient(circle at 80% 50%, rgba(147, 51, 234, 0.3) 0%, transparent 50%)`,
+        }} />
 
         {/* Overlay Gradient for text readability */}
         <div className="absolute inset-0 bg-gradient-to-b from-slate-900/70 via-slate-900/50 to-slate-900/80" />

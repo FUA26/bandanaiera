@@ -38,12 +38,24 @@ export function Header({ servicesByCategory = [] }: HeaderProps) {
         <div className="container mx-auto flex h-full items-center justify-between px-4 md:px-8">
           <Link href="/" className="flex items-center gap-3">
             <div className="bg-card ring-border relative flex h-10 w-10 items-center justify-center rounded-lg shadow-sm ring-1">
-              <Image
-                src={settings?.siteLogoUrl || "/naiera.png"}
-                alt={settings?.siteName || "Naiera"}
-                fill
-                className="object-contain p-1.5"
-              />
+              {settings?.siteLogoUrl ? (
+                <Image
+                  src={settings.siteLogoUrl}
+                  alt={settings.siteName || "Naiera"}
+                  fill
+                  sizes="40px"
+                  className="object-contain p-1.5"
+                  unoptimized
+                />
+              ) : (
+                <Image
+                  src="/naiera.png"
+                  alt="Naiera"
+                  fill
+                  sizes="40px"
+                  className="object-contain p-1.5"
+                />
+              )}
             </div>
             <div className="flex flex-col">
               <span className="text-foreground text-xl font-bold">

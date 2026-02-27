@@ -6,7 +6,14 @@ export default async function LayananPage() {
   const categories = await getServiceCategories();
   const allServices = await getAllServices();
 
+  // Map services to convert null to undefined for optional fields
+  const services = allServices.map((service) => ({
+    ...service,
+    badge: service.badge ?? undefined,
+    stats: service.stats ?? undefined,
+  }));
+
   return (
-    <LayananPageClient categories={categories} services={allServices} />
+    <LayananPageClient categories={categories} services={services} />
   );
 }

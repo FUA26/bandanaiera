@@ -21,6 +21,12 @@ export const GET = protectApiRoute({
               name: true,
             },
           },
+          siteLogo: {
+            select: {
+              id: true,
+              cdnUrl: true,
+            },
+          },
         },
       });
 

@@ -9,5 +9,15 @@ export async function ServicesSection() {
   // Fetch services data from directories
   const serviceCategories = await getServicesGroupedByCategory();
 
-  return <ServicesSectionClient serviceCategories={serviceCategories} />;
+  // Map categories and services to convert null to undefined for optional fields
+  const mappedCategories = serviceCategories.map((category) => ({
+    ...category,
+    services: category.services.map((service) => ({
+      ...service,
+      badge: service.badge ?? undefined,
+      stats: service.stats ?? undefined,
+    })),
+  }));
+
+  return <ServicesSectionClient serviceCategories={mappedCategories} />;
 }

@@ -12,13 +12,20 @@ export default async function LayananPage({
   const categories = await getServiceCategories();
   const allServices = await getAllServices();
 
+  // Map services to convert null to undefined for optional fields
+  const services = allServices.map((service) => ({
+    ...service,
+    badge: service.badge ?? undefined,
+    stats: service.stats ?? undefined,
+  }));
+
   // Validate category slug - only use if valid
   const initialCategory = categories.find(c => c.slug === kategori)?.slug || null;
 
   return (
     <LayananPageClient
       categories={categories}
-      services={allServices}
+      services={services}
       initialCategory={initialCategory}
     />
   );

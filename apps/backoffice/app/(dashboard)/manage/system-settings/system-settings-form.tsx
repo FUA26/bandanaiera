@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { LogoUpload } from "@/components/logo-upload";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -181,9 +182,11 @@ export function SystemSettingsForm() {
 
       toast.success("Settings updated successfully");
 
-      // Update current settings
-      if (result.settings) {
-        setCurrentSettings(result.settings);
+      // Update current settings - fetch fresh data with logo
+      const settingsRes = await fetch("/api/system-settings/full");
+      if (settingsRes.ok) {
+        const data = await settingsRes.json();
+        setCurrentSettings(data.settings);
       }
     } catch (error) {
       console.error("Failed to update settings:", error);
@@ -393,14 +396,18 @@ export function SystemSettingsForm() {
                   <FieldError />
                 </Field>
 
-                <Field>
-                  <FieldLabel htmlFor="siteLogoId">Site Logo</FieldLabel>
-                  <FieldDescription>Upload a logo for your site (optional)</FieldDescription>
-                  <FieldContent>
-                    <Input id="siteLogoId" {...form.register("siteLogoId")} />
-                  </FieldContent>
-                  <FieldError />
-                </Field>
+                <div>
+                  <Label htmlFor="siteLogoId">Site Logo</Label>
+                  <p className="text-xs text-muted-foreground mb-2">
+                    Upload a logo for your site (optional)
+                  </p>
+                  <LogoUpload
+                    value={form.watch("siteLogoId")}
+                    logoUrl={currentSettings?.siteLogoId ? `/api/public/files/${currentSettings.siteLogoId}/serve` : null}
+                    onChange={(value) => form.setValue("siteLogoId", value, { shouldDirty: true })}
+                    disabled={isSaving}
+                  />
+                </div>
               </CardContent>
             </Card>
           </TabsContent>

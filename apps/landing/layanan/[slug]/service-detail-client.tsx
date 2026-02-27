@@ -91,8 +91,8 @@ interface ServiceDetailClientProps {
       name: string;
       slug: string;
     };
-    badge?: string;
-    stats?: string;
+    badge?: string | null;
+    stats?: string | null;
     isIntegrated?: boolean;
     requirements: string[];
     process: string[];
