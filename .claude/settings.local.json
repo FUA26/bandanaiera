@@ -2,7 +2,21 @@
   "permissions": {
     "allow": [
       "Bash(pnpm turbo dev:*)",
-      "Bash(pnpm prisma generate:*)"
+      "Bash(pnpm prisma generate:*)",
+      "Bash(pnpm run build:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git push:*)",
+      "Bash(npx prisma db push:*)",
+      "Bash(npx turbo:*)",
+      "Bash(echo:*)",
+      "Bash(DATABASE_URL=\"postgresql://naiera:naiera_password@100.116.51.61:5432/backoffice_db?pgbouncer=true\" npx prisma db push:*)",
+      "Bash(npx tsc:*)",
+      "Bash(DATABASE_URL=\"postgresql://naiera:naiera_password@100.116.51.61:5432/backoffice_db?pgbouncer=true\" npx prisma generate:*)",
+      "Bash(find:*)",
+      "Bash(pnpm list:*)",
+      "Bash(npm ls:*)",
+      "Bash(git reset:*)"
     ]
   }
 }

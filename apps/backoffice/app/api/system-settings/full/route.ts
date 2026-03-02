@@ -27,6 +27,12 @@ export const GET = protectApiRoute({
               cdnUrl: true,
             },
           },
+          heroBackground: {
+            select: {
+              id: true,
+              cdnUrl: true,
+            },
+          },
         },
       });
 

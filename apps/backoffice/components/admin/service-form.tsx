@@ -44,7 +44,7 @@ interface DownloadForm {
 
 interface ServiceFormProps {
   mode: "create" | "edit";
-  initialData?: Partial<ServiceInput>;
+  initialData?: Partial<ServiceInput> | Partial<ServiceUpdateInput>;
   onSubmit: (data: ServiceInput | ServiceUpdateInput) => Promise<void>;
   onCancel: () => void;
   isLoading?: boolean;

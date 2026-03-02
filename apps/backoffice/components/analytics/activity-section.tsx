@@ -55,7 +55,7 @@ export function ActivitySection({ dateRange = "30" }: { dateRange?: string }) {
         </ChartWrapper>
 
         {/* Recent Activity - Table */}
-        <ChartWrapper title="Recent Activity" icon={Clock} accentColor="purple">
+        <ChartWrapper title="Recent Activity" icon={Clock} accentColor="blue">
           <div className="space-y-2 max-h-[300px] overflow-y-auto">
             {activities?.map((activity) => (
               <div

@@ -167,7 +167,8 @@ async function fetchAPI<T>(
 }
 
 /**
- * Fetch all service categories from the API
+ * Fetch all service categories from the API (all categories, regardless of showInMenu)
+ * This is used for the landing page services section
  */
 export async function getServiceCategories(): Promise<ServiceCategory[]> {
   try {
@@ -185,10 +186,9 @@ export async function getServiceCategories(): Promise<ServiceCategory[]> {
  */
 export async function getVisibleServiceCategories(): Promise<ServiceCategory[]> {
   try {
-    const categories = await getServiceCategories();
-    return categories
-      .filter(cat => cat.showInMenu)
-      .sort((a, b) => a.order - b.order);
+    // Explicitly request only visible categories from the API
+    const response = await fetchAPI<CategoriesResponse>('/services/categories?showInMenu=true', undefined, 'categories-visible');
+    return response.categories.sort((a, b) => a.order - b.order);
   } catch (error) {
     console.error('Error loading visible service categories:', error);
     return [];

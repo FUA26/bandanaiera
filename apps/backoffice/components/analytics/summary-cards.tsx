@@ -105,7 +105,7 @@ export function SummaryCards() {
       </ChartWrapper>
 
       {/* Card 4: Storage Used */}
-      <ChartWrapper title="Storage Used" icon={Database} accentColor="purple">
+      <ChartWrapper title="Storage Used" icon={Database} accentColor="cyan">
         <div className="space-y-2">
           {storageData && (
             <>

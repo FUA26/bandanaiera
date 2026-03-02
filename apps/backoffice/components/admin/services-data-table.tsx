@@ -26,14 +26,11 @@ import {
 import { Input } from "@/components/ui/input";
 import { SyncButton } from "@/components/admin/sync-button";
 import { useCan } from "@/lib/rbac-client/hooks";
-import { Add01Icon, Delete01Icon, Edit01Icon, MoreVerticalIcon, EyeIcon } from "@hugeicons/core-free-icons";
-import { HugeiconsIcon } from "@hugeicons/react";
+import { Plus, MoreVertical, Trash2, Edit } from "lucide-react";
 import { type ColumnDef } from "@tanstack/react-table";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { SERVICE_STATUS_LABELS, ServiceStatus } from "@/lib/services/types";
-import { ServiceDialog } from "@/components/admin/service-dialog";
-import type { ServiceInput } from "@/lib/services/validations";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -88,18 +85,11 @@ interface ServicesDataTableProps {
 
 export function ServicesDataTable({ services, categories, onRefresh }: ServicesDataTableProps) {
   const router = useRouter();
-  const [createDialog, setCreateDialog] = useState(false);
-  const [editDialog, setEditDialog] = useState<{ open: boolean; serviceId: string; service: Service }>({
-    open: false,
-    serviceId: "",
-    service: null as any,
-  });
   const [deleteDialog, setDeleteDialog] = useState<{ open: boolean; serviceId: string; serviceName: string }>({
     open: false,
     serviceId: "",
     serviceName: "",
   });
-  const [selectedServiceIds, setSelectedServiceIds] = useState<string[]>([]);
 
   const canUpdateAny = useCan(["CONTENT_UPDATE_ANY"]);
   const canDeleteAny = useCan(["CONTENT_DELETE_ANY"]);
@@ -241,17 +231,13 @@ export function ServicesDataTable({ services, categories, onRefresh }: ServicesD
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" size="icon" aria-label="Actions">
-                <HugeiconsIcon icon={MoreVerticalIcon} className="h-4 w-4" />
+                <MoreVertical className="h-4 w-4" />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <DropdownMenuItem onClick={() => window.open(`/layanan/${service.slug}`, '_blank')}>
-                <HugeiconsIcon icon={EyeIcon} className="mr-2 h-4 w-4" />
-                View
-              </DropdownMenuItem>
               {canUpdateAny && (
-                <DropdownMenuItem onClick={() => setEditDialog({ open: true, serviceId: service.id, service })}>
-                  <HugeiconsIcon icon={Edit01Icon} className="mr-2 h-4 w-4" />
+                <DropdownMenuItem onClick={() => router.push(`/services/edit/${service.id}`)}>
+                  <Edit className="mr-2 h-4 w-4" />
                   Edit
                 </DropdownMenuItem>
               )}
@@ -270,7 +256,7 @@ export function ServicesDataTable({ services, categories, onRefresh }: ServicesD
                   onClick={() => setDeleteDialog({ open: true, serviceId: service.id, serviceName: service.name })}
                   className="text-destructive focus:text-destructive"
                 >
-                  <HugeiconsIcon icon={Delete01Icon} className="mr-2 h-4 w-4" />
+                  <Trash2 className="mr-2 h-4 w-4" />
                   Delete
                 </DropdownMenuItem>
               )}
@@ -287,6 +273,7 @@ export function ServicesDataTable({ services, categories, onRefresh }: ServicesD
       const response = await fetch(`/api/services/${serviceId}/publish`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ published: true }),
       });
       if (response.ok) {
         onRefresh?.();
@@ -301,7 +288,7 @@ export function ServicesDataTable({ services, categories, onRefresh }: ServicesD
       const response = await fetch(`/api/services/${serviceId}/publish`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ status: "DRAFT" }),
+        body: JSON.stringify({ published: false }),
       });
       if (response.ok) {
         onRefresh?.();
@@ -352,8 +339,8 @@ export function ServicesDataTable({ services, categories, onRefresh }: ServicesD
             </div>
             <div className="flex items-center gap-2">
               {canUpdateAny && (
-                <Button onClick={() => setCreateDialog(true)} size="sm">
-                  <HugeiconsIcon icon={Add01Icon} className="h-4 w-4 mr-2" />
+                <Button onClick={() => router.push("/services/new")} size="sm">
+                  <Plus className="h-4 w-4 mr-2" />
                   New Service
                 </Button>
               )}
@@ -373,8 +360,8 @@ export function ServicesDataTable({ services, categories, onRefresh }: ServicesD
                     const selectedIds = table
                       .getFilteredSelectedRowModel()
                       .rows.map((row) => row.original.id);
-                    setSelectedServiceIds(selectedIds);
                     // Handle bulk actions
+                    console.log("Bulk action for services:", selectedIds);
                   }}
                 >
                   Bulk Actions
@@ -384,55 +371,6 @@ export function ServicesDataTable({ services, categories, onRefresh }: ServicesD
           </DataTableActionBar>
         )}
       />
-
-      {/* Create Service Dialog */}
-      <ServiceDialog
-        open={createDialog}
-        onOpenChange={setCreateDialog}
-        mode="create"
-        categories={categories}
-        onSuccess={() => {
-          setCreateDialog(false);
-          onRefresh?.();
-        }}
-      />
-
-      {/* Edit Service Dialog */}
-      {editDialog.service && (
-        <ServiceDialog
-          open={editDialog.open}
-          onOpenChange={(open) => setEditDialog({ ...editDialog, open })}
-          mode="edit"
-          serviceId={editDialog.serviceId}
-          initialData={{
-            name: editDialog.service.name,
-            slug: editDialog.service.slug,
-            icon: editDialog.service.icon,
-            description: editDialog.service.description,
-            categoryId: editDialog.service.categoryId,
-            badge: editDialog.service.badge ?? undefined,
-            stats: editDialog.service.stats ?? undefined,
-            showInMenu: editDialog.service.showInMenu,
-            order: editDialog.service.order,
-            isIntegrated: editDialog.service.isIntegrated,
-            status: editDialog.service.status,
-            detailedDescription: (editDialog.service as any).detailedDescription ?? undefined,
-            requirements: (editDialog.service as any).requirements ?? undefined,
-            process: (editDialog.service as any).process ?? undefined,
-            duration: (editDialog.service as any).duration ?? undefined,
-            cost: (editDialog.service as any).cost ?? undefined,
-            contactInfo: (editDialog.service as any).contactInfo ?? undefined,
-            faqs: (editDialog.service as any).faqs ?? undefined,
-            downloadForms: (editDialog.service as any).downloadForms ?? undefined,
-            relatedServices: (editDialog.service as any).relatedServices ?? undefined,
-          }}
-          categories={categories}
-          onSuccess={() => {
-            setEditDialog({ open: false, serviceId: "", service: null as any });
-            onRefresh?.();
-          }}
-        />
-      )}
 
       {/* Delete Confirmation Dialog */}
       <AlertDialog open={deleteDialog.open} onOpenChange={(open) => setDeleteDialog({ open, serviceId: "", serviceName: "" })}>
@@ -445,7 +383,7 @@ export function ServicesDataTable({ services, categories, onRefresh }: ServicesD
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={handleDelete} className="bg-destructive text-destructive-foreground">
+            <AlertDialogAction onClick={handleDelete} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
               Delete
             </AlertDialogAction>
           </AlertDialogFooter>

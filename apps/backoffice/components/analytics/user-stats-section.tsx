@@ -22,7 +22,7 @@ const ROLE_COLORS: Record<string, string> = {
   ADMIN: "#3b82f6", // blue
   USER: "#22c55e", // green
   MANAGER: "#f97316", // orange
-  EDITOR: "#a855f7", // purple
+  EDITOR: "#06b6d4", // cyan
 };
 
 export function UserStatsSection({ dateRange = "30" }: { dateRange?: string }) {

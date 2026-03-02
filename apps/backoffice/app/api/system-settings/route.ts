@@ -69,6 +69,7 @@ export const PUT = protectApiRoute({
 
       // Convert empty strings to null for optional fields
       const siteLogoId = validatedData.siteLogoId === "" ? null : validatedData.siteLogoId;
+      const heroBackgroundId = validatedData.heroBackgroundId === "" ? null : validatedData.heroBackgroundId;
       const socialFacebook = validatedData.socialFacebook === "" ? null : validatedData.socialFacebook;
       const socialTwitter = validatedData.socialTwitter === "" ? null : validatedData.socialTwitter;
       const socialInstagram = validatedData.socialInstagram === "" ? null : validatedData.socialInstagram;
@@ -92,6 +93,7 @@ export const PUT = protectApiRoute({
           siteLogoId,
           siteSubtitle: validatedData.siteSubtitle,
           citizenName: validatedData.citizenName,
+          heroBackgroundId,
           contactAddress: validatedData.contactAddress,
           contactPhones: validatedData.contactPhones,
           contactEmails: validatedData.contactEmails,
@@ -114,6 +116,7 @@ export const PUT = protectApiRoute({
           siteLogoId,
           siteSubtitle: validatedData.siteSubtitle,
           citizenName: validatedData.citizenName,
+          heroBackgroundId,
           contactAddress: validatedData.contactAddress,
           contactPhones: validatedData.contactPhones,
           contactEmails: validatedData.contactEmails,

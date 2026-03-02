@@ -1,7 +1,12 @@
 /**
  * Public Categories API Route
  *
- * GET /api/public/services/categories - Get list of visible categories (no auth, CORS enabled)
+ * GET /api/public/services/categories - Get list of categories (no auth, CORS enabled)
+ * Query params:
+ *   - showInMenu: filter by showInMenu status (true/false/all). Default: all categories
+ *   - search: search in name/slug
+ *   - sortBy: sort field (default: order)
+ *   - sortOrder: asc/desc (default: asc)
  */
 
 import { prisma } from "@/lib/db/prisma";
@@ -28,7 +33,7 @@ export const OPTIONS = () => {
 
 /**
  * GET /api/public/services/categories
- * Get list of visible categories (showInMenu: true)
+ * Get list of categories
  * No authentication required
  */
 export const GET = async (request: Request) => {
@@ -37,13 +42,20 @@ export const GET = async (request: Request) => {
 
     // Parse query parameters
     const search = searchParams.get("search");
+    const showInMenuParam = searchParams.get("showInMenu");
     const sortBy = searchParams.get("sortBy") || "order";
     const sortOrder = (searchParams.get("sortOrder") || "asc") as "asc" | "desc";
 
-    // Build where clause - only visible categories
-    const where: Record<string, unknown> = {
-      showInMenu: true,
-    };
+    // Build where clause
+    const where: Record<string, unknown> = {};
+
+    // Filter by showInMenu only if explicitly requested
+    if (showInMenuParam === "true") {
+      where.showInMenu = true;
+    } else if (showInMenuParam === "false") {
+      where.showInMenu = false;
+    }
+    // If showInMenu is "all" or not provided, don't filter by it
 
     if (search) {
       where.OR = [

@@ -15,6 +15,7 @@ export const systemSettingsSchema = z.object({
   siteLogoId: z.union([z.literal(""), z.string().cuid()]).optional(),
   siteSubtitle: z.string().max(100).optional(),
   citizenName: z.string().max(50).optional(),
+  heroBackgroundId: z.union([z.literal(""), z.string().cuid()]).optional(),
 
   // Contact Info (new)
   contactAddress: z.string().optional(),
@@ -45,6 +46,7 @@ export interface SystemSettingsInput {
   siteLogoId?: string;
   siteSubtitle?: string;
   citizenName?: string;
+  heroBackgroundId?: string;
   contactAddress?: string;
   contactPhones: string[];
   contactEmails: string[];
@@ -61,7 +63,7 @@ export const publicSettingsSchema = z.object({
   siteName: z.string(),
   siteSubtitle: z.string().nullable(),
   siteDescription: z.string().nullable(),
-  siteLogoUrl: z.string().url().nullable(),
+  siteLogoUrl: z.string().url().or(z.literal("")).or(z.literal(null)).nullable(),
   citizenName: z.string(),
   contactAddress: z.string().nullable(),
   contactPhones: z.array(z.string()),
@@ -72,6 +74,7 @@ export const publicSettingsSchema = z.object({
   socialYouTube: z.string().nullable(),
   copyrightText: z.string().nullable(),
   versionNumber: z.string().nullable(),
+  heroBackgroundUrl: z.string().url().or(z.literal("")).or(z.literal(null)).nullable(),
 });
 
 export type PublicSettings = z.infer<typeof publicSettingsSchema>;

@@ -127,6 +127,8 @@ model SystemSettings {
   siteLogo         File?             @relation("SiteLogo", fields: [siteLogoId], references: [id])
   siteSubtitle     String?
   citizenName      String?  @default("Warga")
+  heroBackgroundId String?           @unique
+  heroBackground   File?             @relation("HeroBackground", fields: [heroBackgroundId], references: [id])
 
   // NEW: Contact Info
   contactAddress   String?
@@ -178,6 +180,7 @@ model File {
   // Relations
   avatars User[] @relation("UserAvatar")
   siteLogos SystemSettings[] @relation("SiteLogo")
+  heroBackgrounds SystemSettings[] @relation("HeroBackground")
 
   @@index([uploadedById])
   @@index([category])

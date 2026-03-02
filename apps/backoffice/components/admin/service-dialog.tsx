@@ -69,7 +69,7 @@ export function ServiceDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="sm:max-w-[800px] md:max-w-[900px] w-[95vw] sm:w-[90vw] md:w-full max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>{mode === "create" ? "Create New Service" : "Edit Service"}</DialogTitle>
           <DialogDescription>

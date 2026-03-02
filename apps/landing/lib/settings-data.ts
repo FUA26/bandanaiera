@@ -19,6 +19,7 @@ export interface PublicSettings {
   socialYouTube: string | null;
   copyrightText: string | null;
   versionNumber: string | null;
+  heroBackgroundUrl: string | null;
 }
 
 const BACKOFFICE_API_URL = process.env.BACKOFFICE_API_URL || 'http://localhost:3001';
@@ -77,5 +78,6 @@ function getDefaultSettings(): PublicSettings {
     socialYouTube: null,
     copyrightText: null,
     versionNumber: '1.0.0',
+    heroBackgroundUrl: null,
   };
 }

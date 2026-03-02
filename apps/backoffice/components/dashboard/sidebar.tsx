@@ -14,51 +14,47 @@ import {
 } from "@/components/ui/sidebar";
 import { usePermissions } from "@/lib/rbac-client/provider";
 import {
-  BarChartIcon,
   LayoutDashboard,
-  SecurityIcon,
-  Settings01Icon,
-  Settings02Icon,
+  BarChart3,
+  FolderOpen,
+  Folders,
   Users,
-  FolderOpenIcon,
-} from "@hugeicons/core-free-icons";
-import { HugeiconsIcon } from "@hugeicons/react";
+  Shield,
+  Key,
+  Settings,
+  Home,
+} from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 const navItems = [
+  // Overview Group
   { heading: "Overview" },
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard, permission: null },
-  { href: "/analytics", label: "Analytics", icon: BarChartIcon, permission: null },
-  { heading: "Management" },
-  {
-    href: "/manage/users",
-    label: "Users",
-    icon: Users,
-    permission: "ADMIN_USERS_MANAGE",
-  },
-  {
-    href: "/manage/roles",
-    label: "Roles",
-    icon: SecurityIcon,
-    permission: "ADMIN_ROLES_MANAGE",
-  },
+  { href: "/analytics", label: "Analytics", icon: BarChart3, permission: null },
+
+  // Content Management Group
+  { heading: "Content" },
+  { href: "/services", label: "Services", icon: FolderOpen, permission: "CONTENT_READ_ANY" },
+  { href: "/services/categories", label: "Categories", icon: Folders, permission: "CONTENT_READ_ANY" },
+
+  // User & Access Management Group
+  { heading: "Users & Access" },
+  { href: "/manage/users", label: "Users", icon: Users, permission: "ADMIN_USERS_MANAGE" },
+  { href: "/manage/roles", label: "Roles", icon: Shield, permission: "ADMIN_ROLES_MANAGE" },
   {
     href: "/manage/permissions",
     label: "Permissions",
-    icon: Settings01Icon,
+    icon: Key,
     permission: "ADMIN_PERMISSIONS_MANAGE",
   },
-  {
-    href: "/services",
-    label: "Services",
-    icon: FolderOpenIcon,
-    permission: "CONTENT_READ_ANY",
-  },
+
+  // Settings Group
+  { heading: "Settings" },
   {
     href: "/manage/system-settings",
     label: "System Settings",
-    icon: Settings02Icon,
+    icon: Settings,
     permission: "ADMIN_SYSTEM_SETTINGS_MANAGE",
   },
 ];
@@ -74,11 +70,6 @@ export function AppSidebar() {
     // If permission required, check if user has it
     return userPermissions?.permissions.includes(item.permission);
   });
-
-  // Check if there are any management items
-  const hasManagementItems = filteredNavItems.some(
-    (item) => item.heading === "Management" || item.permission?.startsWith("ADMIN_")
-  );
 
   // Filter out headings if they have no items
   const finalNavItems = filteredNavItems.filter((item, index, array) => {
@@ -99,10 +90,6 @@ export function AppSidebar() {
   const groupedItems = finalNavItems.reduce(
     (groups, item) => {
       if ("heading" in item) {
-        // Skip management heading if no management items
-        if (item.heading === "Management" && !hasManagementItems) {
-          return groups;
-        }
         groups.push({ heading: item.heading, items: [] });
       } else {
         const currentGroup = groups[groups.length - 1];
@@ -123,11 +110,11 @@ export function AppSidebar() {
             <SidebarMenuButton size="lg" asChild>
               <Link href="/dashboard">
                 <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-                  <HugeiconsIcon icon={LayoutDashboard} className="size-4" />
+                  <Home className="size-4" />
                 </div>
                 <div className="grid flex-1 text-left text-sm leading-tight">
                   <span className="truncate font-semibold">Naiera</span>
-                  <span className="truncate text-xs text-muted-foreground">Dashboard</span>
+                  <span className="truncate text-xs text-muted-foreground">Admin Dashboard</span>
                 </div>
               </Link>
             </SidebarMenuButton>
@@ -146,7 +133,7 @@ export function AppSidebar() {
                     <SidebarMenuItem key={item.href}>
                       <SidebarMenuButton asChild isActive={pathname === item.href}>
                         <Link href={item.href}>
-                          <HugeiconsIcon icon={item.icon} className="h-5 w-5" />
+                          <item.icon className="h-5 w-5" />
                           <span>{item.label}</span>
                         </Link>
                       </SidebarMenuButton>

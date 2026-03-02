@@ -30,6 +30,7 @@ export const GET = async (req: Request) => {
     const settings = await prisma.systemSettings.findFirst({
       include: {
         siteLogo: true,
+        heroBackground: true,
       },
     });
 
@@ -58,6 +59,7 @@ export const GET = async (req: Request) => {
       socialYouTube: settings.socialYouTube || null,
       copyrightText: settings.copyrightText || null,
       versionNumber: settings.versionNumber || "1.0.0",
+      heroBackgroundUrl: settings.heroBackgroundId ? `${backofficeUrl}/api/public/files/${settings.heroBackgroundId}/serve` : null,
     };
 
     return NextResponse.json(response, { headers: corsHeaders });

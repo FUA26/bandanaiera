@@ -31,7 +31,7 @@ export const serviceCategoryCreateSchema = serviceCategorySchema;
  * Schema for updating an existing service category (all fields optional except id)
  */
 export const serviceCategoryUpdateSchema = serviceCategorySchema.partial().extend({
-  id: z.string().cuid("Invalid category ID format"),
+  id: z.string().min(1, "Invalid category ID format"),
 });
 
 /**
@@ -42,11 +42,12 @@ export const serviceCategoryUpdateSchema = serviceCategorySchema.partial().exten
 
 /**
  * Contact information schema for service details
+ * All fields are optional, but if provided should be valid
  */
 export const contactInfoSchema = z.object({
-  office: z.string().min(1, "Office is required").max(200, "Office name must be less than 200 characters"),
-  phone: z.string().min(1, "Phone is required").max(50, "Phone must be less than 50 characters"),
-  email: z.string().email("Invalid email address").optional().default("-"),
+  office: z.string().max(200, "Office name must be less than 200 characters").optional(),
+  phone: z.string().max(50, "Phone must be less than 50 characters").optional(),
+  email: z.string().email("Invalid email address").optional(),
 });
 
 /**
@@ -76,7 +77,7 @@ export const downloadFormSchema = z.object({
   type: z.enum(["file", "url"], { required_error: "Type is required" }),
   name: z.string().min(1, "Name is required").max(200, "Name must be less than 200 characters"),
   value: z.string().min(1, "URL or file ID is required").max(500, "Value must be less than 500 characters"),
-  fileId: z.string().cuid("Invalid file ID format").optional(),
+  fileId: z.string().min(1, "Invalid file ID format").optional(),
 });
 
 /**
@@ -96,7 +97,7 @@ export const serviceSchema = z.object({
   icon: z.string().min(1, "Icon is required").max(100, "Icon must be less than 100 characters"),
   name: z.string().min(1, "Name is required").max(200, "Name must be less than 200 characters"),
   description: z.string().min(1, "Description is required").max(500, "Description must be less than 500 characters"),
-  categoryId: z.string().cuid("Invalid category ID format"),
+  categoryId: z.string().min(1, "Invalid category ID format"),
   badge: z.string().max(50, "Badge must be less than 50 characters").optional(),
   stats: z.string().max(100, "Stats must be less than 100 characters").optional(),
   showInMenu: z.boolean().default(true),
@@ -110,7 +111,7 @@ export const serviceSchema = z.object({
   contactInfo: contactInfoSchema.optional(),
   faqs: z.array(faqSchema).optional(),
   downloadForms: z.array(downloadFormSchema).optional(),
-  relatedServices: z.array(z.string().cuid("Invalid related service ID format")).optional(),
+  relatedServices: z.array(z.string().min(1, "Invalid related service ID format")).optional(),
   status: z.enum(["DRAFT", "PUBLISHED", "ARCHIVED"], { required_error: "Status is required" }).default("DRAFT"),
 });
 
@@ -128,7 +129,7 @@ export const serviceUpdateSchema = z.object({
   icon: z.string().optional(),
   name: z.string().optional(),
   description: z.string().optional(),
-  categoryId: z.string().cuid().optional(),
+  categoryId: z.string().min(1).optional(),
   badge: z.string().optional(),
   stats: z.string().optional(),
   showInMenu: z.boolean().optional(),
@@ -152,7 +153,7 @@ export const serviceUpdateSchema = z.object({
     type: z.enum(["file", "url"]).optional(),
     name: z.string().optional(),
     value: z.string().optional(),
-    fileId: z.string().cuid().optional(),
+    fileId: z.string().min(1).optional(),
   })).optional(),
   relatedServices: z.array(z.string()).optional(),
   status: z.enum(["DRAFT", "PUBLISHED", "ARCHIVED"]).optional(),
@@ -170,7 +171,7 @@ export const serviceUpdateSchema = z.object({
 export const serviceReorderSchema = z.object({
   services: z.array(
     z.object({
-      id: z.string().cuid("Invalid service ID format"),
+      id: z.string().min(1, "Invalid service ID format"),
       order: z.number().int().min(0, "Order must be a non-negative integer"),
     })
   ).min(1, "At least one service is required"),
@@ -186,7 +187,7 @@ export const serviceReorderSchema = z.object({
  * Schema for service list query parameters
  */
 export const serviceQuerySchema = z.object({
-  categoryId: z.string().cuid("Invalid category ID format").optional(),
+  categoryId: z.string().min(1, "Invalid category ID format").optional(),
   status: z.enum(["DRAFT", "PUBLISHED", "ARCHIVED"]).optional(),
   showInMenu: z.boolean().optional(),
   search: z.string().max(200, "Search query must be less than 200 characters").optional(),

@@ -59,5 +59,6 @@ function getDefaultSettings(): PublicSettings {
     socialYouTube: null,
     copyrightText: null,
     versionNumber: "1.0.0",
+    heroBackgroundUrl: null,
   };
 }

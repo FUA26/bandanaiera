@@ -68,11 +68,13 @@ function TabsTrigger({ className, ...props }: React.ComponentProps<typeof TabsPr
 
         // Active State Colors
         "data-active:bg-background data-active:text-primary dark:data-active:text-primary dark:data-active:border-input dark:data-active:bg-input/30",
+        "group-data-horizontal/tabs:data-active:bg-background group-data-horizontal/tabs:data-active:shadow-sm",
+        "group-data-vertical/tabs:data-active:bg-primary/5 group-data-vertical/tabs:data-active:shadow-none",
 
         // Animated Indigo Underline/Side-line (Premium Detail)
         "after:bg-primary after:absolute after:opacity-0 after:transition-all after:duration-300",
-        "group-data-horizontal/tabs:after:inset-x-0 group-data-horizontal/tabs:after:bottom-[-5px] group-data-horizontal/tabs:after:h-0.5 group-data-horizontal/tabs:data-active:after:opacity-100 group-data-horizontal/tabs:after:rounded-t-md",
-        "group-data-vertical/tabs:after:inset-y-0 group-data-vertical/tabs:after:left-0 group-data-vertical/tabs:after:w-[3px] group-data-vertical/tabs:data-active:after:opacity-100 group-data-vertical/tabs:after:rounded-r-md group-data-vertical/tabs:data-active:bg-primary/5",
+        "group-data-horizontal/tabs:after:inset-x-0 group-data-horizontal/tabs:after:bottom-[-2px] group-data-horizontal/tabs:after:h-0.5 group-data-horizontal/tabs:data-active:after:opacity-100 group-data-horizontal/tabs:after:rounded-t-md",
+        "group-data-vertical/tabs:after:inset-y-1.5 group-data-vertical/tabs:after:left-0 group-data-vertical/tabs:after:w-[3px] group-data-vertical/tabs:data-active:after:opacity-100 group-data-vertical/tabs:after:rounded-r-md",
 
         // After element visibility for line variant
         "group-data-[variant=line]/tabs-list:data-active:after:opacity-100",

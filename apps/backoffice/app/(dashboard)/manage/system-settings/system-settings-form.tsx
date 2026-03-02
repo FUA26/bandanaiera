@@ -48,6 +48,8 @@ interface SystemSettingsData {
   siteLogo?: { id: string; cdnUrl: string } | null;
   siteSubtitle?: string | null;
   citizenName?: string | null;
+  heroBackgroundId?: string | null;
+  heroBackground?: { id: string; cdnUrl: string } | null;
   contactAddress?: string | null;
   contactPhones?: string[] | null;
   contactEmails?: string[] | null;
@@ -83,6 +85,7 @@ export function SystemSettingsForm() {
       siteLogoId: "",
       siteSubtitle: "",
       citizenName: "Warga",
+      heroBackgroundId: "",
       contactAddress: "",
       contactPhones: [],
       contactEmails: [],
@@ -117,15 +120,19 @@ export function SystemSettingsForm() {
 
         // Fetch roles
         const rolesRes = await fetch("/api/roles");
+        console.log("Roles response:", rolesRes.status);
         if (rolesRes.ok) {
           const rolesData = await rolesRes.json();
+          console.log("Roles data:", rolesData);
           setRoles(rolesData.roles || []);
         }
 
         // Fetch settings
         const settingsRes = await fetch("/api/system-settings/full");
+        console.log("Settings response:", settingsRes.status);
         if (settingsRes.ok) {
           const data = await settingsRes.json();
+          console.log("Settings data:", data);
           setCurrentSettings(data.settings);
 
           // Populate form
@@ -141,6 +148,7 @@ export function SystemSettingsForm() {
             siteLogoId: data.settings.siteLogoId || "",
             siteSubtitle: data.settings.siteSubtitle || "",
             citizenName: data.settings.citizenName || "Warga",
+            heroBackgroundId: data.settings.heroBackgroundId || "",
             contactAddress: data.settings.contactAddress || "",
             contactPhones: data.settings.contactPhones || [],
             contactEmails: data.settings.contactEmails || [],
@@ -161,7 +169,7 @@ export function SystemSettingsForm() {
     };
 
     fetchData();
-  }, [form]);
+  }, []);
 
   const onSubmit = async (data: SystemSettingsInput) => {
     setIsSaving(true);
@@ -205,28 +213,28 @@ export function SystemSettingsForm() {
   }
 
   const formState = form.formState;
-  const isDirty = Object.keys(formState.dirtyFields).length > 0;
+  const isDirty = formState.isDirty;
 
   return (
     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
       <Tabs defaultValue="registration" orientation="vertical" className="flex flex-col md:flex-row gap-6 w-full items-start">
         <TabsList className="flex w-full md:w-56 shrink-0 flex-row md:flex-col justify-start bg-transparent p-0 gap-1 overflow-x-auto border-b md:border-none pb-4 md:pb-0 text-left">
-          <TabsTrigger value="registration" className="justify-start md:w-full px-3 py-2 bg-transparent text-muted-foreground data-active:bg-muted data-active:text-foreground">
+          <TabsTrigger value="registration" className="justify-start md:w-full px-3 py-2 bg-transparent text-muted-foreground data-[state=active]:bg-primary/10 data-[state=active]:text-primary data-[state=active]:font-semibold">
             Registration
           </TabsTrigger>
-          <TabsTrigger value="security" className="justify-start md:w-full px-3 py-2 bg-transparent text-muted-foreground data-active:bg-muted data-active:text-foreground">
+          <TabsTrigger value="security" className="justify-start md:w-full px-3 py-2 bg-transparent text-muted-foreground data-[state=active]:bg-primary/10 data-[state=active]:text-primary data-[state=active]:font-semibold">
             Security
           </TabsTrigger>
-          <TabsTrigger value="site" className="justify-start md:w-full px-3 py-2 bg-transparent text-muted-foreground data-active:bg-muted data-active:text-foreground">
+          <TabsTrigger value="site" className="justify-start md:w-full px-3 py-2 bg-transparent text-muted-foreground data-[state=active]:bg-primary/10 data-[state=active]:text-primary data-[state=active]:font-semibold">
             Site Identity
           </TabsTrigger>
-          <TabsTrigger value="contact" className="justify-start md:w-full px-3 py-2 bg-transparent text-muted-foreground data-active:bg-muted data-active:text-foreground">
+          <TabsTrigger value="contact" className="justify-start md:w-full px-3 py-2 bg-transparent text-muted-foreground data-[state=active]:bg-primary/10 data-[state=active]:text-primary data-[state=active]:font-semibold">
             Contact
           </TabsTrigger>
-          <TabsTrigger value="social" className="justify-start md:w-full px-3 py-2 bg-transparent text-muted-foreground data-active:bg-muted data-active:text-foreground">
+          <TabsTrigger value="social" className="justify-start md:w-full px-3 py-2 bg-transparent text-muted-foreground data-[state=active]:bg-primary/10 data-[state=active]:text-primary data-[state=active]:font-semibold">
             Social Media
           </TabsTrigger>
-          <TabsTrigger value="footer" className="justify-start md:w-full px-3 py-2 bg-transparent text-muted-foreground data-active:bg-muted data-active:text-foreground">
+          <TabsTrigger value="footer" className="justify-start md:w-full px-3 py-2 bg-transparent text-muted-foreground data-[state=active]:bg-primary/10 data-[state=active]:text-primary data-[state=active]:font-semibold">
             Footer
           </TabsTrigger>
         </TabsList>
@@ -280,12 +288,16 @@ export function SystemSettingsForm() {
                       className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
                       {...form.register("defaultUserRoleId")}
                     >
+                      <option value="">Select a role...</option>
                       {roles.map((role) => (
                         <option key={role.id} value={role.id}>
                           {role.name}
                         </option>
                       ))}
                     </select>
+                    {roles.length === 0 && (
+                      <p className="text-xs text-destructive mt-1">No roles available. Please create roles first.</p>
+                    )}
                   </FieldContent>
                   <FieldError />
                 </Field>
@@ -405,6 +417,19 @@ export function SystemSettingsForm() {
                     value={form.watch("siteLogoId")}
                     logoUrl={currentSettings?.siteLogoId ? `/api/public/files/${currentSettings.siteLogoId}/serve` : null}
                     onChange={(value) => form.setValue("siteLogoId", value, { shouldDirty: true })}
+                    disabled={isSaving}
+                  />
+                </div>
+
+                <div>
+                  <Label htmlFor="heroBackgroundId">Hero Background Image</Label>
+                  <p className="text-xs text-muted-foreground mb-2">
+                    Upload a background image for the landing page hero section (optional)
+                  </p>
+                  <LogoUpload
+                    value={form.watch("heroBackgroundId")}
+                    logoUrl={currentSettings?.heroBackgroundId ? `/api/public/files/${currentSettings.heroBackgroundId}/serve` : null}
+                    onChange={(value) => form.setValue("heroBackgroundId", value, { shouldDirty: true })}
                     disabled={isSaving}
                   />
                 </div>
@@ -579,7 +604,19 @@ export function SystemSettingsForm() {
 
       {/* Actions */}
       <div className="flex items-center gap-4">
-        <Button type="submit" disabled={isSaving || !isDirty}>
+        <Button
+          type="button"
+          onClick={() => {
+            console.log("Button clicked!");
+            console.log("Form errors:", form.formState.errors);
+            console.log("Form values:", form.getValues());
+            console.log("Is dirty:", form.formState.isDirty);
+            console.log("Is valid:", form.formState.isValid);
+          }}
+        >
+          Debug
+        </Button>
+        <Button type="submit" disabled={isSaving}>
           {isSaving ? "Saving..." : "Save Changes"}
         </Button>
         <Button
@@ -599,6 +636,7 @@ export function SystemSettingsForm() {
                 siteLogoId: currentSettings.siteLogoId || "",
                 siteSubtitle: currentSettings.siteSubtitle || "",
                 citizenName: currentSettings.citizenName || "Warga",
+                heroBackgroundId: currentSettings.heroBackgroundId || "",
                 contactAddress: currentSettings.contactAddress || "",
                 contactPhones: currentSettings.contactPhones || [],
                 contactEmails: currentSettings.contactEmails || [],
@@ -611,7 +649,7 @@ export function SystemSettingsForm() {
               });
             }
           }}
-          disabled={!isDirty}
+          disabled={!form.formState.isDirty}
         >
           Reset
         </Button>

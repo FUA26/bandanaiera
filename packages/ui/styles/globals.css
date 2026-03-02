@@ -26,12 +26,12 @@
      BRAND COLORS
      ======================================== */
 
-  /* Primary - Main brand color (Premium Indigo) */
-  --primary: oklch(0.511 0.262 276.376); /* indigo-600 */
-  --primary-hover: oklch(0.439 0.232 277.58); /* indigo-700 */
-  --primary-active: oklch(0.373 0.198 279.167); /* indigo-800 */
-  --primary-light: oklch(0.935 0.054 281.822); /* indigo-100 */
-  --primary-lighter: oklch(0.966 0.027 284.093); /* indigo-50 */
+  /* Primary - Main brand color (Premium Blue) */
+  --primary: oklch(0.55 0.22 250); /* blue-600 */
+  --primary-hover: oklch(0.48 0.21 250); /* blue-700 */
+  --primary-active: oklch(0.42 0.19 250); /* blue-800 */
+  --primary-light: oklch(0.93 0.05 250); /* blue-100 */
+  --primary-lighter: oklch(0.97 0.01 250); /* blue-50 */
   --primary-foreground: oklch(0.985 0 0); /* white */
 
   /* Secondary - Supporting brand color (Slate/Gray) */
@@ -42,13 +42,13 @@
   --secondary-lighter: oklch(0.968 0.003 264); /* slate-100 */
   --secondary-foreground: oklch(1 0 0); /* white */
 
-  /* Accent - Used for UI hover states (Subtle Indigo) */
-  --accent: oklch(0.966 0.027 284.093); /* indigo-50 */
-  --accent-hover: oklch(0.935 0.054 281.822); /* indigo-100 */
-  --accent-active: oklch(0.88 0.093 282.686); /* indigo-200 */
-  --accent-light: oklch(0.985 0.01 285);
-  --accent-lighter: oklch(0.99 0.005 285);
-  --accent-foreground: oklch(0.511 0.262 276.376); /* indigo-600 */
+  /* Accent - Used for UI hover states (Subtle Blue) */
+  --accent: oklch(0.97 0.01 250); /* blue-50 */
+  --accent-hover: oklch(0.93 0.05 250); /* blue-100 */
+  --accent-active: oklch(0.88 0.08 250); /* blue-200 */
+  --accent-light: oklch(0.985 0.005 250);
+  --accent-lighter: oklch(0.99 0.003 250);
+  --accent-foreground: oklch(0.55 0.22 250); /* blue-600 */
 
   /* ========================================
      SEMANTIC COLORS
@@ -138,12 +138,12 @@
 
   --sidebar: oklch(0.985 0 0);
   --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.53 0.18 155);
+  --sidebar-primary: oklch(0.55 0.22 250); /* blue */
   --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.96 0.04 155);
+  --sidebar-accent: oklch(0.97 0.01 250); /* blue-50 */
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.53 0.18 155);
+  --sidebar-ring: oklch(0.55 0.22 250); /* blue */
 
   /* ========================================
      GRADIENT PRESETS
@@ -173,12 +173,12 @@
    ======================================== */
 
 .dark {
-  /* Brand Colors - Dark Mode */
-  --primary: oklch(0.707 0.165 254);
-  --primary-hover: oklch(0.623 0.214 259);
-  --primary-active: oklch(0.546 0.245 262);
-  --primary-light: oklch(0.282 0.091 267);
-  --primary-lighter: oklch(0.208 0.042 265);
+  /* Brand Colors - Dark Mode (Blue) */
+  --primary: oklch(0.65 0.20 250); /* blue-500 bright */
+  --primary-hover: oklch(0.58 0.21 250); /* blue-600 */
+  --primary-active: oklch(0.50 0.20 250); /* blue-700 */
+  --primary-light: oklch(0.28 0.08 250); /* blue-950 dark */
+  --primary-lighter: oklch(0.22 0.05 250);
   --primary-foreground: oklch(0.145 0 0);
 
   --secondary: oklch(0.3 0.01 264);
@@ -253,15 +253,15 @@
   --chart-4: oklch(0.7 0.18 300);
   --chart-5: oklch(0.75 0.14 180);
 
-  /* Sidebar - Dark Mode */
+  /* Sidebar - Dark Mode (Blue) */
   --sidebar: oklch(0.205 0 0);
   --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.696 0.17 162);
+  --sidebar-primary: oklch(0.65 0.20 250); /* blue */
   --sidebar-primary-foreground: oklch(0.985 0 0);
   --sidebar-accent: oklch(0.269 0 0);
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(0.269 0 0);
-  --sidebar-ring: oklch(0.439 0 0);
+  --sidebar-ring: oklch(0.55 0.22 250); /* blue */
 
   /* Gradients - Dark Mode */
   --gradient-primary: linear-gradient(135deg, var(--primary), var(--accent));
