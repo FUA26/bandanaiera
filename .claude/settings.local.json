@@ -16,7 +16,12 @@
       "Bash(find:*)",
       "Bash(pnpm list:*)",
       "Bash(npm ls:*)",
-      "Bash(git reset:*)"
+      "Bash(git reset:*)",
+      "Bash(curl:*)",
+      "Bash(netstat:*)",
+      "Bash(xargs:*)",
+      "Bash(powershell:*)",
+      "Bash(taskkill:*)"
     ]
   }
 }

@@ -35,7 +35,7 @@ export default function UnauthorizedPage() {
 
         <div className="flex gap-4">
           <Button variant="outline" asChild>
-            <Link href="/dashboard">
+            <Link href="/">
               <HugeiconsIcon icon={ArrowLeft01Icon} className="mr-2 h-4 w-4" />
               Back to Dashboard
             </Link>

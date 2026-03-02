@@ -30,7 +30,7 @@ import { usePathname } from "next/navigation";
 const navItems = [
   // Overview Group
   { heading: "Overview" },
-  { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard, permission: null },
+  { href: "/", label: "Dashboard", icon: LayoutDashboard, permission: null },
   { href: "/analytics", label: "Analytics", icon: BarChart3, permission: null },
 
   // Content Management Group
@@ -108,7 +108,7 @@ export function AppSidebar() {
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" asChild>
-              <Link href="/dashboard">
+              <Link href="/">
                 <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
                   <Home className="size-4" />
                 </div>

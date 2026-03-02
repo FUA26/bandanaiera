@@ -7,12 +7,12 @@ export interface BreadcrumbItem {
 export function generateBreadcrumbs(pathname: string): BreadcrumbItem[] {
   const segments = pathname.split("/").filter(Boolean);
 
-  if (segments.length === 0 || segments[0] === "dashboard") {
-    return [{ label: "Dashboard", href: "/dashboard", icon: undefined }];
+  if (segments.length === 0) {
+    return [{ label: "Dashboard", href: "/", icon: undefined }];
   }
 
   const breadcrumbs: BreadcrumbItem[] = [
-    { label: "Dashboard", href: "/dashboard", icon: undefined },
+    { label: "Dashboard", href: "/", icon: undefined },
   ];
 
   // Build breadcrumb path based on segments

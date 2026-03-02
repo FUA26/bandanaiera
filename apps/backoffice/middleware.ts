@@ -15,12 +15,17 @@ import { NextResponse } from "next/server";
 const MANAGE_ROUTES = ["/manage"];
 
 // Routes that require authentication (any role)
-const PROTECTED_ROUTES = ["/dashboard"];
+const PROTECTED_ROUTES = ["/"];
 
 export default auth((req) => {
   const isLoggedIn = !!req.auth;
   const pathname = req.nextUrl.pathname;
-  const isOnDashboard = pathname.startsWith("/dashboard");
+  const isOnDashboard =
+    !pathname.startsWith("/login") &&
+    !pathname.startsWith("/register") &&
+    !pathname.startsWith("/api") &&
+    !pathname.startsWith("/unauthorized") &&
+    !pathname.startsWith("/forgot-password");
   const isOnManageRoute = MANAGE_ROUTES.some((route) => pathname.startsWith(route));
   const isOnAuthPage =
     pathname.startsWith("/login") ||
@@ -45,7 +50,7 @@ export default auth((req) => {
 
   // Redirect authenticated users away from auth pages
   if (isOnAuthPage && isLoggedIn) {
-    return NextResponse.redirect(new URL("/dashboard", req.url));
+    return NextResponse.redirect(new URL("/", req.url));
   }
 
   return NextResponse.next();

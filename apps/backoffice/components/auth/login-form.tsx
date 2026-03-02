@@ -7,7 +7,6 @@ import { loginSchema } from "@/lib/validations/auth";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { signIn } from "next-auth/react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import type { z } from "zod";
@@ -15,7 +14,6 @@ import type { z } from "zod";
 type LoginFormData = z.infer<typeof loginSchema>;
 
 export function LoginForm() {
-  const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -36,8 +34,8 @@ export function LoginForm() {
       if (result?.error) {
         setError("Invalid email or password");
       } else {
-        router.push("/dashboard");
-        router.refresh();
+        // Use window.location for full page reload to ensure session is properly set
+        window.location.href = "/";
       }
     } catch {
       setError("Something went wrong. Please try again.");
