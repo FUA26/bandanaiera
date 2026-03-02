@@ -69,6 +69,11 @@ model User {
   createdNews      News[]            @relation("NewsCreator")
   updatedNews      News[]            @relation("NewsUpdater")
   newsActivityLogs NewsActivityLog[] @relation("NewsActivityLogs")
+
+  // Event Management Relations
+  createdEvents      Event[]            @relation("EventCreator")
+  updatedEvents      Event[]            @relation("EventUpdater")
+  eventActivityLogs EventActivityLog[] @relation("EventActivityLogs")
 }
 
 model PermissionCache {
@@ -187,6 +192,7 @@ model File {
   siteLogos SystemSettings[] @relation("SiteLogo")
   heroBackgrounds SystemSettings[] @relation("HeroBackground")
   newsAsFeaturedImage News[] @relation("NewsFeaturedImage")
+  eventsAsImage Event[] @relation("EventImage")
 
   @@index([uploadedById])
   @@index([category])
@@ -214,6 +220,19 @@ enum NewsStatus {
   DRAFT
   PUBLISHED
   ARCHIVED
+}
+
+enum EventType {
+  ONLINE
+  OFFLINE
+  HYBRID
+}
+
+enum EventStatus {
+  DRAFT
+  PUBLISHED
+  CANCELLED
+  COMPLETED
 }
 
 model ServiceCategory {
@@ -358,6 +377,94 @@ model NewsActivityLog {
   createdAt   DateTime @default(now())
 
   @@index([newsId])
+  @@index([userId])
+  @@index([createdAt])
+}
+
+model EventCategory {
+  id          String     @id @default(cuid())
+  name        String
+  slug        String     @unique
+  color       String     @default("primary")
+  showInMenu  Boolean    @default(true)
+  order       Int        @default(0)
+  events      Event[]
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  @@index([showInMenu])
+  @@index([order])
+}
+
+model Event {
+  id                   String         @id @default(cuid())
+  slug                 String         @unique
+  title                String
+  description          String?
+
+  categoryId           String
+  category             EventCategory   @relation(fields: [categoryId], references: [id])
+
+  // Event specifics
+  date                 DateTime       @db.Date
+  time                 String?
+  location             String?
+  locationUrl          String?
+  type                 EventType     @default(OFFLINE)
+
+  // Media
+  imageId              String?
+  image                File?          @relation("EventImage", fields: [imageId], references: [id], onDelete: SetNull)
+
+  // Organizer & Attendees
+  organizer            String
+  organizerContact     String?
+  attendees            Json?
+
+  // Registration
+  registrationRequired  Boolean        @default(false)
+  registrationUrl       String?
+  maxAttendees         Int?
+
+  // Display options
+  featured             Boolean        @default(false)
+  showInMenu           Boolean        @default(true)
+  order                Int            @default(0)
+
+  // Publishing workflow
+  status               EventStatus    @default(DRAFT)
+
+  // Audit
+  createdById          String
+  createdBy            User           @relation("EventCreator", fields: [createdById], references: [id])
+  updatedById          String?
+  updatedBy            User?          @relation("EventUpdater", fields: [updatedById], references: [id])
+
+  createdAt            DateTime       @default(now())
+  updatedAt            DateTime       @updatedAt
+
+  activityLogs         EventActivityLog[]
+
+  @@index([categoryId])
+  @@index([status])
+  @@index([type])
+  @@index([featured])
+  @@index([date])
+  @@index([order])
+  @@index([slug])
+}
+
+model EventActivityLog {
+  id          String   @id @default(cuid())
+  eventId     String
+  event       Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  userId      String
+  user        User     @relation("EventActivityLogs", fields: [userId], references: [id])
+  action      String
+  changes     Json?
+  createdAt   DateTime @default(now())
+
+  @@index([eventId])
   @@index([userId])
   @@index([createdAt])
 }
