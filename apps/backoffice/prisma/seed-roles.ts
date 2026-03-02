@@ -130,6 +130,13 @@ const roles = [
       "NEWS_DELETE",
       "NEWS_REORDER",
       "NEWS_CATEGORIES_MANAGE",
+      // All events permissions
+      "EVENTS_VIEW",
+      "EVENTS_CREATE",
+      "EVENTS_EDIT",
+      "EVENTS_DELETE",
+      "EVENTS_REORDER",
+      "EVENT_CATEGORIES_MANAGE",
     ],
   },
 ];

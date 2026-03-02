@@ -86,6 +86,18 @@ const permissions = [
     description: "Manage news categories",
   },
 
+  // Event Management
+  { name: "EVENTS_VIEW", category: "EVENTS", description: "View events" },
+  { name: "EVENTS_CREATE", category: "EVENTS", description: "Create new events" },
+  { name: "EVENTS_EDIT", category: "EVENTS", description: "Edit events" },
+  { name: "EVENTS_DELETE", category: "EVENTS", description: "Delete events" },
+  { name: "EVENTS_REORDER", category: "EVENTS", description: "Reorder events" },
+  {
+    name: "EVENT_CATEGORIES_MANAGE",
+    category: "EVENTS",
+    description: "Manage event categories",
+  },
+
   // Admin
   { name: "ADMIN_PANEL_ACCESS", category: "ADMIN", description: "Access admin panel" },
   { name: "ADMIN_USERS_MANAGE", category: "ADMIN", description: "Manage users in admin panel" },
