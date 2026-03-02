@@ -1,7 +1,11 @@
 #!/usr/bin/env tsx
 import fs from 'fs';
 import path from 'path';
+import { config } from 'dotenv';
 import { PrismaClient } from '@prisma/client';
+
+// Load environment variables
+config({ path: 'apps/backoffice/.env.local' });
 
 const prisma = new PrismaClient();
 
