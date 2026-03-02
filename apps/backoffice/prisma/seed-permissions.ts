@@ -73,6 +73,19 @@ const permissions = [
     description: "Manage service categories",
   },
 
+  // News Management
+  { name: "NEWS_VIEW", category: "NEWS", description: "View news" },
+  { name: "NEWS_CREATE", category: "NEWS", description: "Create new news" },
+  { name: "NEWS_EDIT", category: "NEWS", description: "Edit news" },
+  { name: "NEWS_PUBLISH", category: "NEWS", description: "Publish/unpublish news" },
+  { name: "NEWS_DELETE", category: "NEWS", description: "Delete news" },
+  { name: "NEWS_REORDER", category: "NEWS", description: "Reorder news" },
+  {
+    name: "NEWS_CATEGORIES_MANAGE",
+    category: "NEWS",
+    description: "Manage news categories",
+  },
+
   // Admin
   { name: "ADMIN_PANEL_ACCESS", category: "ADMIN", description: "Access admin panel" },
   { name: "ADMIN_USERS_MANAGE", category: "ADMIN", description: "Manage users in admin panel" },
