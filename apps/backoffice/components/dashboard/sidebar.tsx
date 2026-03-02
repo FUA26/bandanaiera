@@ -1,5 +1,8 @@
 "use client";
 
+import Image from "next/image";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import {
   Sidebar,
   SidebarContent,
@@ -22,10 +25,7 @@ import {
   Shield,
   Key,
   Settings,
-  Home,
 } from "lucide-react";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
 
 const navItems = [
   // Overview Group
@@ -109,8 +109,14 @@ export function AppSidebar() {
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" asChild>
               <Link href="/">
-                <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-                  <Home className="size-4" />
+                <div className="flex aspect-square size-8 items-center justify-center overflow-hidden rounded-lg bg-primary">
+                  <Image
+                    src="/logo.svg"
+                    alt="Naiera Logo"
+                    width={32}
+                    height={32}
+                    className="size-6"
+                  />
                 </div>
                 <div className="grid flex-1 text-left text-sm leading-tight">
                   <span className="truncate font-semibold">Naiera</span>

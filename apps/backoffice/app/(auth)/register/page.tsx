@@ -8,17 +8,21 @@ import { RegisterForm } from "@/components/auth/register-form";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Create Account",
-  description: "Create a new account to get started",
+  title: "Daftar Akun Baru - Super App Naiera",
+  description: "Buat akun baru untuk menggunakan layanan digital Naiera",
 };
 
 export default function RegisterPage() {
   return (
     <div className="w-full">
       <div className="flex items-center gap-3 mb-10">
-        <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-primary text-primary-foreground font-bold text-lg leading-none">
-          N
-        </div>
+        <img
+          src="/logo.svg"
+          alt="Logo Naiera"
+          width={40}
+          height={40}
+          className="object-contain"
+        />
         <div>
           <h2 className="text-base font-bold leading-tight">Super App Naiera</h2>
           <p className="text-xs text-muted-foreground leading-tight">Kabupaten Naiera</p>
