@@ -23,6 +23,7 @@ import {
   Folders,
   Newspaper,
   FolderKanban,
+  Calendar,
   Users,
   Shield,
   Key,
@@ -41,6 +42,8 @@ const navItems = [
   { href: "/services/categories", label: "Categories", icon: Folders, permission: "CONTENT_READ_ANY" },
   { href: "/manage/news", label: "News", icon: Newspaper, permission: "NEWS_VIEW" },
   { href: "/manage/news-categories", label: "News Categories", icon: FolderKanban, permission: "NEWS_CATEGORIES_MANAGE" },
+  { href: "/manage/events", label: "Events", icon: Calendar, permission: "EVENTS_VIEW" },
+  { href: "/manage/event-categories", label: "Event Categories", icon: FolderKanban, permission: "EVENT_CATEGORIES_MANAGE" },
 
   // User & Access Management Group
   { heading: "Users & Access" },
