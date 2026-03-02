@@ -15,24 +15,21 @@ export const metadata = {
 
 export default function ForgotPasswordPage() {
   return (
-    <div className="flex min-h-[calc(100vh-theme-spacing.16)] items-center justify-center bg-background p-4">
-      <div className="w-full max-w-md space-y-8">
-        {/* Header */}
-        <div className="flex flex-col items-center space-y-2 text-center">
-          <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10">
-            <HugeiconsIcon icon={Calendar02Icon} className="h-6 w-6 text-primary" />
-          </div>
-          <h1 className="text-2xl font-semibold tracking-tight">Forgot your password?</h1>
-          <p className="text-sm text-muted-foreground">
-            No worries, we&apos;ll send you reset instructions.
-          </p>
+    <div className="w-full">
+      <div className="flex items-center gap-3 mb-10">
+        <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-primary text-primary-foreground font-bold text-lg leading-none">
+          N
         </div>
-
-        {/* Form Card */}
-        <div className="rounded-lg border bg-card p-6 shadow-sm">
-          <ForgotPasswordForm />
+        <div>
+          <h2 className="text-base font-bold leading-tight">Super App Naiera</h2>
+          <p className="text-xs text-muted-foreground leading-tight">Kabupaten Naiera</p>
         </div>
       </div>
+      <div className="space-y-2 mb-8">
+        <h1 className="text-[28px] font-bold tracking-tight text-foreground">Lupa Password?</h1>
+        <p className="text-sm text-muted-foreground">Jangan khawatir, kami akan mengirimkan instruksi untuk reset password Anda.</p>
+      </div>
+      <ForgotPasswordForm />
     </div>
   );
 }

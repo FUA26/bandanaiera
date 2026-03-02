@@ -7,19 +7,12 @@
  */
 
 import { Button } from "@/components/ui/button";
-import {
-  Field,
-  FieldContent,
-  FieldDescription,
-  FieldError,
-  FieldLabel,
-} from "@/components/ui/field";
+import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Progress } from "@/components/ui/progress";
 import { registerSchema, type RegisterInput } from "@/lib/validations/auth";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { EyeIcon, ViewOffIcon } from "@hugeicons/core-free-icons";
-import { HugeiconsIcon } from "@hugeicons/react";
+import { Mail, Lock, Eye, EyeOff, User, ArrowLeft, ArrowRight, Loader2, CheckCircle2 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -101,38 +94,24 @@ export function RegisterForm() {
   // Show success message if registration completed
   if (registrationSuccess) {
     return (
-      <div className="space-y-6 text-center">
-        <div className="flex justify-center">
-          <div className="flex h-16 w-16 items-center justify-center rounded-full bg-green-100 dark:bg-green-900">
-            <svg
-              className="h-8 w-8 text-green-600 dark:text-green-400"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M5 13l4 4L19 7"
-              />
-            </svg>
-          </div>
+      <div className="flex flex-col items-center justify-center space-y-4 py-8 text-center animate-fade-in-up">
+        <div className="flex h-16 w-16 items-center justify-center rounded-full bg-success/10 mb-2">
+          <CheckCircle2 className="h-8 w-8 text-success" strokeWidth={1.5} />
         </div>
 
         <div className="space-y-2">
-          <h3 className="text-xl font-semibold">Registration Successful!</h3>
-          <p className="text-muted-foreground">
+          <h3 className="text-xl font-semibold text-foreground">Pendaftaran Berhasil!</h3>
+          <p className="text-sm text-muted-foreground">
             {requireEmailVerification
-              ? "We&apos;ve sent a verification email to your address. Please check your email and click the verification link to activate your account."
-              : "Your account has been created successfully."}
+              ? "Kami telah mengirimkan email verifikasi. Silakan cek email Anda untuk mengaktifkan akun."
+              : "Akun Anda telah berhasil dibuat."}
           </p>
         </div>
 
-        <div className="space-y-4 pt-4">
+        <div className="space-y-4 w-full pt-4">
           {requireEmailVerification && (
-            <p className="text-sm text-muted-foreground">
-              Didn&apos;t receive the email? Check your spam folder or{" "}
+            <p className="text-xs text-muted-foreground w-full text-center">
+              Belum menerima email?{" "}
               <button
                 type="button"
                 onClick={() => {
@@ -140,15 +119,15 @@ export function RegisterForm() {
                   setRequireEmailVerification(false);
                   form.reset();
                 }}
-                className="text-primary hover:underline"
+                className="text-primary hover:text-primary/80 font-medium transition-colors"
               >
-                try again
+                Coba kirim ulang
               </button>
             </p>
           )}
 
-          <Button asChild className="w-full">
-            <Link href="/login">Go to Login</Link>
+          <Button asChild className="w-full h-11 rounded-xl bg-primary hover:bg-primary/90 text-primary-foreground font-medium shadow-sm transition-colors mt-6">
+            <Link href="/login">Masuk ke Akun Anda</Link>
           </Button>
         </div>
       </div>
@@ -158,132 +137,169 @@ export function RegisterForm() {
   const formState = form.formState;
 
   return (
-    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
       {/* Name */}
-      <Field>
-        <FieldLabel htmlFor="name">Full Name</FieldLabel>
-        <FieldDescription>Enter your full name</FieldDescription>
-        <FieldContent>
+      <div className="space-y-2">
+        <Label htmlFor="name" className="text-sm font-medium text-foreground">Nama Lengkap</Label>
+        <div className="relative">
+          <User className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground/60" strokeWidth={1.5} />
           <Input
             id="name"
             type="text"
-            placeholder="John Doe"
+            placeholder="Masukkan nama lengkap"
             disabled={isLoading}
             {...form.register("name")}
+            className="pl-10 h-11 rounded-xl bg-background border-muted/80 shadow-none focus-visible:ring-1 focus-visible:ring-primary"
           />
-        </FieldContent>
-        <FieldError />
-      </Field>
+        </div>
+        {form.formState.errors.name && (
+          <p className="text-sm text-red-500">{form.formState.errors.name?.message}</p>
+        )}
+      </div>
 
       {/* Email */}
-      <Field>
-        <FieldLabel htmlFor="email">Email</FieldLabel>
-        <FieldDescription>Enter your email address</FieldDescription>
-        <FieldContent>
+      <div className="space-y-2">
+        <Label htmlFor="email" className="text-sm font-medium text-foreground">Email</Label>
+        <div className="relative">
+          <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground/60" strokeWidth={1.5} />
           <Input
             id="email"
             type="email"
-            placeholder="john@example.com"
+            placeholder="contoh@email.com"
             disabled={isLoading}
             {...form.register("email")}
+            className="pl-10 h-11 rounded-xl bg-background border-muted/80 shadow-none focus-visible:ring-1 focus-visible:ring-primary"
           />
-        </FieldContent>
-        <FieldError />
-      </Field>
+        </div>
+        {form.formState.errors.email && (
+          <p className="text-sm text-red-500">{form.formState.errors.email?.message}</p>
+        )}
+      </div>
 
       {/* Password */}
-      <Field>
-        <FieldLabel htmlFor="password">Password</FieldLabel>
-        <FieldDescription>Enter a secure password</FieldDescription>
-        <FieldContent>
-          <div className="relative">
-            <Input
-              id="password"
-              type={showPassword ? "text" : "password"}
-              placeholder="••••••••"
-              disabled={isLoading}
-              {...form.register("password")}
-            />
-            <button
-              type="button"
-              onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
-              tabIndex={-1}
-            >
-              {showPassword ? (
-                <HugeiconsIcon icon={ViewOffIcon} className="h-5 w-5" />
-              ) : (
-                <HugeiconsIcon icon={EyeIcon} className="h-5 w-5" />
-              )}
-            </button>
-          </div>
-        </FieldContent>
-        <FieldError />
-      </Field>
+      <div className="space-y-2">
+        <Label htmlFor="password" className="text-sm font-medium text-foreground">Password</Label>
+        <div className="relative">
+          <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground/60" strokeWidth={1.5} />
+          <Input
+            id="password"
+            type={showPassword ? "text" : "password"}
+            placeholder="Minimal 8 karakter"
+            disabled={isLoading}
+            {...form.register("password")}
+            className="pl-10 pr-10 h-11 rounded-xl bg-background border-muted/80 shadow-none focus-visible:ring-1 focus-visible:ring-primary"
+          />
+          <button
+            type="button"
+            onClick={() => setShowPassword(!showPassword)}
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground/60 hover:text-foreground focus:outline-none transition-colors"
+            tabIndex={-1}
+          >
+            {showPassword ? (
+              <EyeOff className="h-5 w-5" strokeWidth={1.5} />
+            ) : (
+              <Eye className="h-5 w-5" strokeWidth={1.5} />
+            )}
+          </button>
+        </div>
+        {form.formState.errors.password && (
+          <p className="text-sm text-red-500">{form.formState.errors.password?.message}</p>
+        )}
+      </div>
 
       {/* Password Strength Indicator */}
       {passwordValue && (
         <div className="space-y-2">
           <div className="flex items-center justify-between text-xs">
-            <span className="text-muted-foreground">Password strength:</span>
+            <span className="text-muted-foreground">Kekuatan password:</span>
             <span
-              className={`font-medium ${
-                passwordStrength.score === 25
+              className={`font-medium ${passwordStrength.score === 25
                   ? "text-red-500"
                   : passwordStrength.score === 50
                     ? "text-yellow-500"
                     : passwordStrength.score === 75
                       ? "text-blue-500"
                       : "text-green-500"
-              }`}
+                }`}
             >
               {passwordStrength.label}
             </span>
           </div>
-          <Progress value={passwordStrength.score} className="h-2" />
+          <Progress value={passwordStrength.score} className="h-1.5 rounded-full" />
         </div>
       )}
 
       {/* Confirm Password */}
-      <Field>
-        <FieldLabel htmlFor="confirmPassword">Confirm Password</FieldLabel>
-        <FieldDescription>Re-enter your password</FieldDescription>
-        <FieldContent>
-          <div className="relative">
-            <Input
-              id="confirmPassword"
-              type={showConfirmPassword ? "text" : "password"}
-              placeholder="••••••••"
-              disabled={isLoading}
-              {...form.register("confirmPassword")}
-            />
-            <button
-              type="button"
-              onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
-              tabIndex={-1}
-            >
-              {showConfirmPassword ? (
-                <HugeiconsIcon icon={ViewOffIcon} className="h-5 w-5" />
-              ) : (
-                <HugeiconsIcon icon={EyeIcon} className="h-5 w-5" />
-              )}
-            </button>
-          </div>
-        </FieldContent>
-        <FieldError />
-      </Field>
+      <div className="space-y-2 pb-2">
+        <Label htmlFor="confirmPassword" className="text-sm font-medium text-foreground">Konfirmasi Password</Label>
+        <div className="relative">
+          <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground/60" strokeWidth={1.5} />
+          <Input
+            id="confirmPassword"
+            type={showConfirmPassword ? "text" : "password"}
+            placeholder="Ketik ulang password Anda"
+            disabled={isLoading}
+            {...form.register("confirmPassword")}
+            className="pl-10 pr-10 h-11 rounded-xl bg-background border-muted/80 shadow-none focus-visible:ring-1 focus-visible:ring-primary"
+          />
+          <button
+            type="button"
+            onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground/60 hover:text-foreground focus:outline-none transition-colors"
+            tabIndex={-1}
+          >
+            {showConfirmPassword ? (
+              <EyeOff className="h-5 w-5" strokeWidth={1.5} />
+            ) : (
+              <Eye className="h-5 w-5" strokeWidth={1.5} />
+            )}
+          </button>
+        </div>
+        {form.formState.errors.confirmPassword && (
+          <p className="text-sm text-red-500">{form.formState.errors.confirmPassword?.message}</p>
+        )}
+      </div>
 
       {/* Submit */}
-      <Button type="submit" className="w-full" disabled={isLoading}>
-        {isLoading ? "Creating account..." : "Create Account"}
+      <Button type="submit" className="w-full h-11 rounded-xl bg-primary hover:bg-primary/90 text-primary-foreground font-medium shadow-sm transition-colors" disabled={isLoading}>
+        {isLoading ? (
+          <>
+            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+            Memproses...
+          </>
+        ) : (
+          "Daftar Sekarang"
+        )}
       </Button>
 
+      <div className="relative my-6">
+        <div className="absolute inset-0 flex items-center">
+          <span className="w-full border-t border-muted" />
+        </div>
+        <div className="relative flex justify-center text-xs">
+          <span className="bg-background px-4 text-muted-foreground">
+            atau pendaftaran via
+          </span>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-2 gap-4 pb-2">
+        <Button variant="outline" type="button" className="h-11 rounded-xl font-medium shadow-none bg-background hover:bg-muted/50 border-muted transition-colors">
+          <svg className="w-5 h-5 mr-3" viewBox="0 0 24 24">
+            <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4" />
+            <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853" />
+            <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05" />
+            <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335" />
+          </svg>
+          Google
+        </Button>
+      </div>
+
       {/* Login Link */}
-      <p className="text-center text-sm text-muted-foreground">
-        Already have an account?{" "}
-        <Link href="/login" className="text-primary hover:underline">
-          Sign in
+      <p className="text-center text-sm pt-2">
+        <span className="text-muted-foreground mr-1">Sudah punya akun?</span>
+        <Link href="/login" className="text-primary hover:text-primary/80 font-semibold transition-colors">
+          Masuk di sini <ArrowRight className="inline-block ml-0.5 mb-0.5 w-3.5 h-3.5" />
         </Link>
       </p>
     </form>

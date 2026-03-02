@@ -7,12 +7,11 @@
  */
 
 import { Button } from "@/components/ui/button";
-import { Field, FieldContent, FieldError, FieldLabel } from "@/components/ui/field";
+import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { forgotPasswordSchema } from "@/lib/validations/auth";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Loading02Icon, Mail01Icon } from "@hugeicons/core-free-icons";
-import { HugeiconsIcon } from "@hugeicons/react";
+import { Mail, ArrowLeft, Loader2, CheckCircle2 } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -61,36 +60,36 @@ export function ForgotPasswordForm() {
   // Show success message
   if (isSuccess) {
     return (
-      <div className="flex flex-col items-center justify-center space-y-4 py-8">
-        <div className="flex h-16 w-16 items-center justify-center rounded-full bg-primary/10">
-          <HugeiconsIcon icon={Mail01Icon} className="h-8 w-8 text-primary" />
+      <div className="flex flex-col items-center justify-center space-y-4 py-8 text-center animate-fade-in-up">
+        <div className="flex h-16 w-16 items-center justify-center rounded-full bg-primary/10 mb-2">
+          <CheckCircle2 className="h-8 w-8 text-primary" strokeWidth={1.5} />
         </div>
 
-        <div className="space-y-2 text-center">
-          <h3 className="text-xl font-semibold">Check your email</h3>
-          <p className="text-sm text-muted-foreground">
-            We sent a password reset link to your email address. Please check your inbox and follow
-            the instructions.
+        <div className="space-y-2">
+          <h3 className="text-xl font-semibold text-foreground">Cek email Anda</h3>
+          <p className="text-sm text-muted-foreground max-w-[300px] mx-auto">
+            Kami telah mengirimkan instruksi untuk me-reset password ke email Anda. Silakan cek kotak masuk Anda.
           </p>
         </div>
 
-        <div className="rounded-lg border bg-muted/50 p-4 text-sm text-muted-foreground">
-          <p className="font-medium">Didn&apos;t receive the email?</p>
-          <ul className="mt-2 list-disc list-inside space-y-1 text-xs">
-            <li>Check your spam or junk folder</li>
-            <li>Make sure the email address is correct</li>
-            <li>Wait a few minutes for the email to arrive</li>
+        <div className="rounded-xl border border-muted/80 bg-background shadow-xs p-5 text-sm text-left text-muted-foreground w-full mt-4">
+          <p className="font-medium text-foreground">Tidak menerima email?</p>
+          <ul className="mt-3 space-y-2 text-xs">
+            <li className="flex items-start gap-2"><div className="w-1.5 h-1.5 rounded-full bg-primary/40 mt-1"></div> Cek folder spam atau junk Anda</li>
+            <li className="flex items-start gap-2"><div className="w-1.5 h-1.5 rounded-full bg-primary/40 mt-1"></div> Pastikan alamat email sudah benar</li>
+            <li className="flex items-start gap-2"><div className="w-1.5 h-1.5 rounded-full bg-primary/40 mt-1"></div> Tunggu beberapa menit hingga email sampai</li>
           </ul>
         </div>
 
         <Button
           variant="outline"
+          className="w-full h-11 rounded-xl font-medium shadow-none bg-background hover:bg-muted/50 border-muted transition-colors mt-6"
           onClick={() => {
             setIsSuccess(false);
             form.reset();
           }}
         >
-          Try again
+          Coba lagi
         </Button>
       </div>
     );
@@ -98,46 +97,39 @@ export function ForgotPasswordForm() {
 
   return (
     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-      <div className="space-y-4">
-        <p className="text-sm text-muted-foreground">
-          Enter your email address and we&apos;ll send you a link to reset your password.
-        </p>
-      </div>
-
-      <Field>
-        <FieldLabel htmlFor="email">Email</FieldLabel>
-        <FieldContent>
+      <div className="space-y-2">
+        <Label htmlFor="email" className="text-sm font-medium text-foreground">Email</Label>
+        <div className="relative">
+          <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground/60" strokeWidth={1.5} />
           <Input
             id="email"
             type="email"
-            placeholder="name@example.com"
+            placeholder="Masukkan alamat email Anda"
             autoComplete="email"
             {...form.register("email")}
             disabled={isLoading}
+            className="pl-10 h-11 rounded-xl bg-background border-muted/80 shadow-none focus-visible:ring-1 focus-visible:ring-primary"
           />
-        </FieldContent>
-        <FieldError
-          errors={form.formState.errors.email ? [form.formState.errors.email] : undefined}
-        />
-      </Field>
+        </div>
+        {form.formState.errors.email && (
+          <p className="text-sm text-red-500">{form.formState.errors.email?.message}</p>
+        )}
+      </div>
 
-      <Button type="submit" className="w-full" disabled={isLoading}>
+      <Button type="submit" className="w-full h-11 rounded-xl bg-primary hover:bg-primary/90 text-primary-foreground font-medium shadow-sm transition-colors" disabled={isLoading}>
         {isLoading ? (
           <>
-            <HugeiconsIcon icon={Loading02Icon} className="mr-2 h-4 w-4 animate-spin" />
-            Sending...
+            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+            Mengirim...
           </>
         ) : (
-          <>
-            <HugeiconsIcon icon={Mail01Icon} className="mr-2 h-4 w-4" />
-            Send Reset Link
-          </>
+          "Kirim Tautan Reset"
         )}
       </Button>
 
-      <div className="text-center text-sm">
-        <a href="/login" className="text-primary underline-offset-4 hover:underline">
-          Back to login
+      <div className="pt-2 text-center text-sm">
+        <a href="/login" className="inline-flex items-center text-muted-foreground hover:text-foreground font-medium transition-colors">
+          <ArrowLeft className="mr-1.5 w-4 h-4" /> Kembali ke masuk
         </a>
       </div>
     </form>
