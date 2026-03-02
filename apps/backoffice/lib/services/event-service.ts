@@ -174,6 +174,11 @@ export async function updateEventStatus(id: string, status: EventStatus, userId:
   const action = status === 'PUBLISHED' ? 'published' : status === 'CANCELLED' ? 'cancelled' : 'completed';
   await eventActivityLog(id, userId, action, { before: existing, after: event });
 
+  // Trigger revalidation if status changed to/from PUBLISHED
+  if (status === 'PUBLISHED' || existing.status === 'PUBLISHED') {
+    await triggerEventRevalidation();
+  }
+
   return event;
 }
 
@@ -258,4 +263,28 @@ async function eventActivityLog(eventId: string, userId: string, action: string,
       changes,
     },
   });
+}
+
+// Revalidation helper
+async function triggerEventRevalidation() {
+  const REVALIDATE_SECRET = process.env.REVALIDATE_SECRET;
+  const LANDING_URL = process.env.LANDING_URL || 'http://localhost:3000';
+
+  if (!REVALIDATE_SECRET) {
+    console.warn('REVALIDATE_SECRET not configured, skipping revalidation');
+    return;
+  }
+
+  try {
+    await fetch(`${LANDING_URL}/api/revalidate`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        secret: REVALIDATE_SECRET,
+        tag: 'events',
+      }),
+    });
+  } catch (error) {
+    console.error('Failed to trigger revalidation:', error);
+  }
 }
