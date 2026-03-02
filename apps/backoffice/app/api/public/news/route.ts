@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { prisma } from '@workspace/db';
+import { prisma } from '@/lib/db/prisma';
 
 const querySchema = {
   featured: false,

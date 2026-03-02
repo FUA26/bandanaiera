@@ -1,4 +1,4 @@
-import { prisma, Prisma } from '@workspace/db';
+import { prisma, Prisma } from '@/lib/db/prisma';
 import { NewsStatus } from '@prisma/client';
 
 export interface NewsListOptions {

@@ -1,7 +1,7 @@
 #!/usr/bin/env tsx
 import fs from 'fs';
 import path from 'path';
-import { PrismaClient } from '@workspace/db';
+import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
