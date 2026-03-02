@@ -1,37 +1,34 @@
-import fs from 'fs';
-import path from 'path';
-
 // Types for news data structure
 export interface NewsArticle {
   id: string;
   slug: string;
   title: string;
   excerpt: string;
+  content?: string;
   category: string;
+  categorySlug?: string;
+  categoryColor?: string;
   date: string;
-  image: string;
-  author: string;
-  readTime: string;
+  image: string | null;
+  author: string | null;
+  readTime: string | null;
   featured: boolean;
   tags: string[];
 }
 
-// Path to news data directory
-const NEWS_DATA_PATH = path.join(process.cwd(), 'data', 'news');
+const BACKOFFICE_URL = process.env.NEXT_PUBLIC_BACKOFFICE_URL || 'http://localhost:3001';
 
 /**
  * Fetch all news articles
  */
 export async function getAllNews(): Promise<NewsArticle[]> {
   try {
-    const articlesPath = path.join(NEWS_DATA_PATH, 'articles.json');
-    const fileContents = fs.readFileSync(articlesPath, 'utf8');
-    const articles: NewsArticle[] = JSON.parse(fileContents);
-
-    // Sort by date (newest first)
-    return articles.sort((a, b) =>
-      new Date(b.date).getTime() - new Date(a.date).getTime()
-    );
+    const res = await fetch(`${BACKOFFICE_URL}/api/public/news`, {
+      next: { revalidate: 3600 } // Cache 1 hour
+    });
+    if (!res.ok) return [];
+    const data = await res.json();
+    return data.items || [];
   } catch (error) {
     console.error('Error loading news articles:', error);
     return [];
@@ -43,8 +40,12 @@ export async function getAllNews(): Promise<NewsArticle[]> {
  */
 export async function getFeaturedNews(): Promise<NewsArticle[]> {
   try {
-    const allNews = await getAllNews();
-    return allNews.filter(article => article.featured);
+    const res = await fetch(`${BACKOFFICE_URL}/api/public/news?featured=true`, {
+      next: { revalidate: 3600 }
+    });
+    if (!res.ok) return [];
+    const data = await res.json();
+    return data.items || [];
   } catch (error) {
     console.error('Error loading featured news:', error);
     return [];
@@ -56,8 +57,12 @@ export async function getFeaturedNews(): Promise<NewsArticle[]> {
  */
 export async function getRecentNews(limit: number = 6): Promise<NewsArticle[]> {
   try {
-    const allNews = await getAllNews();
-    return allNews.slice(0, limit);
+    const res = await fetch(`${BACKOFFICE_URL}/api/public/news?limit=${limit}`, {
+      next: { revalidate: 3600 }
+    });
+    if (!res.ok) return [];
+    const data = await res.json();
+    return data.items || [];
   } catch (error) {
     console.error('Error loading recent news:', error);
     return [];
@@ -69,10 +74,12 @@ export async function getRecentNews(limit: number = 6): Promise<NewsArticle[]> {
  */
 export async function getNewsByCategory(category: string): Promise<NewsArticle[]> {
   try {
-    const allNews = await getAllNews();
-    return allNews.filter(article =>
-      article.category.toLowerCase() === category.toLowerCase()
-    );
+    const res = await fetch(`${BACKOFFICE_URL}/api/public/news?category=${category}`, {
+      next: { revalidate: 3600 }
+    });
+    if (!res.ok) return [];
+    const data = await res.json();
+    return data.items || [];
   } catch (error) {
     console.error(`Error loading news for category ${category}:`, error);
     return [];
@@ -84,8 +91,11 @@ export async function getNewsByCategory(category: string): Promise<NewsArticle[]
  */
 export async function getNewsBySlug(slug: string): Promise<NewsArticle | null> {
   try {
-    const allNews = await getAllNews();
-    return allNews.find(article => article.slug === slug) || null;
+    const res = await fetch(`${BACKOFFICE_URL}/api/public/news/${slug}`, {
+      next: { revalidate: 3600 }
+    });
+    if (!res.ok) return null;
+    return await res.json();
   } catch (error) {
     console.error(`Error loading news article ${slug}:`, error);
     return null;
@@ -97,9 +107,34 @@ export async function getNewsBySlug(slug: string): Promise<NewsArticle | null> {
  */
 export async function getNewsCategories(): Promise<string[]> {
   try {
-    const allNews = await getAllNews();
-    const categories = new Set(allNews.map(article => article.category));
-    return Array.from(categories).sort();
+    const res = await fetch(`${BACKOFFICE_URL}/api/public/news/categories`, {
+      next: { revalidate: 3600 }
+    });
+    if (!res.ok) return [];
+    const categories = await res.json();
+    return categories.map((c: any) => c.name);
+  } catch (error) {
+    console.error('Error loading news categories:', error);
+    return [];
+  }
+}
+
+/**
+ * Get categories with full details
+ */
+export async function getNewsCategoriesWithDetails(): Promise<Array<{
+  id: string;
+  name: string;
+  slug: string;
+  color: string;
+  order: number;
+}>> {
+  try {
+    const res = await fetch(`${BACKOFFICE_URL}/api/public/news/categories`, {
+      next: { revalidate: 3600 }
+    });
+    if (!res.ok) return [];
+    return await res.json();
   } catch (error) {
     console.error('Error loading news categories:', error);
     return [];
