@@ -2,10 +2,11 @@
  * News Page
  */
 
-import { redirect } from 'next/navigation';
 import { prisma } from '@/lib/db/prisma';
 import { ProtectedRoute } from '@/components/rbac/ProtectedRoute';
 import { NewsClient } from './news-client';
+import { Button } from '@/components/ui/button';
+import { Plus } from 'lucide-react';
 
 async function getNews() {
   return prisma.news.findMany({
@@ -43,19 +44,20 @@ function NewsContent() {
   const categories = getCategories();
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold">News</h1>
-          <p className="text-muted-foreground">
-            Manage news articles for the website
-          </p>
+    <NewsClient
+      newsPromise={news}
+      categoriesPromise={categories}
+      header={
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-3xl font-bold">News</h1>
+            <p className="text-muted-foreground">
+              Manage news articles for the website
+            </p>
+          </div>
         </div>
-        <NewsClient.CreateButton />
-      </div>
-
-      <NewsClient newsPromise={news} categoriesPromise={categories} />
-    </div>
+      }
+    />
   );
 }
 

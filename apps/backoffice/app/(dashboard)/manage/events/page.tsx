@@ -43,19 +43,18 @@ function EventsContent() {
   const categories = getCategories();
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
+    <EventsClient
+      eventsPromise={events}
+      categoriesPromise={categories}
+      header={
         <div>
           <h1 className="text-3xl font-bold">Events</h1>
           <p className="text-muted-foreground">
             Manage events for the website
           </p>
         </div>
-        <EventsClient.CreateButton />
-      </div>
-
-      <EventsClient eventsPromise={events} categoriesPromise={categories} />
-    </div>
+      }
+    />
   );
 }
 

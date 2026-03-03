@@ -103,6 +103,7 @@ interface Category {
 interface EventsClientProps {
   eventsPromise: Promise<Event[]>;
   categoriesPromise: Promise<Category[]>;
+  header?: React.ReactNode;
 }
 
 const STATUS_COLORS: Record<EventStatus, string> = {
@@ -118,7 +119,7 @@ const TYPE_LABELS: Record<EventType, string> = {
   HYBRID: 'Hybrid',
 };
 
-export function EventsClient({ eventsPromise, categoriesPromise }: EventsClientProps) {
+export function EventsClient({ eventsPromise, categoriesPromise, header }: EventsClientProps) {
   const router = useRouter();
   const [events, setEvents] = useState<Event[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
@@ -278,15 +279,18 @@ export function EventsClient({ eventsPromise, categoriesPromise }: EventsClientP
     }
   };
 
-  EventsClient.CreateButton = () => (
-    <Button onClick={openCreateDialog}>
-      <Plus className="mr-2 h-4 w-4" />
-      New Event
-    </Button>
-  );
-
   return (
     <>
+      {header && (
+        <div className="flex items-center justify-between mb-4">
+          {header}
+          <Button onClick={openCreateDialog}>
+            <Plus className="mr-2 h-4 w-4" />
+            New Event
+          </Button>
+        </div>
+      )}
+
       {/* Filters */}
       <div className="flex gap-4 mb-4">
         <Select value={statusFilter} onValueChange={setStatusFilter}>

@@ -92,9 +92,10 @@ interface Category {
 interface NewsClientProps {
   newsPromise: Promise<News[]>;
   categoriesPromise: Promise<Category[]>;
+  header?: React.ReactNode;
 }
 
-export function NewsClient({ newsPromise, categoriesPromise }: NewsClientProps) {
+export function NewsClient({ newsPromise, categoriesPromise, header }: NewsClientProps) {
   const router = useRouter();
   const [news, setNews] = useState<News[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
@@ -264,17 +265,18 @@ export function NewsClient({ newsPromise, categoriesPromise }: NewsClientProps) 
     setTags(tags.filter((t) => tag !== t));
   };
 
-  NewsClient.CreateButton = function CreateButton() {
-    return (
-      <Button onClick={openCreateDialog}>
-        <Plus className="mr-2 h-4 w-4" />
-        New News
-      </Button>
-    );
-  };
-
   return (
     <>
+      {header && (
+        <div className="flex items-center justify-between mb-4">
+          {header}
+          <Button onClick={openCreateDialog}>
+            <Plus className="mr-2 h-4 w-4" />
+            New News
+          </Button>
+        </div>
+      )}
+
       <div className="flex gap-4 mb-4">
         <Input
           placeholder="Search news..."
