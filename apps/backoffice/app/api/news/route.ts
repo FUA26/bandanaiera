@@ -6,6 +6,25 @@ import {
   getNewsList,
   createNews,
 } from '@/lib/services/news-service';
+import { revalidatePath } from 'next/cache';
+
+async function triggerLandingRevalidation(tag: 'events' | 'news') {
+  const revalidateSecret = process.env.REVALIDATE_SECRET;
+  const landingUrl = process.env.LANDING_URL || 'http://localhost:3000';
+
+  if (revalidateSecret) {
+    try {
+      await fetch(`${landingUrl}/api/revalidate`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ secret: revalidateSecret, tag }),
+      });
+    } catch (error) {
+      console.error('Failed to revalidate landing:', error);
+      // Don't fail the request if revalidation fails
+    }
+  }
+}
 
 export async function GET(request: NextRequest) {
   try {
@@ -43,6 +62,14 @@ export async function POST(request: NextRequest) {
     const data = newsSchema.parse(body);
 
     const news = await createNews(data, session.user.id);
+
+    // Trigger landing revalidation if published
+    if (news.status === 'PUBLISHED') {
+      await triggerLandingRevalidation('news');
+      revalidatePath('/api/public/news');
+      revalidatePath('/informasi-publik/berita-terkini');
+    }
+
     return NextResponse.json(news, { status: 201 });
   } catch (error) {
     console.error('Error creating news:', error);
