@@ -3,7 +3,7 @@
  */
 
 import { redirect } from 'next/navigation';
-import { prisma } from '@workspace/db';
+import { prisma } from '@/lib/db/prisma';
 import { ProtectedRoute } from '@/components/rbac/ProtectedRoute';
 import { NewsCategoriesClient } from './news-categories-client';
 
