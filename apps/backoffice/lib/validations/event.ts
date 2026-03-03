@@ -24,7 +24,10 @@ export const eventSchema = z.object({
   location: z.string().optional(),
   locationUrl: z.string().url().optional().or(z.literal('')),
   type: z.enum(['ONLINE', 'OFFLINE', 'HYBRID']).default('OFFLINE'),
-  imageId: z.string().cuid().optional(),
+  imageId: z.preprocess(
+    (val) => val === '' || val === null ? undefined : val,
+    z.string().cuid().optional()
+  ),
   organizer: z.string().min(1, 'Organizer is required').max(100),
   organizerContact: z.string().optional(),
   attendees: z.array(z.string()).optional(),

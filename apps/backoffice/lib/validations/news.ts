@@ -20,7 +20,10 @@ export const newsSchema = z.object({
   excerpt: z.string().min(1, 'Excerpt is required').max(500),
   content: z.string().optional(),
   categoryId: z.string().cuid(),
-  featuredImageId: z.string().cuid().optional(),
+  featuredImageId: z.preprocess(
+    (val) => val === '' || val === null ? undefined : val,
+    z.string().cuid().optional()
+  ),
   featured: z.boolean().default(false),
   showInMenu: z.boolean().default(true),
   order: z.number().int().min(0).default(0),
