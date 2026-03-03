@@ -26,6 +26,33 @@ export interface Event {
 const BACKOFFICE_URL = process.env.NEXT_PUBLIC_BACKOFFICE_URL || 'http://localhost:3001';
 
 /**
+ * Calculate event status based on date
+ */
+function calculateEventStatus(eventDate: Date | string): "upcoming" | "ongoing" | "completed" {
+  const date = typeof eventDate === 'string' ? new Date(eventDate) : eventDate;
+  const now = new Date();
+  const oneDayAgo = new Date(now.getTime() - 24 * 60 * 60 * 1000);
+
+  if (date < oneDayAgo) {
+    return "completed";
+  } else if (date <= now && date >= oneDayAgo) {
+    return "ongoing";
+  } else {
+    return "upcoming";
+  }
+}
+
+/**
+ * Add status to events from API
+ */
+function addStatusToEvents(events: any[]): Event[] {
+  return events.map(event => ({
+    ...event,
+    status: calculateEventStatus(event.date)
+  }));
+}
+
+/**
  * Fetch all events
  */
 export async function getAllEvents(): Promise<Event[]> {
@@ -35,7 +62,7 @@ export async function getAllEvents(): Promise<Event[]> {
     });
     if (!res.ok) return [];
     const data = await res.json();
-    return data.items || [];
+    return addStatusToEvents(data.items || []);
   } catch (error) {
     console.error('Error loading events:', error);
     return [];
@@ -52,7 +79,7 @@ export async function getUpcomingEvents(limit?: number): Promise<Event[]> {
     });
     if (!res.ok) return [];
     const data = await res.json();
-    return data || [];
+    return addStatusToEvents(data || []);
   } catch (error) {
     console.error('Error loading upcoming events:', error);
     return [];

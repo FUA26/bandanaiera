@@ -41,7 +41,14 @@
       "Bash(git -C /home/acn/code/bandanaiera commit:*)",
       "Bash(git -C /home/acn/code/bandanaiera push origin main)",
       "Bash(lsof:*)",
-      "Bash(grep:*)"
+      "Bash(grep:*)",
+      "Bash(npx prisma db execute --stdin <<'SQL'\nUPDATE \"Event\" SET \n  \"status\" = 'PUBLISHED',\n  \"showInMenu\" = true\nWHERE \"status\" IS NULL;\nSQL)",
+      "Bash(psql:*)",
+      "Bash(npx tsx:*)",
+      "Bash(npx prisma db execute:*)",
+      "Bash(docker ps:*)",
+      "Bash(docker exec:*)",
+      "Bash(docker restart:*)"
     ]
   }
 }

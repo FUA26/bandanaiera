@@ -23,7 +23,7 @@ export function EventsSectionClient({ events }: EventsSectionClientProps) {
   const locale = useLocale();
   const dateLocale = locale === "id" ? "id-ID" : "en-US";
 
-  const [currentMonth, setCurrentMonth] = useState(new Date(2026, 0)); // January 2026
+  const [currentMonth, setCurrentMonth] = useState(new Date()); // Current date
   const [selectedDate, setSelectedDate] = useState<number | null>(null);
 
   const formatDate = (dateStr: string) => {
