@@ -424,203 +424,205 @@ export function EventsClient({ eventsPromise, categoriesPromise, header }: Event
 
       {/* Create/Edit Dialog */}
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-        <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto]">
+        <DialogContent className="sm:max-w-[600px] max-h-[90vh] flex flex-col">
           <DialogHeader>
             <DialogTitle>
               {editingEvent ? 'Edit Event' : 'New Event'}
             </DialogTitle>
           </DialogHeader>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2 col-span-2">
-                <Label htmlFor="title">Title</Label>
-                <Input id="title" {...form.register('title')} placeholder="Event title" />
-                {form.formState.errors.title && (
-                  <p className="text-sm text-destructive">{form.formState.errors.title.message}</p>
-                )}
-              </div>
-
-              <div className="space-y-2 col-span-2">
-                <Label htmlFor="slug">Slug</Label>
-                <Input id="slug" {...form.register('slug')} placeholder="event-slug" />
-                {form.formState.errors.slug && (
-                  <p className="text-sm text-destructive">{form.formState.errors.slug.message}</p>
-                )}
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="categoryId">Category</Label>
-                <Select
-                  value={form.watch('categoryId')}
-                  onValueChange={(value) => form.setValue('categoryId', value)}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select category" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {categories.map((cat) => (
-                      <SelectItem key={cat.id} value={cat.id}>{cat.name}</SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="type">Type</Label>
-                <Select
-                  value={form.watch('type')}
-                  onValueChange={(value) => form.setValue('type', value as EventType)}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select type" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="OFFLINE">Offline</SelectItem>
-                    <SelectItem value="ONLINE">Online</SelectItem>
-                    <SelectItem value="HYBRID">Hybrid</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <div className="space-y-2">
-                <Label>Date</Label>
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <Button
-                      variant="outline"
-                      className={cn(
-                        'w-full justify-start text-left font-normal',
-                        !form.watch('date') && 'text-muted-foreground'
-                      )}
-                    >
-                      <CalendarIcon className="mr-2 h-4 w-4" />
-                      {form.watch('date') ? format(form.watch('date'), 'PPP') : 'Pick a date'}
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0" align="start">
-                    <Calendar
-                      mode="single"
-                      selected={form.watch('date')}
-                      onSelect={(date) => date && form.setValue('date', date)}
-                      initialFocus
-                    />
-                  </PopoverContent>
-                </Popover>
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="time">Time</Label>
-                <Input id="time" {...form.register('time')} placeholder="09:00 - 17:00" />
-              </div>
-
-              <div className="space-y-2 col-span-2">
-                <Label htmlFor="location">Location</Label>
-                <Input id="location" {...form.register('location')} placeholder="Event location" />
-              </div>
-
-              <div className="space-y-2 col-span-2">
-                <Label htmlFor="locationUrl">Location URL</Label>
-                <Input id="locationUrl" {...form.register('locationUrl')} placeholder="https://maps.google.com/..." />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="organizer">Organizer</Label>
-                <Input id="organizer" {...form.register('organizer')} placeholder="Organization name" />
-                {form.formState.errors.organizer && (
-                  <p className="text-sm text-destructive">{form.formState.errors.organizer.message}</p>
-                )}
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="organizerContact">Contact</Label>
-                <Input id="organizerContact" {...form.register('organizerContact')} placeholder="Email or phone" />
-              </div>
-
-              <div className="space-y-2 col-span-2">
-                <Label htmlFor="description">Description</Label>
-                <Textarea id="description" {...form.register('description')} placeholder="Event description" rows={3} />
-              </div>
-
-              <div className="flex items-center justify-between rounded-lg border p-4 col-span-2">
-                <div className="space-y-0.5">
-                  <Label>Registration Required</Label>
-                  <p className="text-xs text-muted-foreground">Require registration for this event</p>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col flex-1 overflow-hidden">
+            <div className="flex-1 overflow-y-auto px-1">
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2 col-span-2">
+                  <Label htmlFor="title">Title</Label>
+                  <Input id="title" {...form.register('title')} placeholder="Event title" />
+                  {form.formState.errors.title && (
+                    <p className="text-sm text-destructive">{form.formState.errors.title.message}</p>
+                  )}
                 </div>
-                <Switch
-                  checked={form.watch('registrationRequired')}
-                  onCheckedChange={(checked) => form.setValue('registrationRequired', checked)}
-                />
-              </div>
 
-              {form.watch('registrationRequired') && (
-                <>
-                  <div className="space-y-2 col-span-2">
-                    <Label htmlFor="registrationUrl">Registration URL</Label>
-                    <Input id="registrationUrl" {...form.register('registrationUrl')} placeholder="https://wa.me/..." />
+                <div className="space-y-2 col-span-2">
+                  <Label htmlFor="slug">Slug</Label>
+                  <Input id="slug" {...form.register('slug')} placeholder="event-slug" />
+                  {form.formState.errors.slug && (
+                    <p className="text-sm text-destructive">{form.formState.errors.slug.message}</p>
+                  )}
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="categoryId">Category</Label>
+                  <Select
+                    value={form.watch('categoryId')}
+                    onValueChange={(value) => form.setValue('categoryId', value)}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select category" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {categories.map((cat) => (
+                        <SelectItem key={cat.id} value={cat.id}>{cat.name}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="type">Type</Label>
+                  <Select
+                    value={form.watch('type')}
+                    onValueChange={(value) => form.setValue('type', value as EventType)}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select type" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="OFFLINE">Offline</SelectItem>
+                      <SelectItem value="ONLINE">Online</SelectItem>
+                      <SelectItem value="HYBRID">Hybrid</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div className="space-y-2">
+                  <Label>Date</Label>
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <Button
+                        variant="outline"
+                        className={cn(
+                          'w-full justify-start text-left font-normal',
+                          !form.watch('date') && 'text-muted-foreground'
+                        )}
+                      >
+                        <CalendarIcon className="mr-2 h-4 w-4" />
+                        {form.watch('date') ? format(form.watch('date'), 'PPP') : 'Pick a date'}
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0" align="start">
+                      <Calendar
+                        mode="single"
+                        selected={form.watch('date')}
+                        onSelect={(date) => date && form.setValue('date', date)}
+                        initialFocus
+                      />
+                    </PopoverContent>
+                  </Popover>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="time">Time</Label>
+                  <Input id="time" {...form.register('time')} placeholder="09:00 - 17:00" />
+                </div>
+
+                <div className="space-y-2 col-span-2">
+                  <Label htmlFor="location">Location</Label>
+                  <Input id="location" {...form.register('location')} placeholder="Event location" />
+                </div>
+
+                <div className="space-y-2 col-span-2">
+                  <Label htmlFor="locationUrl">Location URL</Label>
+                  <Input id="locationUrl" {...form.register('locationUrl')} placeholder="https://maps.google.com/..." />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="organizer">Organizer</Label>
+                  <Input id="organizer" {...form.register('organizer')} placeholder="Organization name" />
+                  {form.formState.errors.organizer && (
+                    <p className="text-sm text-destructive">{form.formState.errors.organizer.message}</p>
+                  )}
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="organizerContact">Contact</Label>
+                  <Input id="organizerContact" {...form.register('organizerContact')} placeholder="Email or phone" />
+                </div>
+
+                <div className="space-y-2 col-span-2">
+                  <Label htmlFor="description">Description</Label>
+                  <Textarea id="description" {...form.register('description')} placeholder="Event description" rows={3} />
+                </div>
+
+                <div className="flex items-center justify-between rounded-lg border p-4 col-span-2">
+                  <div className="space-y-0.5">
+                    <Label>Registration Required</Label>
+                    <p className="text-xs text-muted-foreground">Require registration for this event</p>
                   </div>
+                  <Switch
+                    checked={form.watch('registrationRequired')}
+                    onCheckedChange={(checked) => form.setValue('registrationRequired', checked)}
+                  />
+                </div>
 
-                  <div className="space-y-2">
-                    <Label htmlFor="maxAttendees">Max Attendees</Label>
-                    <Input
-                      id="maxAttendees"
-                      type="number"
-                      {...form.register('maxAttendees', { valueAsNumber: true })}
-                      placeholder="100"
-                    />
+                {form.watch('registrationRequired') && (
+                  <>
+                    <div className="space-y-2 col-span-2">
+                      <Label htmlFor="registrationUrl">Registration URL</Label>
+                      <Input id="registrationUrl" {...form.register('registrationUrl')} placeholder="https://wa.me/..." />
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="maxAttendees">Max Attendees</Label>
+                      <Input
+                        id="maxAttendees"
+                        type="number"
+                        {...form.register('maxAttendees', { valueAsNumber: true })}
+                        placeholder="100"
+                      />
+                    </div>
+                  </>
+                )}
+
+                <div className="flex items-center justify-between rounded-lg border p-4">
+                  <div className="space-y-0.5">
+                    <Label>Featured</Label>
+                    <p className="text-xs text-muted-foreground">Show as featured event</p>
                   </div>
-                </>
-              )}
-
-              <div className="flex items-center justify-between rounded-lg border p-4">
-                <div className="space-y-0.5">
-                  <Label>Featured</Label>
-                  <p className="text-xs text-muted-foreground">Show as featured event</p>
+                  <Switch
+                    checked={form.watch('featured')}
+                    onCheckedChange={(checked) => form.setValue('featured', checked)}
+                  />
                 </div>
-                <Switch
-                  checked={form.watch('featured')}
-                  onCheckedChange={(checked) => form.setValue('featured', checked)}
-                />
-              </div>
 
-              <div className="flex items-center justify-between rounded-lg border p-4">
-                <div className="space-y-0.5">
-                  <Label>Show in Menu</Label>
+                <div className="flex items-center justify-between rounded-lg border p-4">
+                  <div className="space-y-0.5">
+                    <Label>Show in Menu</Label>
+                  </div>
+                  <Switch
+                    checked={form.watch('showInMenu')}
+                    onCheckedChange={(checked) => form.setValue('showInMenu', checked)}
+                  />
                 </div>
-                <Switch
-                  checked={form.watch('showInMenu')}
-                  onCheckedChange={(checked) => form.setValue('showInMenu', checked)}
-                />
-              </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="order">Order</Label>
-                <Input
-                  id="order"
-                  type="number"
-                  {...form.register('order', { valueAsNumber: true })}
-                />
-              </div>
+                <div className="space-y-2">
+                  <Label htmlFor="order">Order</Label>
+                  <Input
+                    id="order"
+                    type="number"
+                    {...form.register('order', { valueAsNumber: true })}
+                  />
+                </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="status">Status</Label>
-                <Select
-                  value={form.watch('status')}
-                  onValueChange={(value) => form.setValue('status', value as EventStatus)}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select status" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="DRAFT">Draft</SelectItem>
-                    <SelectItem value="PUBLISHED">Published</SelectItem>
-                    <SelectItem value="CANCELLED">Cancelled</SelectItem>
-                    <SelectItem value="COMPLETED">Completed</SelectItem>
-                  </SelectContent>
-                </Select>
+                <div className="space-y-2">
+                  <Label htmlFor="status">Status</Label>
+                  <Select
+                    value={form.watch('status')}
+                    onValueChange={(value) => form.setValue('status', value as EventStatus)}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select status" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="DRAFT">Draft</SelectItem>
+                      <SelectItem value="PUBLISHED">Published</SelectItem>
+                      <SelectItem value="CANCELLED">Cancelled</SelectItem>
+                      <SelectItem value="COMPLETED">Completed</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
               </div>
             </div>
 
-            <DialogFooter>
+            <DialogFooter className="mt-4">
               <Button type="button" variant="outline" onClick={() => setDialogOpen(false)}>
                 Cancel
               </Button>

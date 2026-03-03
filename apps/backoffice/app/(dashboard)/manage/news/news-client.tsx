@@ -390,167 +390,169 @@ export function NewsClient({ newsPromise, categoriesPromise, header }: NewsClien
 
       {/* Create/Edit Dialog */}
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+        <DialogContent className="max-w-2xl max-h-[90vh] flex flex-col">
           <DialogHeader>
             <DialogTitle>{editingNews ? 'Edit News' : 'New News'}</DialogTitle>
           </DialogHeader>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-            <div className="grid grid-cols-2 gap-4">
+          <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col flex-1 overflow-hidden">
+            <div className="flex-1 overflow-y-auto px-1 space-y-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="title">Title</Label>
+                  <Input id="title" {...form.register('title')} placeholder="Enter news title" />
+                  {form.formState.errors.title && (
+                    <p className="text-sm text-destructive">{form.formState.errors.title.message}</p>
+                  )}
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="slug">Slug</Label>
+                  <Input id="slug" {...form.register('slug')} placeholder="news-url-slug" />
+                  {form.formState.errors.slug && (
+                    <p className="text-sm text-destructive">{form.formState.errors.slug.message}</p>
+                  )}
+                </div>
+              </div>
+
               <div className="space-y-2">
-                <Label htmlFor="title">Title</Label>
-                <Input id="title" {...form.register('title')} placeholder="Enter news title" />
-                {form.formState.errors.title && (
-                  <p className="text-sm text-destructive">{form.formState.errors.title.message}</p>
+                <Label htmlFor="excerpt">Excerpt</Label>
+                <Textarea id="excerpt" {...form.register('excerpt')} placeholder="Brief summary for the news card" rows={3} />
+                {form.formState.errors.excerpt && (
+                  <p className="text-sm text-destructive">{form.formState.errors.excerpt.message}</p>
                 )}
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="slug">Slug</Label>
-                <Input id="slug" {...form.register('slug')} placeholder="news-url-slug" />
-                {form.formState.errors.slug && (
-                  <p className="text-sm text-destructive">{form.formState.errors.slug.message}</p>
-                )}
+                <Label htmlFor="content">Content</Label>
+                <Textarea id="content" {...form.register('content')} placeholder="Full article content..." rows={10} />
               </div>
-            </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="excerpt">Excerpt</Label>
-              <Textarea id="excerpt" {...form.register('excerpt')} placeholder="Brief summary for the news card" rows={3} />
-              {form.formState.errors.excerpt && (
-                <p className="text-sm text-destructive">{form.formState.errors.excerpt.message}</p>
-              )}
-            </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="categoryId">Category</Label>
+                  <Select
+                    value={form.watch('categoryId')}
+                    onValueChange={(value) => form.setValue('categoryId', value)}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select category" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {categories.map((category) => (
+                        <SelectItem key={category.id} value={category.id}>
+                          {category.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  {form.formState.errors.categoryId && (
+                    <p className="text-sm text-destructive">{form.formState.errors.categoryId.message}</p>
+                  )}
+                </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="content">Content</Label>
-              <Textarea id="content" {...form.register('content')} placeholder="Full article content..." rows={10} />
-            </div>
+                <div className="space-y-2">
+                  <Label htmlFor="status">Status</Label>
+                  <Select
+                    value={form.watch('status')}
+                    onValueChange={(value) => form.setValue('status', value as 'DRAFT' | 'PUBLISHED' | 'ARCHIVED')}
+                  >
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="DRAFT">Draft</SelectItem>
+                      <SelectItem value="PUBLISHED">Published</SelectItem>
+                      <SelectItem value="ARCHIVED">Archived</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
 
-            <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="author">Author</Label>
+                  <Input id="author" {...form.register('author')} placeholder="Author name" />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="readTime">Read Time</Label>
+                  <Input id="readTime" {...form.register('readTime')} placeholder="5 min read" />
+                </div>
+              </div>
+
               <div className="space-y-2">
-                <Label htmlFor="categoryId">Category</Label>
-                <Select
-                  value={form.watch('categoryId')}
-                  onValueChange={(value) => form.setValue('categoryId', value)}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select category" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {categories.map((category) => (
-                      <SelectItem key={category.id} value={category.id}>
-                        {category.name}
-                      </SelectItem>
+                <Label>Tags</Label>
+                <div className="flex gap-2">
+                  <Input
+                    placeholder="Add a tag"
+                    value={tagInput}
+                    onChange={(e) => setTagInput(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') {
+                        e.preventDefault();
+                        addTag();
+                      }
+                    }}
+                  />
+                  <Button type="button" variant="outline" onClick={addTag}>
+                    Add
+                  </Button>
+                </div>
+                {tags.length > 0 && (
+                  <div className="flex flex-wrap gap-2">
+                    {tags.map((tag) => (
+                      <Badge key={tag} variant="secondary">
+                        {tag}
+                        <button
+                          type="button"
+                          onClick={() => removeTag(tag)}
+                          className="ml-2 hover:text-destructive"
+                        >
+                          <X className="h-3 w-3" />
+                        </button>
+                      </Badge>
                     ))}
-                  </SelectContent>
-                </Select>
-                {form.formState.errors.categoryId && (
-                  <p className="text-sm text-destructive">{form.formState.errors.categoryId.message}</p>
+                  </div>
                 )}
               </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="status">Status</Label>
-                <Select
-                  value={form.watch('status')}
-                  onValueChange={(value) => form.setValue('status', value as 'DRAFT' | 'PUBLISHED' | 'ARCHIVED')}
-                >
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="DRAFT">Draft</SelectItem>
-                    <SelectItem value="PUBLISHED">Published</SelectItem>
-                    <SelectItem value="ARCHIVED">Archived</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="author">Author</Label>
-                <Input id="author" {...form.register('author')} placeholder="Author name" />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="readTime">Read Time</Label>
-                <Input id="readTime" {...form.register('readTime')} placeholder="5 min read" />
-              </div>
-            </div>
-
-            <div className="space-y-2">
-              <Label>Tags</Label>
-              <div className="flex gap-2">
-                <Input
-                  placeholder="Add a tag"
-                  value={tagInput}
-                  onChange={(e) => setTagInput(e.target.value)}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter') {
-                      e.preventDefault();
-                      addTag();
-                    }
-                  }}
-                />
-                <Button type="button" variant="outline" onClick={addTag}>
-                  Add
-                </Button>
-              </div>
-              {tags.length > 0 && (
-                <div className="flex flex-wrap gap-2">
-                  {tags.map((tag) => (
-                    <Badge key={tag} variant="secondary">
-                      {tag}
-                      <button
-                        type="button"
-                        onClick={() => removeTag(tag)}
-                        className="ml-2 hover:text-destructive"
-                      >
-                        <X className="h-3 w-3" />
-                      </button>
-                    </Badge>
-                  ))}
-                </div>
-              )}
-            </div>
-
-            <div className="grid grid-cols-3 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="order">Order</Label>
-                <Input
-                  id="order"
-                  type="number"
-                  {...form.register('order', { valueAsNumber: true })}
-                />
-              </div>
-
-              <div className="flex flex-col justify-end space-y-4">
-                <div className="flex items-center justify-between rounded-lg border p-4">
-                  <div className="space-y-0.5">
-                    <Label>Featured</Label>
-                  </div>
-                  <Switch
-                    checked={form.watch('featured')}
-                    onCheckedChange={(checked) => form.setValue('featured', checked)}
+              <div className="grid grid-cols-3 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="order">Order</Label>
+                  <Input
+                    id="order"
+                    type="number"
+                    {...form.register('order', { valueAsNumber: true })}
                   />
                 </div>
-              </div>
 
-              <div className="flex flex-col justify-end">
-                <div className="flex items-center justify-between rounded-lg border p-4">
-                  <div className="space-y-0.5">
-                    <Label>Visible</Label>
+                <div className="flex flex-col justify-end space-y-4">
+                  <div className="flex items-center justify-between rounded-lg border p-4">
+                    <div className="space-y-0.5">
+                      <Label>Featured</Label>
+                    </div>
+                    <Switch
+                      checked={form.watch('featured')}
+                      onCheckedChange={(checked) => form.setValue('featured', checked)}
+                    />
                   </div>
-                  <Switch
-                    checked={form.watch('showInMenu')}
-                    onCheckedChange={(checked) => form.setValue('showInMenu', checked)}
-                  />
+                </div>
+
+                <div className="flex flex-col justify-end">
+                  <div className="flex items-center justify-between rounded-lg border p-4">
+                    <div className="space-y-0.5">
+                      <Label>Visible</Label>
+                    </div>
+                    <Switch
+                      checked={form.watch('showInMenu')}
+                      onCheckedChange={(checked) => form.setValue('showInMenu', checked)}
+                    />
+                  </div>
                 </div>
               </div>
             </div>
 
-            <DialogFooter>
+            <DialogFooter className="mt-4">
               <Button type="button" variant="outline" onClick={() => setDialogOpen(false)}>
                 Cancel
               </Button>
