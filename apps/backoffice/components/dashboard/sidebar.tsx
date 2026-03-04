@@ -44,6 +44,10 @@ const navItems = [
   { href: "/manage/news-categories", label: "News Categories", icon: FolderKanban, permission: "NEWS_CATEGORIES_MANAGE" },
   { href: "/manage/events", label: "Events", icon: Calendar, permission: "EVENTS_VIEW" },
   { href: "/manage/event-categories", label: "Event Categories", icon: FolderKanban, permission: "EVENT_CATEGORIES_MANAGE" },
+  { href: "/manage/photos", label: "Photos", icon: FolderOpen, permission: "GALLERY_VIEW" },
+  { href: "/manage/albums", label: "Albums", icon: Folders, permission: "GALLERY_ALBUMS_MANAGE" },
+  { href: "/manage/destinations", label: "Destinations", icon: FolderOpen, permission: "DESTINATIONS_VIEW" },
+  { href: "/manage/destination-categories", label: "Destination Categories", icon: FolderKanban, permission: "DESTINATION_CATEGORIES_MANAGE" },
 
   // User & Access Management Group
   { heading: "Users & Access" },
