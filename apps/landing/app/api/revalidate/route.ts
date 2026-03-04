@@ -9,7 +9,7 @@
 
 import { revalidatePath, revalidateTag } from 'next/cache';
 import { NextRequest, NextResponse } from 'next/server';
-import { clearServicesCache } from '@/lib/services-data';
+// Services module removed - clearServicesCache no longer available
 
 /**
  * Verify the request is from a trusted source
@@ -64,7 +64,7 @@ export async function POST(request: NextRequest) {
 
         case 'services':
           // Clear services in-memory cache
-          clearServicesCache();
+          // clearServicesCache(); // Services module removed
           revalidatePath('/layanan');
           revalidatePath('/api/public/services');
           revalidateTag('services');
@@ -73,7 +73,7 @@ export async function POST(request: NextRequest) {
         case 'all':
         default:
           // Revalidate everything
-          clearServicesCache();
+          // clearServicesCache(); // Services module removed
           revalidatePath('/');
           revalidatePath('/layanan');
           revalidatePath('/informasi-publik');
@@ -97,7 +97,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Clear in-memory cache for services
-    clearServicesCache();
+    // clearServicesCache(); // Services module removed
 
     // Revalidate specific paths if provided
     if (paths && Array.isArray(paths)) {
