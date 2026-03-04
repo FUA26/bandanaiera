@@ -98,6 +98,42 @@ const permissions = [
     description: "Manage event categories",
   },
 
+  // Gallery Management
+  { name: "GALLERY_VIEW", category: "GALLERY", description: "View photos and albums" },
+  { name: "GALLERY_CREATE", category: "GALLERY", description: "Create new photos" },
+  { name: "GALLERY_EDIT", category: "GALLERY", description: "Edit photos" },
+  { name: "GALLERY_DELETE", category: "GALLERY", description: "Delete photos" },
+  { name: "GALLERY_PUBLISH", category: "GALLERY", description: "Publish/unpublish photos" },
+  { name: "GALLERY_REORDER", category: "GALLERY", description: "Reorder photos" },
+  {
+    name: "GALLERY_ALBUMS_MANAGE",
+    category: "GALLERY",
+    description: "Manage photo albums",
+  },
+  {
+    name: "GALLERY_TAGS_MANAGE",
+    category: "GALLERY",
+    description: "Manage photo tags",
+  },
+
+  // Destination Management
+  { name: "DESTINATIONS_VIEW", category: "DESTINATIONS", description: "View destinations" },
+  { name: "DESTINATIONS_CREATE", category: "DESTINATIONS", description: "Create new destinations" },
+  { name: "DESTINATIONS_EDIT", category: "DESTINATIONS", description: "Edit destinations" },
+  { name: "DESTINATIONS_DELETE", category: "DESTINATIONS", description: "Delete destinations" },
+  { name: "DESTINATIONS_PUBLISH", category: "DESTINATIONS", description: "Publish/unpublish destinations" },
+  { name: "DESTINATIONS_REORDER", category: "DESTINATIONS", description: "Reorder destinations" },
+  {
+    name: "DESTINATION_CATEGORIES_MANAGE",
+    category: "DESTINATIONS",
+    description: "Manage destination categories",
+  },
+  {
+    name: "DESTINATION_FACILITIES_MANAGE",
+    category: "DESTINATIONS",
+    description: "Manage facilities",
+  },
+
   // Admin
   { name: "ADMIN_PANEL_ACCESS", category: "ADMIN", description: "Access admin panel" },
   { name: "ADMIN_USERS_MANAGE", category: "ADMIN", description: "Manage users in admin panel" },
