@@ -23,7 +23,7 @@ export interface Event {
   featured?: boolean;
 }
 
-const BACKOFFICE_URL = process.env.NEXT_PUBLIC_BACKOFFICE_URL || 'http://localhost:3001';
+const BACKOFFICE_API_URL = process.env.BACKOFFICE_API_URL || 'http://localhost:3001';
 
 /**
  * Calculate event status based on date
@@ -31,11 +31,12 @@ const BACKOFFICE_URL = process.env.NEXT_PUBLIC_BACKOFFICE_URL || 'http://localho
 function calculateEventStatus(eventDate: Date | string): "upcoming" | "ongoing" | "completed" {
   const date = typeof eventDate === 'string' ? new Date(eventDate) : eventDate;
   const now = new Date();
-  const oneDayAgo = new Date(now.getTime() - 24 * 60 * 60 * 1000);
+  const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const eventDay = new Date(date.getFullYear(), date.getMonth(), date.getDate());
 
-  if (date < oneDayAgo) {
+  if (eventDay.getTime() < startOfToday.getTime()) {
     return "completed";
-  } else if (date <= now && date >= oneDayAgo) {
+  } else if (eventDay.getTime() === startOfToday.getTime()) {
     return "ongoing";
   } else {
     return "upcoming";
@@ -57,7 +58,7 @@ function addStatusToEvents(events: any[]): Event[] {
  */
 export async function getAllEvents(): Promise<Event[]> {
   try {
-    const res = await fetch(`${BACKOFFICE_URL}/api/public/events`, {
+    const res = await fetch(`${BACKOFFICE_API_URL}/api/public/events`, {
       next: { revalidate: 3600 } // Cache 1 hour
     });
     if (!res.ok) return [];
@@ -74,7 +75,7 @@ export async function getAllEvents(): Promise<Event[]> {
  */
 export async function getUpcomingEvents(limit?: number): Promise<Event[]> {
   try {
-    const res = await fetch(`${BACKOFFICE_URL}/api/public/events/upcoming${limit ? `?limit=${limit}` : ''}`, {
+    const res = await fetch(`${BACKOFFICE_API_URL}/api/public/events/upcoming${limit ? `?limit=${limit}` : ''}`, {
       next: { revalidate: 3600 }
     });
     if (!res.ok) return [];
@@ -91,7 +92,7 @@ export async function getUpcomingEvents(limit?: number): Promise<Event[]> {
  */
 export async function getEventsByStatus(status: 'upcoming' | 'ongoing' | 'completed'): Promise<Event[]> {
   try {
-    const res = await fetch(`${BACKOFFICE_URL}/api/public/events`, {
+    const res = await fetch(`${BACKOFFICE_API_URL}/api/public/events`, {
       next: { revalidate: 3600 }
     });
     if (!res.ok) return [];
@@ -120,7 +121,7 @@ export async function getEventsByStatus(status: 'upcoming' | 'ongoing' | 'comple
  */
 export async function getEventsByCategory(category: string): Promise<Event[]> {
   try {
-    const res = await fetch(`${BACKOFFICE_URL}/api/public/events?category=${category}`, {
+    const res = await fetch(`${BACKOFFICE_API_URL}/api/public/events?category=${category}`, {
       next: { revalidate: 3600 }
     });
     if (!res.ok) return [];
@@ -137,7 +138,7 @@ export async function getEventsByCategory(category: string): Promise<Event[]> {
  */
 export async function getEventBySlug(slug: string): Promise<Event | null> {
   try {
-    const res = await fetch(`${BACKOFFICE_URL}/api/public/events/${slug}`, {
+    const res = await fetch(`${BACKOFFICE_API_URL}/api/public/events/${slug}`, {
       next: { revalidate: 3600 }
     });
     if (!res.ok) return null;
@@ -153,7 +154,7 @@ export async function getEventBySlug(slug: string): Promise<Event | null> {
  */
 export async function getEventsByMonth(year: number, month: number): Promise<Event[]> {
   try {
-    const res = await fetch(`${BACKOFFICE_URL}/api/public/events/calendar?year=${year}&month=${month}`, {
+    const res = await fetch(`${BACKOFFICE_API_URL}/api/public/events/calendar?year=${year}&month=${month}`, {
       next: { revalidate: 3600 }
     });
     if (!res.ok) return [];
@@ -169,7 +170,7 @@ export async function getEventsByMonth(year: number, month: number): Promise<Eve
  */
 export async function getEventCategories(): Promise<string[]> {
   try {
-    const res = await fetch(`${BACKOFFICE_URL}/api/public/events/categories`, {
+    const res = await fetch(`${BACKOFFICE_API_URL}/api/public/events/categories`, {
       next: { revalidate: 3600 }
     });
     if (!res.ok) return [];

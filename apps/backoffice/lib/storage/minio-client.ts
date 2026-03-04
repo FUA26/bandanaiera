@@ -36,7 +36,7 @@ export function getS3Client(): S3Client {
  */
 export async function ensureBucket(): Promise<void> {
   const s3 = getS3Client();
-  const { HeadBucketCommand, CreateBucketCommand } = await import("@aws-sdk/client-s3");
+  const { HeadBucketCommand, CreateBucketCommand, PutBucketPolicyCommand } = await import("@aws-sdk/client-s3");
 
   try {
     // Check if bucket exists
@@ -68,6 +68,38 @@ export async function ensureBucket(): Promise<void> {
       console.error("❌ Error checking bucket:", error);
       throw error;
     }
+  }
+
+  // Set public policy to allow anonymous read access
+  try {
+    const bucket = env.MINIO_BUCKET;
+    const policy = {
+      Version: "2012-10-17",
+      Statement: [
+        {
+          Effect: "Allow",
+          Principal: { AWS: ["*"] },
+          Action: ["s3:GetBucketLocation", "s3:ListBucket"],
+          Resource: [`arn:aws:s3:::${bucket}`],
+        },
+        {
+          Effect: "Allow",
+          Principal: { AWS: ["*"] },
+          Action: ["s3:GetObject"],
+          Resource: [`arn:aws:s3:::${bucket}/*`],
+        },
+      ],
+    };
+
+    await s3.send(
+      new PutBucketPolicyCommand({
+        Bucket: bucket,
+        Policy: JSON.stringify(policy),
+      })
+    );
+    console.log(`✅ Public read policy applied to bucket: ${bucket}`);
+  } catch (error) {
+    console.error("❌ Failed to set bucket policy:", error);
   }
 }
 

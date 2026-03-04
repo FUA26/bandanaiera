@@ -49,7 +49,9 @@
       "Bash(docker ps:*)",
       "Bash(docker exec:*)",
       "Bash(docker restart:*)",
-      "Bash(turbo dev:*)"
+      "Bash(turbo dev:*)",
+      "Skill(superpowers:brainstorming)",
+      "Skill(superpowers:writing-plans)"
     ]
   }
 }

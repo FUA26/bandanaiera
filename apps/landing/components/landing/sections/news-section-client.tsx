@@ -3,6 +3,7 @@
 import { Calendar, Clock, ArrowRight } from "lucide-react";
 import { useTranslations, useLocale } from "next-intl";
 import type { NewsArticle } from "@/lib/news-data";
+import Link from "next/link";
 
 interface NewsSectionClientProps {
   newsArticles: NewsArticle[];
@@ -39,8 +40,8 @@ export function NewsSectionClient({
               {t("description")}
             </p>
           </div>
-          <a
-            href="#semua-berita"
+          <Link
+            href="/informasi-publik/berita-terkini"
             className="group text-primary hover:text-primary-hover hidden items-center gap-2 font-semibold transition-colors md:inline-flex"
           >
             {t("viewAll")}
@@ -48,28 +49,28 @@ export function NewsSectionClient({
               size={20}
               className="transition-transform group-hover:translate-x-1"
             />
-          </a>
+          </Link>
         </div>
 
         {/* Featured News */}
         <div className="mb-8 grid grid-cols-1 gap-8 lg:grid-cols-2">
           {/* Main Featured */}
           {newsArticles[0] && (
-            <NewsCard article={newsArticles[0]} featured tRead={t("read")} />
+            <NewsCard article={newsArticles[0]} featured tRead={t("read")} formatDate={formatDate} />
           )}
 
           {/* Secondary News */}
           <div className="space-y-6">
             {newsArticles.slice(1, 4).map((article) => (
-              <NewsCardCompact key={article.id} article={article} />
+              <NewsCardCompact key={article.id} article={article} formatDate={formatDate} />
             ))}
           </div>
         </div>
 
         {/* Mobile View All Link */}
         <div className="text-center md:hidden">
-          <a
-            href="#semua-berita"
+          <Link
+            href="/informasi-publik/berita-terkini"
             className="group text-primary hover:text-primary-hover inline-flex items-center gap-2 font-semibold transition-colors"
           >
             {t("viewAllMobile")}
@@ -77,7 +78,7 @@ export function NewsSectionClient({
               size={20}
               className="transition-transform group-hover:translate-x-1"
             />
-          </a>
+          </Link>
         </div>
       </div>
     </section>
@@ -88,17 +89,17 @@ interface NewsCardProps {
   article: NewsArticle;
   featured?: boolean;
   tRead?: string;
+  formatDate: (date: string) => string;
 }
 
-function NewsCard({ article, tRead }: NewsCardProps) {
+function NewsCard({ article, tRead, formatDate }: NewsCardProps) {
   return (
-    <a
+    <Link
       href={`/informasi-publik/berita-terkini/${article.slug}`}
       className="group border-border bg-card block overflow-hidden rounded-2xl border shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
     >
       {/* Image */}
       <div className="from-primary-light relative h-64 overflow-hidden bg-gradient-to-br to-blue-100">
-        {/* Placeholder gradient - replace with actual image when available */}
         <div className="from-primary absolute inset-0 bg-gradient-to-br to-blue-500 opacity-60" />
         <div className="absolute inset-0 flex items-center justify-center">
           <div className="text-center text-white/80">
@@ -106,7 +107,6 @@ function NewsCard({ article, tRead }: NewsCardProps) {
             <p className="text-sm">Gambar Berita</p>
           </div>
         </div>
-        {/* Category Badge */}
         <div className="absolute top-4 left-4">
           <span className="text-primary rounded-full bg-white/90 px-3 py-1 text-xs font-semibold backdrop-blur-sm">
             {article.category}
@@ -114,7 +114,6 @@ function NewsCard({ article, tRead }: NewsCardProps) {
         </div>
       </div>
 
-      {/* Content */}
       <div className="p-6">
         <h3 className="group-hover:text-primary text-foreground mb-3 line-clamp-2 text-xl font-bold transition-colors">
           {article.title}
@@ -123,12 +122,11 @@ function NewsCard({ article, tRead }: NewsCardProps) {
           {article.excerpt}
         </p>
 
-        {/* Meta */}
         <div className="border-border text-muted-foreground flex items-center justify-between border-t pt-4 text-xs">
           <div className="flex items-center gap-4">
             <span className="flex items-center gap-1">
               <Calendar size={14} />
-              {article.date}
+              {formatDate(article.date)}
             </span>
             <span className="flex items-center gap-1">
               <Clock size={14} />
@@ -140,17 +138,16 @@ function NewsCard({ article, tRead }: NewsCardProps) {
           </span>
         </div>
       </div>
-    </a>
+    </Link>
   );
 }
 
-function NewsCardCompact({ article }: { article: NewsArticle }) {
+function NewsCardCompact({ article, formatDate }: { article: NewsArticle, formatDate: (date: string) => string }) {
   return (
-    <a
+    <Link
       href={`/informasi-publik/berita-terkini/${article.slug}`}
       className="group hover:border-primary/30 border-border bg-card flex gap-4 rounded-xl border p-4 transition-all duration-300 hover:shadow-lg"
     >
-      {/* Thumbnail */}
       <div className="from-primary-light relative h-24 w-24 flex-shrink-0 overflow-hidden rounded-lg bg-gradient-to-br to-blue-100">
         <div className="from-primary absolute inset-0 bg-gradient-to-br to-blue-500 opacity-40" />
         <div className="absolute inset-0 flex items-center justify-center">
@@ -158,7 +155,6 @@ function NewsCardCompact({ article }: { article: NewsArticle }) {
         </div>
       </div>
 
-      {/* Content */}
       <div className="min-w-0 flex-1">
         <span className="bg-info-light text-info mb-2 inline-block rounded px-2 py-1 text-xs font-semibold">
           {article.category}
@@ -167,11 +163,11 @@ function NewsCardCompact({ article }: { article: NewsArticle }) {
           {article.title}
         </h4>
         <div className="text-muted-foreground flex items-center gap-3 text-xs">
-          <span>{article.date}</span>
+          <span>{formatDate(article.date)}</span>
           <span>•</span>
           <span>{article.readTime}</span>
         </div>
       </div>
-    </a>
+    </Link>
   );
 }

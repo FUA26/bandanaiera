@@ -1,6 +1,8 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
+import { useState } from "react";
 import {
   Calendar,
   Clock,
@@ -14,9 +16,26 @@ import {
   Linkedin,
   Link as LinkIcon,
   Tag,
+  Newspaper,
 } from "lucide-react";
 import { useTranslations, useLocale } from "next-intl";
 import type { NewsArticle } from "@/lib/news-data";
+
+function ArticleHeroImage({ src, alt }: { src: string; alt: string }) {
+  const [hasError, setHasError] = useState(false);
+  if (hasError) return null;
+  return (
+    <Image
+      src={src}
+      alt={alt}
+      fill
+      className="object-cover"
+      sizes="(max-width: 768px) 100vw, 896px"
+      priority
+      onError={() => setHasError(true)}
+    />
+  );
+}
 
 interface NewsDetailClientProps {
   article: NewsArticle;
@@ -114,14 +133,18 @@ export function NewsDetailClient({ article, relatedNews }: NewsDetailClientProps
                 <Calendar size={18} />
                 <span>{formatDate(article.date)}</span>
               </div>
-              <div className="text-muted-foreground flex items-center gap-2">
-                <User size={18} />
-                <span>{article.author}</span>
-              </div>
-              <div className="text-muted-foreground flex items-center gap-2">
-                <Clock size={18} />
-                <span>{article.readTime}</span>
-              </div>
+              {article.author && (
+                <div className="text-muted-foreground flex items-center gap-2">
+                  <User size={18} />
+                  <span>{article.author}</span>
+                </div>
+              )}
+              {article.readTime && (
+                <div className="text-muted-foreground flex items-center gap-2">
+                  <Clock size={18} />
+                  <span>{article.readTime}</span>
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -134,14 +157,17 @@ export function NewsDetailClient({ article, relatedNews }: NewsDetailClientProps
             {/* Main Article */}
             <div className="lg:col-span-2">
               {/* Featured Image */}
-              <div className="from-primary-light to-primary-lighter bg-gradient-to-br relative mb-8 aspect-video overflow-hidden rounded-2xl">
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="text-center text-white/80">
-                    <Calendar size={64} className="mx-auto mb-3" />
-                    <p className="text-lg font-semibold">Gambar Berita</p>
-                    <p className="text-sm opacity-70">{article.image}</p>
+              <div className="relative mb-8 aspect-video overflow-hidden rounded-2xl bg-gradient-to-br from-primary-light to-primary-lighter">
+                {article.image ? (
+                  <ArticleHeroImage src={article.image} alt={article.title} />
+                ) : (
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <div className="text-center text-white/80">
+                      <Newspaper size={64} className="mx-auto mb-3" />
+                      <p className="text-lg font-semibold">Gambar Berita</p>
+                    </div>
                   </div>
-                </div>
+                )}
               </div>
 
               {/* Share Buttons */}
@@ -211,51 +237,16 @@ export function NewsDetailClient({ article, relatedNews }: NewsDetailClientProps
                   Informasi Lengkap
                 </h3>
 
-                <p className="text-muted-foreground mb-4 leading-relaxed">
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do
-                  eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-                  enim ad minim veniam, quis nostrud exercitation ullamco laboris
-                  nisi ut aliquip ex ea commodo consequat.
-                </p>
-
-                <p className="text-muted-foreground mb-4 leading-relaxed">
-                  Duis aute irure dolor in reprehenderit in voluptate velit esse
-                  cillum dolore eu fugiat nulla pariatur. Excepteur sint
-                  occaecat cupidatat non proident, sunt in culpa qui officia
-                  deserunt mollit anim id est laborum.
-                </p>
-
-                <h4 className="text-foreground mb-3 mt-8 text-lg font-bold">
-                  Poin Penting
-                </h4>
-                <ul className="list-disc space-y-2 pl-6">
-                  <li className="text-muted-foreground">
-                    Implementasi sistem informasi daerah yang terintegrasi
-                  </li>
-                  <li className="text-muted-foreground">
-                    Peningkatan pelayanan publik berbasis digital
-                  </li>
-                  <li className="text-muted-foreground">
-                    Transparansi dan akuntabilitas pemerintahan
-                  </li>
-                  <li className="text-muted-foreground">
-                    Partisipasi aktif masyarakat dalam pembangunan
-                  </li>
-                </ul>
-
-                <div className="border-border bg-muted my-8 rounded-xl border p-6">
-                  <p className="text-foreground font-semibold mb-2">
-                    Kutipan Terkait
+                {article.content ? (
+                  <div
+                    className="prose prose-lg dark:prose-invert max-w-none text-muted-foreground leading-relaxed"
+                    dangerouslySetInnerHTML={{ __html: article.content }}
+                  />
+                ) : (
+                  <p className="text-muted-foreground mb-4 leading-relaxed">
+                    Konten tidak tersedia untuk berita ini.
                   </p>
-                  <p className="text-muted-foreground italic">
-                    "Inovasi dalam pelayanan publik adalah kunci untuk mewujudkan
-                    pemerintahan yang transparan, akuntabel, dan melayani
-                    masyarakat dengan prima."
-                  </p>
-                  <p className="text-muted-foreground mt-2 text-sm">
-                    — Pemerintah Daerah
-                  </p>
-                </div>
+                )}
 
                 {/* Tags */}
                 {article.tags && article.tags.length > 0 && (
@@ -279,22 +270,24 @@ export function NewsDetailClient({ article, relatedNews }: NewsDetailClientProps
             {/* Sidebar */}
             <aside className="space-y-6">
               {/* Author Card */}
-              <div className="bg-card border-border rounded-xl border p-6 shadow-sm">
-                <h3 className="text-foreground mb-4 font-bold">Penulis</h3>
-                <div className="flex items-center gap-4">
-                  <div className="bg-primary-lighter text-primary flex h-12 w-12 items-center justify-center rounded-full font-bold">
-                    {article.author.charAt(0)}
-                  </div>
-                  <div>
-                    <p className="text-foreground font-semibold">
-                      {article.author}
-                    </p>
-                    <p className="text-muted-foreground text-sm">
-                      {article.category}
-                    </p>
+              {article.author && (
+                <div className="bg-card border-border rounded-xl border p-6 shadow-sm">
+                  <h3 className="text-foreground mb-4 font-bold">Penulis</h3>
+                  <div className="flex items-center gap-4">
+                    <div className="bg-primary-lighter text-primary flex h-12 w-12 items-center justify-center rounded-full font-bold">
+                      {article.author.charAt(0)}
+                    </div>
+                    <div>
+                      <p className="text-foreground font-semibold">
+                        {article.author}
+                      </p>
+                      <p className="text-muted-foreground text-sm">
+                        {article.category}
+                      </p>
+                    </div>
                   </div>
                 </div>
-              </div>
+              )}
 
               {/* Quick Info */}
               <div className="bg-card border-border rounded-xl border p-6 shadow-sm">
@@ -312,12 +305,14 @@ export function NewsDetailClient({ article, relatedNews }: NewsDetailClientProps
                       {article.category}
                     </span>
                   </div>
-                  <div className="flex justify-between">
-                    <span className="text-muted-foreground">Waktu Baca</span>
-                    <span className="text-foreground font-medium">
-                      {article.readTime}
-                    </span>
-                  </div>
+                  {article.readTime && (
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">Waktu Baca</span>
+                      <span className="text-foreground font-medium">
+                        {article.readTime}
+                      </span>
+                    </div>
+                  )}
                 </div>
               </div>
 

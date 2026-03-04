@@ -14,6 +14,7 @@ import {
   Building2,
   ArrowRight,
   Filter,
+  ArrowLeft,
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { useTranslations, useLocale } from "next-intl";
@@ -32,12 +33,13 @@ export function AgendaKegiatanClient({
   const locale = useLocale();
   const dateLocale = locale === "id" ? "id-ID" : "en-US";
 
+  const ITEMS_PER_PAGE = 6;
+  const [currentPage, setCurrentPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("Semua");
   const [selectedStatus, setSelectedStatus] = useState("Semua");
   const [selectedType, setSelectedType] = useState("Semua");
 
-  // Add "Semua" to categories
   const allCategories = ["Semua", ...categories];
   const statusOptions = ["Semua", "upcoming", "ongoing", "completed"];
   const typeOptions = ["Semua", "online", "offline", "hybrid"];
@@ -49,7 +51,7 @@ export function AgendaKegiatanClient({
         event.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
         (event.description &&
           event.description.toLowerCase().includes(searchQuery.toLowerCase())) ||
-        event.location.toLowerCase().includes(searchQuery.toLowerCase());
+        (event.location && event.location.toLowerCase().includes(searchQuery.toLowerCase()));
       const matchesCategory =
         selectedCategory === "Semua" || event.category === selectedCategory;
       const matchesStatus =
@@ -58,6 +60,13 @@ export function AgendaKegiatanClient({
       return matchesSearch && matchesCategory && matchesStatus && matchesType;
     });
   }, [allEvents, searchQuery, selectedCategory, selectedStatus, selectedType]);
+
+  // Paginated events
+  const totalPages = Math.ceil(filteredEvents.length / ITEMS_PER_PAGE);
+  const paginatedEvents = useMemo(() => {
+    const start = (currentPage - 1) * ITEMS_PER_PAGE;
+    return filteredEvents.slice(start, start + ITEMS_PER_PAGE);
+  }, [filteredEvents, currentPage]);
 
   // Get upcoming events count
   const upcomingCount = allEvents.filter((e) => e.status === "upcoming").length;
@@ -139,8 +148,7 @@ export function AgendaKegiatanClient({
             </div>
           </div>
 
-          {/* Quick Stats */}
-          <div className="mt-8 grid grid-cols-2 gap-4 md:grid-cols-4">
+          <div className="mt-8 grid grid-cols-2 gap-4 md:grid-cols-3">
             <div className="rounded-xl bg-white/10 p-4 backdrop-blur-sm">
               <Calendar className="mb-2 h-6 w-6" />
               <div className="text-2xl font-bold">{allEvents.length}</div>
@@ -150,13 +158,6 @@ export function AgendaKegiatanClient({
               <Clock className="mb-2 h-6 w-6" />
               <div className="text-2xl font-bold">{upcomingCount}</div>
               <div className="text-primary-lighter text-sm">Akan Datang</div>
-            </div>
-            <div className="rounded-xl bg-white/10 p-4 backdrop-blur-sm">
-              <MapPin className="mb-2 h-6 w-6" />
-              <div className="text-2xl font-bold">
-                {new Set(allEvents.map((e) => e.location)).size}
-              </div>
-              <div className="text-primary-lighter text-sm">Lokasi</div>
             </div>
             <div className="rounded-xl bg-white/10 p-4 backdrop-blur-sm">
               <Tag className="mb-2 h-6 w-6" />
@@ -235,88 +236,125 @@ export function AgendaKegiatanClient({
       <section className="py-8">
         <div className="container mx-auto max-w-6xl px-4">
           <p className="text-muted-foreground mb-6 text-sm">
-            Menampilkan {filteredEvents.length} agenda
+            Menampilkan {paginatedEvents.length} dari {filteredEvents.length} agenda
             {(selectedCategory !== "Semua" ||
               selectedStatus !== "Semua" ||
               selectedType !== "Semua" ||
               searchQuery) && (
-              <span>
-                {" "}
-                dari filter yang dipilih
-                {selectedCategory !== "Semua" && ` - Kategori: ${selectedCategory}`}
-                {selectedStatus !== "Semua" && ` - Status: ${selectedStatus}`}
-                {selectedType !== "Semua" && ` - Tipe: ${selectedType}`}
-              </span>
-            )}
+                <span>
+                  {" "}
+                  dari filter yang dipilih
+                  {selectedCategory !== "Semua" && ` - Kategori: ${selectedCategory}`}
+                  {selectedStatus !== "Semua" && ` - Status: ${selectedStatus}`}
+                  {selectedType !== "Semua" && ` - Tipe: ${selectedType}`}
+                </span>
+              )}
           </p>
 
           {filteredEvents.length > 0 ? (
-            <div className="grid gap-6 md:grid-cols-2">
-              {filteredEvents.map((event) => (
-                <Link
-                  key={event.id}
-                  href={`/informasi-publik/agenda-kegiatan/${event.slug}`}
-                  className="group hover:border-primary/30 border-border bg-card rounded-2xl border p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
-                >
-                  {/* Header */}
-                  <div className="mb-4 flex items-start justify-between">
-                    <span className="bg-info-light text-info rounded-lg px-3 py-1 text-xs font-semibold">
-                      {event.category}
-                    </span>
-                    {getStatusBadge(event.status)}
-                  </div>
+            <>
+              <div className="grid gap-6 md:grid-cols-2">
+                {paginatedEvents.map((event) => (
+                  <Link
+                    key={event.id}
+                    href={`/informasi-publik/agenda-kegiatan/${event.slug}`}
+                    className="group hover:border-primary/30 border-border bg-card rounded-2xl border p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
+                  >
+                    {/* Header */}
+                    <div className="mb-4 flex items-start justify-between">
+                      <span className="bg-info-light text-info rounded-lg px-3 py-1 text-xs font-semibold">
+                        {event.category}
+                      </span>
+                      {getStatusBadge(event.status)}
+                    </div>
 
-                  {/* Title */}
-                  <h3 className="group-hover:text-primary text-foreground mb-3 text-xl font-bold transition-colors">
-                    {event.title}
-                  </h3>
+                    {/* Title */}
+                    <h3 className="group-hover:text-primary text-foreground mb-3 text-xl font-bold transition-colors">
+                      {event.title}
+                    </h3>
 
-                  {/* Description */}
-                  {event.description && (
-                    <p className="text-muted-foreground mb-4 line-clamp-2 text-sm">
-                      {event.description}
-                    </p>
-                  )}
-
-                  {/* Event Details */}
-                  <div className="text-muted-foreground space-y-2 text-sm">
-                    <div className="flex items-center gap-2">
-                      <Calendar size={16} />
-                      <span>{formatDate(event.date)}</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Clock size={16} />
-                      <span>{event.time}</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <MapPin size={16} />
-                      <span className="line-clamp-1">{event.location}</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      {getTypeIcon(event.type)}
-                      <span className="capitalize">{event.type}</span>
-                    </div>
-                    {event.attendees && (
-                      <div className="flex items-center gap-2">
-                        <Users size={16} />
-                        <span>{event.attendees} peserta</span>
-                      </div>
+                    {/* Description */}
+                    {event.description && (
+                      <p className="text-muted-foreground mb-4 line-clamp-2 text-sm">
+                        {event.description}
+                      </p>
                     )}
-                  </div>
 
-                  {/* Footer */}
-                  <div className="border-border mt-4 flex items-center justify-between border-t pt-4">
-                    <span className="text-muted-foreground text-xs">
-                      {event.organizer}
-                    </span>
-                    <div className="text-primary flex items-center gap-1 text-sm font-semibold opacity-0 transition-opacity group-hover:opacity-100">
-                      Lihat Detail
-                      <ArrowRight size={16} />
+                    {/* Event Details */}
+                    <div className="text-muted-foreground space-y-2 text-sm">
+                      <div className="flex items-center gap-2">
+                        <Calendar size={16} />
+                        <span>{formatDate(event.date)}</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Clock size={16} />
+                        <span>{event.time}</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <MapPin size={16} />
+                        <span className="line-clamp-1">{event.location}</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        {getTypeIcon(event.type)}
+                        <span className="capitalize">{event.type}</span>
+                      </div>
+                      {event.attendees && (
+                        <div className="flex items-center gap-2">
+                          <Users size={16} />
+                          <span>{event.attendees} peserta</span>
+                        </div>
+                      )}
                     </div>
+
+                    {/* Footer */}
+                    <div className="border-border mt-4 flex items-center justify-between border-t pt-4">
+                      <span className="text-muted-foreground text-xs">
+                        {event.organizer}
+                      </span>
+                      <div className="text-primary flex items-center gap-1 text-sm font-semibold opacity-0 transition-opacity group-hover:opacity-100">
+                        Lihat Detail
+                        <ArrowRight size={16} />
+                      </div>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+
+              {totalPages > 1 && (
+                <div className="mt-8 flex justify-center gap-2">
+                  <button
+                    onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                    disabled={currentPage === 1}
+                    className="rounded-lg bg-card border-border border px-4 py-2 text-sm font-medium hover:bg-muted disabled:opacity-50"
+                  >
+                    <ArrowLeft size={16} className="inline mr-2" />
+                    Sebelumnya
+                  </button>
+                  <div className="flex items-center gap-1">
+                    {Array.from({ length: totalPages }).map((_, i) => (
+                      <button
+                        key={i}
+                        onClick={() => setCurrentPage(i + 1)}
+                        className={`rounded-lg w-10 h-10 flex items-center justify-center text-sm font-medium transition-colors ${currentPage === i + 1
+                          ? "bg-primary text-primary-foreground shadow-md"
+                          : "bg-card border-border border text-foreground hover:bg-muted"
+                          }`}
+                      >
+                        {i + 1}
+                      </button>
+                    ))}
                   </div>
-                </Link>
-              ))}
-            </div>
+                  <button
+                    onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+                    disabled={currentPage === totalPages}
+                    className="rounded-lg bg-card border-border border px-4 py-2 text-sm font-medium hover:bg-muted disabled:opacity-50"
+                  >
+                    Selanjutnya
+                    <ArrowRight size={16} className="inline ml-2" />
+                  </button>
+                </div>
+              )}
+            </>
           ) : (
             <div className="border-border bg-card py-16 text-center rounded-2xl border">
               <Calendar

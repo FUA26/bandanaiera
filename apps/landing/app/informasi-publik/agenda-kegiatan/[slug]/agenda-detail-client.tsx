@@ -85,11 +85,11 @@ export function AgendaDetailClient({ event, relatedEvents }: AgendaDetailClientP
 
   const getTypeIcon = () => {
     switch (event.type) {
-      case "online":
+      case "ONLINE":
         return <Globe size={24} />;
-      case "offline":
+      case "OFFLINE":
         return <Building2 size={24} />;
-      case "hybrid":
+      case "HYBRID":
         return <Users size={24} />;
       default:
         return <Calendar size={24} />;
@@ -270,9 +270,9 @@ export function AgendaDetailClient({ event, relatedEvents }: AgendaDetailClientP
                   <li className="text-muted-foreground flex items-start gap-2">
                     <ChevronRight size={18} className="text-primary mt-1 flex-shrink-0" />
                     <span>
-                      {event.type === "online"
+                      {event.type === "ONLINE"
                         ? "Link meeting akan dikirimkan melalui email setelah registrasi"
-                        : event.type === "hybrid"
+                        : event.type === "HYBRID"
                           ? "Bisa diikuti secara online atau offline sesuai pilihan"
                           : "Lokasi acara mudah diakses dengan transportasi umum"}
                     </span>

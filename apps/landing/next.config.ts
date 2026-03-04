@@ -7,7 +7,7 @@ const withNextIntl = createNextIntlPlugin("./src/i18n/request.ts");
 const nextConfig: NextConfig = {
   images: {
     // For local images in /public folder
-    unoptimized: false,
+    unoptimized: true,
     // Remote patterns for external images
     remotePatterns: [
       {
@@ -15,6 +15,18 @@ const nextConfig: NextConfig = {
         hostname: "localhost",
         port: "3001",
         pathname: "/api/public/files/**",
+      },
+      {
+        protocol: "http",
+        hostname: "100.116.51.61",
+        port: "9000",
+        pathname: "/**",
+      },
+      {
+        protocol: "http",
+        hostname: "localhost",
+        port: "9000",
+        pathname: "/**",
       },
       {
         protocol: "http",

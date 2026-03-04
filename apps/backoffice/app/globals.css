@@ -2,6 +2,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=JetBrains+Mono:wght@400;500&display=swap");
 
 @import "../../../packages/ui/styles/globals.css";
+@plugin "@tailwindcss/typography";
 
 /* Backoffice-specific font overrides */
 @theme inline {

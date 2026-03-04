@@ -50,41 +50,41 @@ export async function POST(request: NextRequest) {
       switch (tag) {
         case 'news':
           // Revalidate all news-related paths
-          revalidatePath('/api/public/news');
-          revalidatePath('/informasi-publik/berita-terkini');
-          revalidateTag('news');
+          revalidatePath('/api/public/news', 'page');
+          revalidatePath('/informasi-publik/berita-terkini', 'page');
+          revalidateTag('news', '');
           break;
 
         case 'events':
           // Revalidate all events-related paths
-          revalidatePath('/api/public/events');
-          revalidatePath('/informasi-publik/agenda-kegiatan');
-          revalidateTag('events');
+          revalidatePath('/api/public/events', 'page');
+          revalidatePath('/informasi-publik/agenda-kegiatan', 'page');
+          revalidateTag('events', '');
           break;
 
         case 'services':
           // Clear services in-memory cache
           clearServicesCache();
-          revalidatePath('/layanan');
-          revalidatePath('/api/public/services');
-          revalidateTag('services');
+          revalidatePath('/layanan', 'page');
+          revalidatePath('/api/public/services', 'page');
+          revalidateTag('services', '');
           break;
 
         case 'all':
         default:
           // Revalidate everything
           clearServicesCache();
-          revalidatePath('/');
-          revalidatePath('/layanan');
-          revalidatePath('/informasi-publik');
-          revalidatePath('/informasi-publik/berita-terkini');
-          revalidatePath('/informasi-publik/agenda-kegiatan');
-          revalidatePath('/api/public/news');
-          revalidatePath('/api/public/events');
-          revalidatePath('/api/public/services');
-          revalidateTag('news');
-          revalidateTag('events');
-          revalidateTag('services');
+          revalidatePath('/', 'layout');
+          revalidatePath('/layanan', 'page');
+          revalidatePath('/informasi-publik', 'page');
+          revalidatePath('/informasi-publik/berita-terkini', 'page');
+          revalidatePath('/informasi-publik/agenda-kegiatan', 'page');
+          revalidatePath('/api/public/news', 'page');
+          revalidatePath('/api/public/events', 'page');
+          revalidatePath('/api/public/services', 'page');
+          revalidateTag('news', '');
+          revalidateTag('events', '');
+          revalidateTag('services', '');
           break;
       }
 
@@ -102,12 +102,12 @@ export async function POST(request: NextRequest) {
     // Revalidate specific paths if provided
     if (paths && Array.isArray(paths)) {
       for (const path of paths) {
-        revalidatePath(path);
+        revalidatePath(path, 'page');
       }
     } else {
       // Revalidate all service-related paths
-      revalidatePath('/layanan');
-      revalidatePath('/informasi-publik');
+      revalidatePath('/layanan', 'page');
+      revalidatePath('/informasi-publik', 'page');
       revalidatePath('/', 'layout');
     }
 
