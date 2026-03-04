@@ -60,11 +60,6 @@ model User {
   avatarUrl     String? // Cache URL from File.cdnUrl
   uploadedFiles File[]
 
-  // Service Management Relations
-  createdServices     Service[]            @relation("ServiceCreator")
-  updatedServices     Service[]            @relation("ServiceUpdater")
-  serviceActivityLogs ServiceActivityLog[] @relation("ServiceActivityLogs")
-
   // News Management Relations
   createdNews      News[]            @relation("NewsCreator")
   updatedNews      News[]            @relation("NewsUpdater")
@@ -224,12 +219,6 @@ enum FileCategory {
   OTHER
 }
 
-enum ServiceStatus {
-  DRAFT
-  PUBLISHED
-  ARCHIVED
-}
-
 enum NewsStatus {
   DRAFT
   PUBLISHED
@@ -259,75 +248,6 @@ enum EventStatus {
   PUBLISHED
   CANCELLED
   COMPLETED
-}
-
-model ServiceCategory {
-  id         String    @id @default(cuid())
-  name       String
-  slug       String    @unique
-  icon       String
-  color      String
-  bgColor    String
-  showInMenu Boolean   @default(true)
-  order      Int
-  services   Service[]
-  createdAt  DateTime  @default(now())
-  updatedAt  DateTime  @updatedAt
-
-  @@index([showInMenu])
-  @@index([order])
-}
-
-model Service {
-  id                  String               @id @default(cuid())
-  slug                String               @unique
-  icon                String
-  name                String
-  description         String
-  categoryId          String
-  category            ServiceCategory      @relation(fields: [categoryId], references: [id])
-  badge               String?
-  stats               String?
-  showInMenu          Boolean              @default(true)
-  order               Int                  @default(0)
-  isIntegrated        Boolean              @default(false)
-  detailedDescription String?
-  requirements        Json?
-  process             Json?
-  duration            String?
-  cost                String?
-  contactInfo         Json?
-  faqs                Json?
-  downloadForms       Json?
-  relatedServices     Json?
-  status              ServiceStatus        @default(DRAFT)
-  createdById         String
-  createdBy           User                 @relation("ServiceCreator", fields: [createdById], references: [id])
-  updatedById         String?
-  updatedBy           User?                @relation("ServiceUpdater", fields: [updatedById], references: [id])
-  createdAt           DateTime             @default(now())
-  updatedAt           DateTime             @updatedAt
-  activityLogs        ServiceActivityLog[]
-
-  @@index([categoryId])
-  @@index([status])
-  @@index([order])
-  @@index([slug])
-}
-
-model ServiceActivityLog {
-  id        String   @id @default(cuid())
-  serviceId String
-  service   Service  @relation(fields: [serviceId], references: [id], onDelete: Cascade)
-  userId    String
-  action    String
-  changes   Json?
-  createdAt DateTime @default(now())
-  user      User     @relation("ServiceActivityLogs", fields: [userId], references: [id])
-
-  @@index([serviceId])
-  @@index([userId])
-  @@index([createdAt])
 }
 
 model NewsCategory {
