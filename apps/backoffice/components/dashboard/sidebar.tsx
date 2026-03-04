@@ -46,6 +46,7 @@ const navItems = [
   { href: "/manage/event-categories", label: "Event Categories", icon: FolderKanban, permission: "EVENT_CATEGORIES_MANAGE" },
   { href: "/manage/photos", label: "Photos", icon: FolderOpen, permission: "GALLERY_VIEW" },
   { href: "/manage/albums", label: "Albums", icon: Folders, permission: "GALLERY_ALBUMS_MANAGE" },
+  { href: "/manage/tags", label: "Tags", icon: Key, permission: "GALLERY_TAGS_MANAGE" },
   { href: "/manage/destinations", label: "Destinations", icon: FolderOpen, permission: "DESTINATIONS_VIEW" },
   { href: "/manage/destination-categories", label: "Destination Categories", icon: FolderKanban, permission: "DESTINATION_CATEGORIES_MANAGE" },
   { href: "/manage/facilities", label: "Facilities", icon: FolderKanban, permission: "DESTINATION_FACILITIES_MANAGE" },
