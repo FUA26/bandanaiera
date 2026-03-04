@@ -19,6 +19,7 @@ import { usePermissions } from "@/lib/rbac-client/provider";
 import {
   LayoutDashboard,
   BarChart3,
+  CheckSquare,
   FolderKanban,
   Users,
   Shield,
@@ -31,6 +32,10 @@ const navItems = [
   { heading: "Overview" },
   { href: "/", label: "Dashboard", icon: LayoutDashboard, permission: null },
   { href: "/analytics", label: "Analytics", icon: BarChart3, permission: null },
+
+  // Work Management Group
+  { heading: "Work" },
+  { href: "/tasks", label: "Tasks", icon: CheckSquare, permission: null },
 
   // User & Access Management Group
   { heading: "Users & Access" },
