@@ -48,7 +48,8 @@
       "Bash(npx prisma db execute:*)",
       "Bash(docker ps:*)",
       "Bash(docker exec:*)",
-      "Bash(docker restart:*)"
+      "Bash(docker restart:*)",
+      "Bash(turbo dev:*)"
     ]
   }
 }
