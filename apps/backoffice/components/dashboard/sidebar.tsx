@@ -48,6 +48,7 @@ const navItems = [
   { href: "/manage/albums", label: "Albums", icon: Folders, permission: "GALLERY_ALBUMS_MANAGE" },
   { href: "/manage/destinations", label: "Destinations", icon: FolderOpen, permission: "DESTINATIONS_VIEW" },
   { href: "/manage/destination-categories", label: "Destination Categories", icon: FolderKanban, permission: "DESTINATION_CATEGORIES_MANAGE" },
+  { href: "/manage/facilities", label: "Facilities", icon: FolderKanban, permission: "DESTINATION_FACILITIES_MANAGE" },
 
   // User & Access Management Group
   { heading: "Users & Access" },
