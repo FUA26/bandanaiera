@@ -177,12 +177,20 @@ export function AgendaDetailClient({ event, relatedEvents }: AgendaDetailClientP
             <div className="lg:col-span-2 space-y-6">
               {/* Featured Image */}
               <div className="from-primary-light to-primary-lighter bg-gradient-to-br relative aspect-video w-full overflow-hidden rounded-2xl">
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="text-center text-white/80">
-                    <Calendar size={80} className="mx-auto mb-4" />
-                    <p className="text-xl font-semibold">{event.title}</p>
+                {event.image ? (
+                  <img
+                    src={event.image}
+                    alt={event.title}
+                    className="h-full w-full object-cover"
+                  />
+                ) : (
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <div className="text-center text-white/80">
+                      <Calendar size={80} className="mx-auto mb-4" />
+                      <p className="text-xl font-semibold">{event.title}</p>
+                    </div>
                   </div>
-                </div>
+                )}
               </div>
 
               {/* Action Buttons */}
@@ -245,12 +253,13 @@ export function AgendaDetailClient({ event, relatedEvents }: AgendaDetailClientP
                   Tentang Agenda
                 </h2>
                 {event.description ? (
-                  <p className="text-muted-foreground mb-6 text-lg leading-relaxed">
-                    {event.description}
-                  </p>
+                  <div
+                    className="prose prose-lg dark:prose-invert max-w-none text-muted-foreground leading-relaxed"
+                    dangerouslySetInnerHTML={{ __html: event.description }}
+                  />
                 ) : (
                   <p className="text-muted-foreground mb-6 text-lg leading-relaxed">
-                    Deskripsi lengkap mengenai agenda ini akan segera diperbarui.
+                    Deskripsi lengkap mengenai agenda ini belum tersedia.
                     Silakan hubungi penyelenggara untuk informasi lebih lanjut.
                   </p>
                 )}
@@ -437,8 +446,16 @@ export function AgendaDetailClient({ event, relatedEvents }: AgendaDetailClientP
                         href={`/informasi-publik/agenda-kegiatan/${relatedEvent.slug}`}
                         className="block group"
                       >
-                        <div className="mb-2 flex aspect-video items-center justify-center rounded-lg bg-gradient-to-br from-primary-light to-primary-lighter">
-                          <Calendar className="text-primary/60" size={32} />
+                        <div className="mb-2 flex aspect-video items-center justify-center rounded-lg bg-gradient-to-br from-primary-light to-primary-lighter overflow-hidden">
+                          {relatedEvent.image ? (
+                            <img
+                              src={relatedEvent.image}
+                              alt={relatedEvent.title}
+                              className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                            />
+                          ) : (
+                            <Calendar className="text-primary/60" size={32} />
+                          )}
                         </div>
                         <h4 className="group-hover:text-primary line-clamp-2 text-sm font-semibold text-foreground transition-colors">
                           {relatedEvent.title}

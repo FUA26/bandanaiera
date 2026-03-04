@@ -103,6 +103,18 @@ export function EventsSectionClient({ events }: EventsSectionClientProps) {
     );
   };
 
+  // Find the first upcoming or ongoing event for the Featured slot
+  const featuredEvent = useMemo(() => {
+    return events.find(e => e.status !== "completed") || events[0];
+  }, [events]);
+
+  // List other upcoming events (excluding the featured one)
+  const displayEvents = useMemo(() => {
+    return events
+      .filter(e => e.id !== featuredEvent?.id && e.status !== "completed")
+      .slice(0, 3);
+  }, [events, featuredEvent]);
+
   return (
     <section className="bg-muted py-16 md:py-20" id="acara">
       <div className="container mx-auto max-w-7xl px-4">
@@ -124,16 +136,15 @@ export function EventsSectionClient({ events }: EventsSectionClientProps) {
           {/* Left Column - Featured Event & Event List */}
           <div className="space-y-6 lg:col-span-2">
             {/* Featured Event */}
-            {events[0] ? (
+            {featuredEvent ? (
               <div className="border-border bg-card group overflow-hidden rounded-2xl border shadow-lg transition-all duration-300 hover:shadow-xl">
                 {/* Featured Event Image */}
-                <div className="relative h-64 bg-muted md:h-80">
-                  {events[0].image ? (
-                    <Image
-                      src={events[0].image}
-                      alt={events[0].title}
-                      fill
-                      className="object-cover transition-transform duration-500 group-hover:scale-105"
+                <div className="relative h-64 bg-muted md:h-80 overflow-hidden">
+                  {featuredEvent.image ? (
+                    <img
+                      src={featuredEvent.image}
+                      alt={featuredEvent.title}
+                      className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
                     />
                   ) : (
                     <div className="from-primary absolute inset-0 bg-gradient-to-br to-blue-600 opacity-70">
@@ -146,11 +157,11 @@ export function EventsSectionClient({ events }: EventsSectionClientProps) {
                   {/* Event Badge */}
                   <div className="absolute top-4 left-4">
                     <span className="bg-primary/90 text-primary-foreground backdrop-blur-sm rounded-lg px-4 py-2 text-sm font-semibold shadow-lg">
-                      {events[0].category}
+                      {featuredEvent.category}
                     </span>
                   </div>
 
-                  {events[0].featured && (
+                  {featuredEvent.featured && (
                     <div className="absolute top-4 right-4">
                       <span className="bg-amber-500 text-white rounded-lg px-3 py-1.5 text-xs font-bold shadow-lg flex items-center gap-1">
                         <Sparkles size={14} />
@@ -163,7 +174,7 @@ export function EventsSectionClient({ events }: EventsSectionClientProps) {
                 {/* Featured Event Content */}
                 <div className="p-6">
                   <h3 className="mb-4 text-2xl leading-tight font-bold text-foreground group-hover:text-primary transition-colors">
-                    {events[0].title}
+                    {featuredEvent.title}
                   </h3>
 
                   <div className="mb-6 space-y-3">
@@ -171,35 +182,35 @@ export function EventsSectionClient({ events }: EventsSectionClientProps) {
                       <div className="flex items-center gap-2">
                         <Calendar size={18} className="text-primary" />
                         <span className="font-medium">
-                          {formatDate(events[0].date)}
+                          {formatDate(featuredEvent.date)}
                         </span>
                       </div>
                       <div className="hidden sm:block text-muted-foreground/30">|</div>
                       <div className="flex items-center gap-2">
                         <Clock size={18} className="text-primary" />
-                        <span>{events[0].time}</span>
+                        <span>{featuredEvent.time}</span>
                       </div>
-                      {events[0].location && (
+                      {featuredEvent.location && (
                         <>
                           <div className="hidden sm:block text-muted-foreground/30">|</div>
                           <div className="flex items-center gap-2">
                             <MapPin size={18} className="text-primary" />
-                            <span className="line-clamp-1">{events[0].location}</span>
+                            <span className="line-clamp-1">{featuredEvent.location}</span>
                           </div>
                         </>
                       )}
                     </div>
 
-                    {events[0].description && (
+                    {featuredEvent.description && (
                       <p className="text-muted-foreground leading-relaxed line-clamp-3">
-                        {events[0].description}
+                        {featuredEvent.description}
                       </p>
                     )}
                   </div>
 
                   <div className="border-border flex items-center justify-between border-t pt-5">
                     <Link
-                      href={`/informasi-publik/agenda-kegiatan/${events[0].slug}`}
+                      href={`/informasi-publik/agenda-kegiatan/${featuredEvent.slug}`}
                       className="group/link text-primary hover:text-primary-hover inline-flex items-center gap-2 font-bold"
                     >
                       {t("viewMore")}
@@ -242,11 +253,10 @@ export function EventsSectionClient({ events }: EventsSectionClientProps) {
                     >
                       <div className="relative h-20 w-20 flex-shrink-0 overflow-hidden rounded-lg bg-muted">
                         {event.image ? (
-                          <Image
+                          <img
                             src={event.image}
                             alt={event.title}
-                            fill
-                            className="object-cover transition-transform group-hover:scale-110"
+                            className="h-full w-full object-cover transition-transform group-hover:scale-110"
                           />
                         ) : (
                           <div className="from-primary/40 absolute inset-0 bg-gradient-to-br to-blue-500/40 flex items-center justify-center">
@@ -294,10 +304,7 @@ export function EventsSectionClient({ events }: EventsSectionClientProps) {
                 {selectedDate !== null ? "Acara Lainnya" : t("finished")}
               </h4>
 
-              {(selectedDate !== null
-                ? events.slice(1, 4).filter(e => !selectedDateEvents.includes(e))
-                : events.slice(1, 4)
-              ).map((event) => (
+              {displayEvents.map((event) => (
                 <Link
                   key={event.id}
                   href={`/informasi-publik/agenda-kegiatan/${event.slug}`}
@@ -306,11 +313,10 @@ export function EventsSectionClient({ events }: EventsSectionClientProps) {
                   {/* Event Thumbnail */}
                   <div className="relative h-24 w-24 flex-shrink-0 overflow-hidden rounded-lg bg-muted">
                     {event.image ? (
-                      <Image
+                      <img
                         src={event.image}
                         alt={event.title}
-                        fill
-                        className="object-cover transition-transform group-hover:scale-110"
+                        className="h-full w-full object-cover transition-transform group-hover:scale-110"
                       />
                     ) : (
                       <div className="from-primary/40 absolute inset-0 bg-gradient-to-br to-blue-500/40 flex items-center justify-center">

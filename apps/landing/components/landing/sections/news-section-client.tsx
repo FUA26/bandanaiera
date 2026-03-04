@@ -100,13 +100,23 @@ function NewsCard({ article, tRead, formatDate }: NewsCardProps) {
     >
       {/* Image */}
       <div className="from-primary-light relative h-64 overflow-hidden bg-gradient-to-br to-blue-100">
-        <div className="from-primary absolute inset-0 bg-gradient-to-br to-blue-500 opacity-60" />
-        <div className="absolute inset-0 flex items-center justify-center">
-          <div className="text-center text-white/80">
-            <Calendar size={48} className="mx-auto mb-2" />
-            <p className="text-sm">Gambar Berita</p>
-          </div>
-        </div>
+        {article.image ? (
+          <img
+            src={article.image}
+            alt={article.title}
+            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+          />
+        ) : (
+          <>
+            <div className="from-primary absolute inset-0 bg-gradient-to-br to-blue-500 opacity-60" />
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div className="text-center text-white/80">
+                <Calendar size={48} className="mx-auto mb-2" />
+                <p className="text-sm">Gambar Berita</p>
+              </div>
+            </div>
+          </>
+        )}
         <div className="absolute top-4 left-4">
           <span className="text-primary rounded-full bg-white/90 px-3 py-1 text-xs font-semibold backdrop-blur-sm">
             {article.category}
@@ -149,10 +159,20 @@ function NewsCardCompact({ article, formatDate }: { article: NewsArticle, format
       className="group hover:border-primary/30 border-border bg-card flex gap-4 rounded-xl border p-4 transition-all duration-300 hover:shadow-lg"
     >
       <div className="from-primary-light relative h-24 w-24 flex-shrink-0 overflow-hidden rounded-lg bg-gradient-to-br to-blue-100">
-        <div className="from-primary absolute inset-0 bg-gradient-to-br to-blue-500 opacity-40" />
-        <div className="absolute inset-0 flex items-center justify-center">
-          <Calendar size={24} className="text-white/60" />
-        </div>
+        {article.image ? (
+          <img
+            src={article.image}
+            alt={article.title}
+            className="h-full w-full object-cover transition-transform group-hover:scale-110"
+          />
+        ) : (
+          <>
+            <div className="from-primary absolute inset-0 bg-gradient-to-br to-blue-500 opacity-40" />
+            <div className="absolute inset-0 flex items-center justify-center">
+              <Calendar size={24} className="text-white/60" />
+            </div>
+          </>
+        )}
       </div>
 
       <div className="min-w-0 flex-1">

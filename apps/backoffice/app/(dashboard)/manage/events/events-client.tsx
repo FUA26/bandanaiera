@@ -4,6 +4,8 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import { format } from 'date-fns';
+import Image from 'next/image';
+import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import {
   Table,
@@ -26,10 +28,6 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
-import { Switch } from '@/components/ui/switch';
 import {
   Select,
   SelectContent,
@@ -38,36 +36,8 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
-import { Calendar } from '@/components/ui/calendar';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { MoreHorizontal, Pencil, Trash2, Plus, CalendarIcon } from 'lucide-react';
 import { EventStatus, EventType } from '@prisma/client';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
-import { z } from 'zod';
-import { cn } from '@/lib/utils';
-
-const eventSchema = z.object({
-  title: z.string().min(1).max(200),
-  slug: z.string().min(1).max(200).regex(/^[a-z0-9-]+$/),
-  description: z.string().optional(),
-  categoryId: z.string().min(1),
-  date: z.date(),
-  time: z.string().optional(),
-  location: z.string().optional(),
-  locationUrl: z.string().url().optional().or(z.literal('')),
-  type: z.enum(['ONLINE', 'OFFLINE', 'HYBRID']),
-  imageId: z.string().optional(),
-  organizer: z.string().min(1).max(100),
-  organizerContact: z.string().optional(),
-  registrationRequired: z.boolean().default(false),
-  registrationUrl: z.string().url().optional().or(z.literal('')),
-  maxAttendees: z.number().int().min(1).optional(),
-  featured: z.boolean().default(false),
-  showInMenu: z.boolean().default(true),
-  order: z.number().int().min(0).default(0),
-  status: z.enum(['DRAFT', 'PUBLISHED', 'CANCELLED', 'COMPLETED']),
-});
 
 interface Event {
   id: string;
@@ -127,37 +97,10 @@ export function EventsClient({ eventsPromise, categoriesPromise, header }: Event
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [typeFilter, setTypeFilter] = useState<string>('all');
   const [categoryFilter, setCategoryFilter] = useState<string>('all');
-  const [dialogOpen, setDialogOpen] = useState(false);
   const [deleteDialog, setDeleteDialog] = useState<{ open: boolean; id: string | null; title: string }>({
     open: false,
     id: null,
     title: '',
-  });
-  const [editingEvent, setEditingEvent] = useState<Event | null>(null);
-
-  const form = useForm({
-    resolver: zodResolver(eventSchema),
-    defaultValues: {
-      title: '',
-      slug: '',
-      description: '',
-      categoryId: '',
-      date: new Date(),
-      time: '',
-      location: '',
-      locationUrl: '',
-      type: 'OFFLINE' as const,
-      imageId: '',
-      organizer: '',
-      organizerContact: '',
-      registrationRequired: false,
-      registrationUrl: '',
-      maxAttendees: undefined,
-      featured: false,
-      showInMenu: true,
-      order: 0,
-      status: 'DRAFT' as const,
-    },
   });
 
   useEffect(() => {
@@ -184,54 +127,6 @@ export function EventsClient({ eventsPromise, categoriesPromise, header }: Event
 
     setFilteredEvents(filtered);
   }, [events, statusFilter, typeFilter, categoryFilter]);
-
-  const openCreateDialog = () => {
-    setEditingEvent(null);
-    form.reset();
-    setDialogOpen(true);
-  };
-
-  const openEditDialog = (event: Event) => {
-    setEditingEvent(event);
-    form.reset({
-      ...event,
-      date: new Date(event.date),
-    });
-    setDialogOpen(true);
-  };
-
-  const onSubmit = async (data: any) => {
-    try {
-      const url = editingEvent
-        ? `/api/events/${editingEvent.id}`
-        : '/api/events';
-      const method = editingEvent ? 'PUT' : 'POST';
-
-      const response = await fetch(url, {
-        method,
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          ...data,
-          date: data.date.toISOString(),
-        }),
-      });
-
-      if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.error || 'Failed to save event');
-      }
-
-      toast.success(editingEvent ? 'Event updated' : 'Event created');
-      setDialogOpen(false);
-      router.refresh();
-
-      // Refresh events
-      const updated = await eventsPromise;
-      setEvents(updated);
-    } catch (error) {
-      toast.error(error instanceof Error ? error.message : 'Failed to save');
-    }
-  };
 
   const handleDelete = async () => {
     if (!deleteDialog.id) return;
@@ -271,6 +166,7 @@ export function EventsClient({ eventsPromise, categoriesPromise, header }: Event
       }
 
       toast.success(`Event ${status.toLowerCase()}`);
+      router.refresh();
 
       const updated = await eventsPromise;
       setEvents(updated);
@@ -284,9 +180,11 @@ export function EventsClient({ eventsPromise, categoriesPromise, header }: Event
       {header && (
         <div className="flex items-center justify-between mb-4">
           {header}
-          <Button onClick={openCreateDialog}>
-            <Plus className="mr-2 h-4 w-4" />
-            New Event
+          <Button asChild>
+            <Link href="/manage/events/create">
+              <Plus className="mr-2 h-4 w-4" />
+              New Event
+            </Link>
           </Button>
         </div>
       )}
@@ -335,6 +233,7 @@ export function EventsClient({ eventsPromise, categoriesPromise, header }: Event
         <Table>
           <TableHeader>
             <TableRow>
+              <TableHead>Image</TableHead>
               <TableHead>Title</TableHead>
               <TableHead>Date</TableHead>
               <TableHead>Category</TableHead>
@@ -346,7 +245,23 @@ export function EventsClient({ eventsPromise, categoriesPromise, header }: Event
           <TableBody>
             {filteredEvents.map((event) => (
               <TableRow key={event.id}>
-                <TableCell className="font-medium">{event.title}</TableCell>
+                <TableCell>
+                  {event.image ? (
+                    <div className="relative h-12 w-12 rounded overflow-hidden bg-muted">
+                      <Image src={event.image.cdnUrl} alt="" fill className="object-cover" />
+                    </div>
+                  ) : (
+                    <div className="h-12 w-12 rounded bg-muted flex items-center justify-center text-xs text-muted-foreground">
+                      No img
+                    </div>
+                  )}
+                </TableCell>
+                <TableCell>
+                  <div className="max-w-[300px]">
+                    <div className="font-medium truncate">{event.title}</div>
+                    {event.featured && <Badge variant="secondary" className="mt-1">Featured</Badge>}
+                  </div>
+                </TableCell>
                 <TableCell>
                   <div className="flex items-center gap-2">
                     <CalendarIcon className="h-4 w-4 text-muted-foreground" />
@@ -357,7 +272,7 @@ export function EventsClient({ eventsPromise, categoriesPromise, header }: Event
                 <TableCell>{event.category.name}</TableCell>
                 <TableCell>{TYPE_LABELS[event.type]}</TableCell>
                 <TableCell>
-                  <Badge variant={STATUS_COLORS[event.status]}>
+                  <Badge variant={STATUS_COLORS[event.status] as any}>
                     {event.status}
                   </Badge>
                 </TableCell>
@@ -369,9 +284,11 @@ export function EventsClient({ eventsPromise, categoriesPromise, header }: Event
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
-                      <DropdownMenuItem onClick={() => openEditDialog(event)}>
-                        <Pencil className="mr-2 h-4 w-4" />
-                        Edit
+                      <DropdownMenuItem asChild>
+                        <Link href={`/manage/events/${event.id}`}>
+                          <Pencil className="mr-2 h-4 w-4" />
+                          Edit
+                        </Link>
                       </DropdownMenuItem>
                       {event.status === 'DRAFT' && (
                         <DropdownMenuItem onClick={() => handleStatusUpdate(event.id, 'PUBLISHED')}>
@@ -413,7 +330,7 @@ export function EventsClient({ eventsPromise, categoriesPromise, header }: Event
             ))}
             {filteredEvents.length === 0 && (
               <TableRow>
-                <TableCell colSpan={6} className="h-24 text-center text-muted-foreground">
+                <TableCell colSpan={7} className="h-24 text-center text-muted-foreground">
                   No events found.
                 </TableCell>
               </TableRow>
@@ -421,218 +338,6 @@ export function EventsClient({ eventsPromise, categoriesPromise, header }: Event
           </TableBody>
         </Table>
       </div>
-
-      {/* Create/Edit Dialog */}
-      <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-        <DialogContent className="sm:max-w-[600px] max-h-[90vh] flex flex-col">
-          <DialogHeader>
-            <DialogTitle>
-              {editingEvent ? 'Edit Event' : 'New Event'}
-            </DialogTitle>
-          </DialogHeader>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col flex-1 overflow-hidden">
-            <div className="flex-1 overflow-y-auto px-1">
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2 col-span-2">
-                  <Label htmlFor="title">Title</Label>
-                  <Input id="title" {...form.register('title')} placeholder="Event title" />
-                  {form.formState.errors.title && (
-                    <p className="text-sm text-destructive">{form.formState.errors.title.message}</p>
-                  )}
-                </div>
-
-                <div className="space-y-2 col-span-2">
-                  <Label htmlFor="slug">Slug</Label>
-                  <Input id="slug" {...form.register('slug')} placeholder="event-slug" />
-                  {form.formState.errors.slug && (
-                    <p className="text-sm text-destructive">{form.formState.errors.slug.message}</p>
-                  )}
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="categoryId">Category</Label>
-                  <Select
-                    value={form.watch('categoryId')}
-                    onValueChange={(value) => form.setValue('categoryId', value)}
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select category" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {categories.map((cat) => (
-                        <SelectItem key={cat.id} value={cat.id}>{cat.name}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="type">Type</Label>
-                  <Select
-                    value={form.watch('type')}
-                    onValueChange={(value) => form.setValue('type', value as EventType)}
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select type" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="OFFLINE">Offline</SelectItem>
-                      <SelectItem value="ONLINE">Online</SelectItem>
-                      <SelectItem value="HYBRID">Hybrid</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                <div className="space-y-2">
-                  <Label>Date</Label>
-                  <Popover>
-                    <PopoverTrigger asChild>
-                      <Button
-                        variant="outline"
-                        className={cn(
-                          'w-full justify-start text-left font-normal',
-                          !form.watch('date') && 'text-muted-foreground'
-                        )}
-                      >
-                        <CalendarIcon className="mr-2 h-4 w-4" />
-                        {form.watch('date') ? format(form.watch('date'), 'PPP') : 'Pick a date'}
-                      </Button>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-auto p-0" align="start">
-                      <Calendar
-                        mode="single"
-                        selected={form.watch('date')}
-                        onSelect={(date) => date && form.setValue('date', date)}
-                        initialFocus
-                      />
-                    </PopoverContent>
-                  </Popover>
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="time">Time</Label>
-                  <Input id="time" {...form.register('time')} placeholder="09:00 - 17:00" />
-                </div>
-
-                <div className="space-y-2 col-span-2">
-                  <Label htmlFor="location">Location</Label>
-                  <Input id="location" {...form.register('location')} placeholder="Event location" />
-                </div>
-
-                <div className="space-y-2 col-span-2">
-                  <Label htmlFor="locationUrl">Location URL</Label>
-                  <Input id="locationUrl" {...form.register('locationUrl')} placeholder="https://maps.google.com/..." />
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="organizer">Organizer</Label>
-                  <Input id="organizer" {...form.register('organizer')} placeholder="Organization name" />
-                  {form.formState.errors.organizer && (
-                    <p className="text-sm text-destructive">{form.formState.errors.organizer.message}</p>
-                  )}
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="organizerContact">Contact</Label>
-                  <Input id="organizerContact" {...form.register('organizerContact')} placeholder="Email or phone" />
-                </div>
-
-                <div className="space-y-2 col-span-2">
-                  <Label htmlFor="description">Description</Label>
-                  <Textarea id="description" {...form.register('description')} placeholder="Event description" rows={3} />
-                </div>
-
-                <div className="flex items-center justify-between rounded-lg border p-4 col-span-2">
-                  <div className="space-y-0.5">
-                    <Label>Registration Required</Label>
-                    <p className="text-xs text-muted-foreground">Require registration for this event</p>
-                  </div>
-                  <Switch
-                    checked={form.watch('registrationRequired')}
-                    onCheckedChange={(checked) => form.setValue('registrationRequired', checked)}
-                  />
-                </div>
-
-                {form.watch('registrationRequired') && (
-                  <>
-                    <div className="space-y-2 col-span-2">
-                      <Label htmlFor="registrationUrl">Registration URL</Label>
-                      <Input id="registrationUrl" {...form.register('registrationUrl')} placeholder="https://wa.me/..." />
-                    </div>
-
-                    <div className="space-y-2">
-                      <Label htmlFor="maxAttendees">Max Attendees</Label>
-                      <Input
-                        id="maxAttendees"
-                        type="number"
-                        {...form.register('maxAttendees', { valueAsNumber: true })}
-                        placeholder="100"
-                      />
-                    </div>
-                  </>
-                )}
-
-                <div className="flex items-center justify-between rounded-lg border p-4">
-                  <div className="space-y-0.5">
-                    <Label>Featured</Label>
-                    <p className="text-xs text-muted-foreground">Show as featured event</p>
-                  </div>
-                  <Switch
-                    checked={form.watch('featured')}
-                    onCheckedChange={(checked) => form.setValue('featured', checked)}
-                  />
-                </div>
-
-                <div className="flex items-center justify-between rounded-lg border p-4">
-                  <div className="space-y-0.5">
-                    <Label>Show in Menu</Label>
-                  </div>
-                  <Switch
-                    checked={form.watch('showInMenu')}
-                    onCheckedChange={(checked) => form.setValue('showInMenu', checked)}
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="order">Order</Label>
-                  <Input
-                    id="order"
-                    type="number"
-                    {...form.register('order', { valueAsNumber: true })}
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="status">Status</Label>
-                  <Select
-                    value={form.watch('status')}
-                    onValueChange={(value) => form.setValue('status', value as EventStatus)}
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select status" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="DRAFT">Draft</SelectItem>
-                      <SelectItem value="PUBLISHED">Published</SelectItem>
-                      <SelectItem value="CANCELLED">Cancelled</SelectItem>
-                      <SelectItem value="COMPLETED">Completed</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-              </div>
-            </div>
-
-            <DialogFooter className="mt-4">
-              <Button type="button" variant="outline" onClick={() => setDialogOpen(false)}>
-                Cancel
-              </Button>
-              <Button type="submit">
-                {editingEvent ? 'Update' : 'Create'}
-              </Button>
-            </DialogFooter>
-          </form>
-        </DialogContent>
-      </Dialog>
 
       {/* Delete Dialog */}
       <Dialog open={deleteDialog.open} onOpenChange={(open) => setDeleteDialog({ ...deleteDialog, open })}>

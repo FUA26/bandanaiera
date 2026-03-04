@@ -260,6 +260,21 @@ export function AgendaKegiatanClient({
                     href={`/informasi-publik/agenda-kegiatan/${event.slug}`}
                     className="group hover:border-primary/30 border-border bg-card rounded-2xl border p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
                   >
+                    {/* Event Banner */}
+                    {event.image ? (
+                      <div className="relative -mx-6 -mt-6 mb-4 h-48 overflow-hidden rounded-t-2xl">
+                        <img
+                          src={event.image}
+                          alt={event.title}
+                          className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                        />
+                      </div>
+                    ) : (
+                      <div className="relative -mx-6 -mt-6 mb-4 h-48 bg-gradient-to-br from-primary-light to-primary flex items-center justify-center rounded-t-2xl">
+                        <Calendar className="text-white/30" size={64} />
+                      </div>
+                    )}
+
                     {/* Header */}
                     <div className="mb-4 flex items-start justify-between">
                       <span className="bg-info-light text-info rounded-lg px-3 py-1 text-xs font-semibold">
