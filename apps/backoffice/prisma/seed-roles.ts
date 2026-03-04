@@ -122,6 +122,21 @@ const roles = [
       "SERVICES_DELETE",
       "SERVICES_REORDER",
       "CATEGORIES_MANAGE",
+      // All news permissions
+      "NEWS_VIEW",
+      "NEWS_CREATE",
+      "NEWS_EDIT",
+      "NEWS_PUBLISH",
+      "NEWS_DELETE",
+      "NEWS_REORDER",
+      "NEWS_CATEGORIES_MANAGE",
+      // All events permissions
+      "EVENTS_VIEW",
+      "EVENTS_CREATE",
+      "EVENTS_EDIT",
+      "EVENTS_DELETE",
+      "EVENTS_REORDER",
+      "EVENT_CATEGORIES_MANAGE",
     ],
   },
 ];
