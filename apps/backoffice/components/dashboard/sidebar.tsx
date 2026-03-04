@@ -19,11 +19,7 @@ import { usePermissions } from "@/lib/rbac-client/provider";
 import {
   LayoutDashboard,
   BarChart3,
-  FolderOpen,
-  Folders,
-  Newspaper,
   FolderKanban,
-  Calendar,
   Users,
   Shield,
   Key,
@@ -35,19 +31,6 @@ const navItems = [
   { heading: "Overview" },
   { href: "/", label: "Dashboard", icon: LayoutDashboard, permission: null },
   { href: "/analytics", label: "Analytics", icon: BarChart3, permission: null },
-
-  // Content Management Group
-  { heading: "Content" },
-  { href: "/manage/news", label: "News", icon: Newspaper, permission: "NEWS_VIEW" },
-  { href: "/manage/news-categories", label: "News Categories", icon: FolderKanban, permission: "NEWS_CATEGORIES_MANAGE" },
-  { href: "/manage/events", label: "Events", icon: Calendar, permission: "EVENTS_VIEW" },
-  { href: "/manage/event-categories", label: "Event Categories", icon: FolderKanban, permission: "EVENT_CATEGORIES_MANAGE" },
-  { href: "/manage/photos", label: "Photos", icon: FolderOpen, permission: "GALLERY_VIEW" },
-  { href: "/manage/albums", label: "Albums", icon: Folders, permission: "GALLERY_ALBUMS_MANAGE" },
-  { href: "/manage/tags", label: "Tags", icon: Key, permission: "GALLERY_TAGS_MANAGE" },
-  { href: "/manage/destinations", label: "Destinations", icon: FolderOpen, permission: "DESTINATIONS_VIEW" },
-  { href: "/manage/destination-categories", label: "Destination Categories", icon: FolderKanban, permission: "DESTINATION_CATEGORIES_MANAGE" },
-  { href: "/manage/facilities", label: "Facilities", icon: FolderKanban, permission: "DESTINATION_FACILITIES_MANAGE" },
 
   // User & Access Management Group
   { heading: "Users & Access" },
