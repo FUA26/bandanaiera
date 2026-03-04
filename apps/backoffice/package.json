@@ -8,8 +8,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint --max-warnings 0",
-    "check-types": "next typegen && tsc --noEmit",
-    "migrate:services": "tsx scripts/migrate-services.ts"
+    "check-types": "next typegen && tsc --noEmit"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.989.0",
