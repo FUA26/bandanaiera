@@ -74,6 +74,16 @@ model User {
   createdEvents      Event[]            @relation("EventCreator")
   updatedEvents      Event[]            @relation("EventUpdater")
   eventActivityLogs EventActivityLog[] @relation("EventActivityLogs")
+
+  // Photo Management Relations
+  createdPhotos      Photo[]            @relation("PhotoCreator")
+  updatedPhotos      Photo[]            @relation("PhotoUpdater")
+  photoActivityLogs  PhotoActivityLog[] @relation("PhotoActivityLogs")
+
+  // Destination Management Relations
+  createdDestinations      Destination[]            @relation("DestinationCreator")
+  updatedDestinations      Destination[]            @relation("DestinationUpdater")
+  destinationActivityLogs  DestinationActivityLog[] @relation("DestinationActivityLogs")
 }
 
 model PermissionCache {
@@ -193,6 +203,10 @@ model File {
   heroBackgrounds SystemSettings[] @relation("HeroBackground")
   newsAsFeaturedImage News[] @relation("NewsFeaturedImage")
   eventsAsImage Event[] @relation("EventImage")
+  albumsAsCover PhotoAlbum[] @relation("AlbumCover")
+  photosAsImage Photo[] @relation("PhotoImage")
+  destinationsAsCover Destination[] @relation("DestinationCover")
+  destinationImages DestinationImage[] @relation("DestinationImage")
 
   @@index([uploadedById])
   @@index([category])
@@ -217,6 +231,18 @@ enum ServiceStatus {
 }
 
 enum NewsStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+enum PhotoStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+enum DestinationStatus {
   DRAFT
   PUBLISHED
   ARCHIVED
@@ -465,6 +491,225 @@ model EventActivityLog {
   createdAt   DateTime @default(now())
 
   @@index([eventId])
+  @@index([userId])
+  @@index([createdAt])
+}
+
+model PhotoAlbum {
+  id          String   @id @default(cuid())
+  name        String
+  slug        String   @unique
+  description String?
+  coverImageId String? @unique
+  coverImage  File?    @relation("AlbumCover", fields: [coverImageId], references: [id], onDelete: SetNull)
+  order       Int      @default(0)
+  photos      Photo[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([order])
+}
+
+model PhotoTag {
+  id        String        @id @default(cuid())
+  name      String        @unique
+  slug      String        @unique
+  photos    PhotoTagRelation[]
+  createdAt DateTime      @default(now())
+}
+
+model Photo {
+  id          String        @id @default(cuid())
+  slug        String        @unique
+  title       String
+  description String?
+
+  albumId     String?
+  album       PhotoAlbum?   @relation(fields: [albumId], references: [id], onDelete: SetNull)
+
+  imageId     String
+  image       File          @relation("PhotoImage", fields: [imageId], references: [id], onDelete: Restrict)
+
+  location    String?
+  photographer String?
+
+  views       Int           @default(0)
+  likes       Int           @default(0)
+  isFeatured  Boolean       @default(false)
+  showInMenu  Boolean       @default(true)
+  order       Int           @default(0)
+
+  status      PhotoStatus   @default(DRAFT)
+  publishedAt DateTime?
+
+  createdById String
+  createdBy   User          @relation("PhotoCreator", fields: [createdById], references: [id])
+  updatedById String?
+  updatedBy   User?         @relation("PhotoUpdater", fields: [updatedById], references: [id])
+
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  tags        PhotoTagRelation[]
+  activityLogs PhotoActivityLog[]
+
+  @@index([albumId])
+  @@index([status])
+  @@index([isFeatured])
+  @@index([order])
+  @@index([slug])
+}
+
+model PhotoTagRelation {
+  photoId String
+  photo   Photo   @relation(fields: [photoId], references: [id], onDelete: Cascade)
+  tagId   String
+  tag     PhotoTag @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@id([photoId, tagId])
+}
+
+model PhotoActivityLog {
+  id        String   @id @default(cuid())
+  photoId   String
+  photo     Photo    @relation(fields: [photoId], references: [id], onDelete: Cascade)
+  userId    String
+  user      User     @relation("PhotoActivityLogs", fields: [userId], references: [id])
+  action    String
+  changes   Json?
+  createdAt DateTime @default(now())
+
+  @@index([photoId])
+  @@index([userId])
+  @@index([createdAt])
+}
+
+model DestinationCategory {
+  id          String        @id @default(cuid())
+  name        String
+  slug        String        @unique
+  description String?
+  icon        String?
+  order       Int           @default(0)
+  destinations Destination[]
+  facilities  DestinationFacility[]
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  @@index([order])
+}
+
+model DestinationFacility {
+  id             String                @id @default(cuid())
+  name           String
+  icon           String?
+  order          Int                   @default(0)
+  destinations   DestinationFacilityRelation[]
+  category       DestinationCategory?  @relation(fields: [categoryId], references: [id])
+  categoryId     String?
+  createdAt      DateTime              @default(now())
+  updatedAt      DateTime              @updatedAt
+
+  @@index([categoryId])
+  @@index([order])
+}
+
+model Destination {
+  id             String                    @id @default(cuid())
+  slug           String                    @unique
+  name           String
+  description    String?
+
+  categoryId     String
+  category       DestinationCategory       @relation(fields: [categoryId], references: [id])
+
+  locationAddress String?
+  locationLat     Decimal?                 @db.Decimal(10, 8)
+  locationLng     Decimal?                 @db.Decimal(11, 8)
+
+  priceInfo      String?
+  openHours      String?
+
+  rating         Decimal?                  @db.Decimal(3, 2)
+  reviewsCount   Int                       @default(0)
+
+  isFeatured     Boolean                   @default(false)
+  showInMenu     Boolean                   @default(true)
+  order          Int                       @default(0)
+
+  coverImageId   String?                   @unique
+  coverImage     File?                     @relation("DestinationCover", fields: [coverImageId], references: [id], onDelete: SetNull)
+
+  status         DestinationStatus         @default(DRAFT)
+  publishedAt    DateTime?
+
+  createdById    String
+  createdBy      User                      @relation("DestinationCreator", fields: [createdById], references: [id])
+  updatedById    String?
+  updatedBy      User?                     @relation("DestinationUpdater", fields: [updatedById], references: [id])
+
+  createdAt      DateTime                  @default(now())
+  updatedAt      DateTime                  @updatedAt
+
+  images         DestinationImage[]
+  facilities     DestinationFacilityRelation[]
+  relations      DestinationRelation[]
+  activityLogs   DestinationActivityLog[]
+
+  @@index([categoryId])
+  @@index([status])
+  @@index([isFeatured])
+  @@index([order])
+  @@index([slug])
+}
+
+model DestinationImage {
+  id             String       @id @default(cuid())
+  destinationId  String
+  destination    Destination  @relation(fields: [destinationId], references: [id], onDelete: Cascade)
+  imageId        String
+  image          File         @relation("DestinationImage", fields: [imageId], references: [id], onDelete: Cascade)
+  caption        String?
+  order          Int          @default(0)
+  createdAt      DateTime     @default(now())
+
+  @@unique([destinationId, imageId, order])
+  @@index([destinationId])
+  @@index([order])
+}
+
+model DestinationFacilityRelation {
+  destinationId String
+  destination   Destination @relation(fields: [destinationId], references: [id], onDelete: Cascade)
+  facilityId    String
+  facility      DestinationFacility @relation(fields: [facilityId], references: [id], onDelete: Cascade)
+
+  @@id([destinationId, facilityId])
+}
+
+model DestinationRelation {
+  id             String       @id @default(cuid())
+  destinationId  String
+  destination    Destination  @relation(fields: [destinationId], references: [id], onDelete: Cascade)
+  relatedType    String       // 'news' or 'event'
+  relatedId      String
+  createdAt      DateTime     @default(now())
+
+  @@index([destinationId])
+  @@index([relatedType, relatedId])
+}
+
+model DestinationActivityLog {
+  id            String       @id @default(cuid())
+  destinationId String
+  destination   Destination  @relation(fields: [destinationId], references: [id], onDelete: Cascade)
+  userId        String
+  user          User         @relation("DestinationActivityLogs", fields: [userId], references: [id])
+  action        String
+  changes       Json?
+  createdAt     DateTime     @default(now())
+
+  @@index([destinationId])
   @@index([userId])
   @@index([createdAt])
 }
