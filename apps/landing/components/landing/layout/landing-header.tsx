@@ -6,30 +6,24 @@ import { Menu, X } from "lucide-react";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { LanguageSwitcher } from "@/components/shared/language-switcher";
-import { MegaMenuClient } from "@/components/landing/layout/mega-menu-client";
-import type { ServiceCategory } from "@/lib/services-data";
 import { useSettings } from "@/components/providers";
 
-interface HeaderProps {
-  servicesByCategory?: Array<ServiceCategory & { services: any[] }>;
-}
-
-export function Header({ servicesByCategory = [] }: HeaderProps) {
+export function Header() {
   const t = useTranslations("Navigation");
   const { settings } = useSettings();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  // Mobile menu items (simplified version of mega menu)
+  // Navigation items
   const navItems = [
-    { label: t("home"), href: "/", active: true },
-    { label: t("services"), href: "/layanan", active: false },
-    { label: t("about"), href: "/pemerintahan/profil", active: false },
+    { label: "Home", href: "/", active: true },
+    { label: "Documentation", href: "/docs", active: false },
+    { label: "Features", href: "#features", active: false },
     {
-      label: t("news"),
-      href: "/informasi-publik/berita-terkini",
+      label: "GitHub",
+      href: "https://github.com/yourusername/yourrepo",
       active: false,
+      external: true,
     },
-    { label: t("contact"), href: "/kontak", active: false },
   ];
 
   return (
@@ -41,7 +35,7 @@ export function Header({ servicesByCategory = [] }: HeaderProps) {
               {settings?.siteLogoUrl ? (
                 <Image
                   src={settings.siteLogoUrl}
-                  alt={settings.siteName || "Naiera"}
+                  alt={settings.siteName || "YourBrand"}
                   fill
                   sizes="40px"
                   className="object-contain p-1.5"
@@ -50,7 +44,7 @@ export function Header({ servicesByCategory = [] }: HeaderProps) {
               ) : (
                 <Image
                   src="/naiera.png"
-                  alt="Naiera"
+                  alt="YourBrand"
                   fill
                   sizes="40px"
                   className="object-contain p-1.5"
@@ -59,18 +53,30 @@ export function Header({ servicesByCategory = [] }: HeaderProps) {
             </div>
             <div className="flex flex-col">
               <span className="text-foreground text-xl font-bold">
-                {settings?.siteName || t("brandName")}
+                {settings?.siteName || "YourBrand"}
               </span>
               <span className="text-muted-foreground hidden text-xs sm:block">
-                {settings?.siteSubtitle || t("brandSubtitle")}
+                {settings?.siteSubtitle || "Enterprise Next.js Boilerplate"}
               </span>
             </div>
           </Link>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:block">
-            <MegaMenuClient servicesByCategory={servicesByCategory} />
-          </div>
+          <nav className="hidden md:flex items-center gap-6">
+            {navItems.map((item) => (
+              <Link
+                key={item.label}
+                href={item.href}
+                target={item.external ? "_blank" : undefined}
+                rel={item.external ? "noopener noreferrer" : undefined}
+                className={`text-sm font-medium transition-colors hover:text-primary ${
+                  item.active ? "text-primary" : "text-muted-foreground"
+                }`}
+              >
+                {item.label}
+              </Link>
+            ))}
+          </nav>
 
           {/* Action Section */}
           <div className="flex items-center gap-4">
@@ -79,7 +85,7 @@ export function Header({ servicesByCategory = [] }: HeaderProps) {
               href="/login"
               className="bg-primary text-primary-foreground shadow-primary/30 hover:bg-primary-hover hidden items-center justify-center rounded-lg px-6 py-2 font-medium shadow-lg transition-all duration-300 sm:inline-flex"
             >
-              {t("login")}
+              Login
             </Link>
 
             {/* Mobile Menu Button */}
@@ -110,7 +116,7 @@ export function Header({ servicesByCategory = [] }: HeaderProps) {
               {/* Drawer Header */}
               <div className="border-border flex items-center justify-between border-b p-6">
                 <span className="text-foreground text-lg font-bold">
-                  {t("menu")}
+                  Menu
                 </span>
                 <button
                   onClick={() => setMobileMenuOpen(false)}
@@ -124,9 +130,11 @@ export function Header({ servicesByCategory = [] }: HeaderProps) {
               {/* Navigation Items */}
               <nav className="flex-1 overflow-y-auto">
                 {navItems.map((item) => (
-                  <a
+                  <Link
                     key={item.label}
                     href={item.href}
+                    target={item.external ? "_blank" : undefined}
+                    rel={item.external ? "noopener noreferrer" : undefined}
                     onClick={() => setMobileMenuOpen(false)}
                     className={`border-border block border-b px-6 py-4 font-medium transition-colors ${
                       item.active
@@ -135,7 +143,7 @@ export function Header({ servicesByCategory = [] }: HeaderProps) {
                     }`}
                   >
                     {item.label}
-                  </a>
+                  </Link>
                 ))}
               </nav>
 
@@ -145,7 +153,7 @@ export function Header({ servicesByCategory = [] }: HeaderProps) {
                   href="/login"
                   className="bg-primary text-primary-foreground shadow-primary/30 hover:bg-primary-hover block w-full rounded-lg px-6 py-3 text-center font-medium shadow-lg transition-all"
                 >
-                  {t("login")}
+                  Login
                 </Link>
               </div>
             </div>
