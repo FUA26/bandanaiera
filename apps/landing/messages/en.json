@@ -210,7 +210,10 @@
         "name": "MSME Capital",
         "desc": "Capital assistance application"
       },
-      "kartuKuning": { "name": "Yellow Card", "desc": "Job seeker card (AK1)" },
+      "kartuKuning": {
+        "name": "Yellow Card",
+        "desc": "Job seeker card (AK1)"
+      },
       "jobFair": {
         "name": "Job Fair",
         "desc": "Job vacancies and career fair info"
@@ -243,7 +246,10 @@
         "name": "Social Aid",
         "desc": "PKH, BPNT, and direct assistance"
       },
-      "dtks": { "name": "DTKS", "desc": "Family data registration and update" },
+      "dtks": {
+        "name": "DTKS",
+        "desc": "Family data registration and update"
+      },
       "bankSampah": {
         "name": "Waste Bank",
         "desc": "Waste management and recycling"
@@ -353,6 +359,8 @@
     "viewOthers": "View Other Agendas",
     "representative": "Represent Governor",
     "completed": "Completed",
+    "upcoming_status": "Upcoming",
+    "ongoing_status": "Ongoing",
     "finished": "Completed Agendas",
     "calToday": "Today",
     "calHasEvent": "Has agenda",

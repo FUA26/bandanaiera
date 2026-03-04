@@ -24,10 +24,8 @@ export const metadata: Metadata = {
   },
   description: "Layanan Digital Pemerintahan Kabupaten Naiera - Backoffice Dashboard",
   icons: {
-    icon: [
-      { url: "/logo.svg", type: "image/svg+xml" },
-    ],
-    apple: "/logo.svg",
+    icon: "/icon.png",
+    apple: "/icon.png",
   },
 };
 

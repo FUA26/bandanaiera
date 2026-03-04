@@ -286,9 +286,9 @@ export function EventsSectionClient({ events }: EventsSectionClientProps) {
                             ? "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400"
                             : "bg-gray-100 text-gray-700 dark:bg-gray-900/30 dark:text-gray-400"
                           }`}>
-                          {event.status === "upcoming" ? "Akan Datang" :
-                            event.status === "ongoing" ? "Sedang Berlangsung" :
-                              "Selesai"}
+                          {event.status === "upcoming" ? t("upcoming_status") :
+                            event.status === "ongoing" ? t("ongoing_status") :
+                              t("completed")}
                         </span>
                       </div>
                     </Link>
@@ -346,8 +346,8 @@ export function EventsSectionClient({ events }: EventsSectionClientProps) {
                   <div className="flex items-center">
                     <span className="bg-muted text-muted-foreground rounded-lg px-3 py-1 text-xs font-medium whitespace-nowrap">
                       {event.status === "completed" ? t("completed") :
-                        event.status === "ongoing" ? t("ongoing") :
-                          t("upcoming")}
+                        event.status === "ongoing" ? t("ongoing_status") :
+                          t("upcoming_status")}
                     </span>
                   </div>
                 </Link>

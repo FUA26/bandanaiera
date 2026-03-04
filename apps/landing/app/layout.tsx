@@ -14,12 +14,21 @@ const fontSans = Inter({
   display: "swap",
 });
 
-export const metadata: Metadata = {
-  icons: {
-    icon: "/icon.png",
-    apple: "/apple-icon.png",
-  },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const settings = await getPublicSettings();
+
+  return {
+    title: {
+      default: settings?.siteName || "Super App Naiera",
+      template: `%s | ${settings?.siteName || "Super App Naiera"}`,
+    },
+    description: settings?.siteDescription || "Layanan Digital Pemerintahan Kabupaten Naiera",
+    icons: {
+      icon: settings?.siteLogoUrl || "/icon.png",
+      apple: settings?.siteLogoUrl || "/apple-icon.png",
+    },
+  };
+}
 
 export default async function RootLayout({
   children,

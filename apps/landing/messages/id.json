@@ -359,6 +359,8 @@
     "viewOthers": "Lihat Agenda Lainnya",
     "representative": "Wakili Gubernur",
     "completed": "Telah Selesai",
+    "upcoming_status": "Akan Datang",
+    "ongoing_status": "Sedang Berlangsung",
     "finished": "Agenda Telah Selesai",
     "calToday": "Hari ini",
     "calHasEvent": "Ada agenda",
