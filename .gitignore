@@ -17,6 +17,8 @@ build
 # misc
 .DS_Store
 *.pem
+tmpclaude*
+tempclaude*
 
 # debug
 npm-debug.log*
