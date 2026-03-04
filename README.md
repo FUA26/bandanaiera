@@ -1,19 +1,19 @@
-# Bandanaiera Monorepo
+# Enterprise Next.js Boilerplate
 
-Monorepo for landing and backoffice applications built with Turborepo, Next.js, and shadcn/ui.
+A production-ready Next.js 15 boilerplate with authentication, RBAC, file uploads, and more.
 
-## 📁 Structure
+## Features
 
-- `apps/landing` - Landing page application
-- `apps/backoffice` - Backoffice/admin application
-- `packages/ui` - Shared UI components (shadcn/ui)
-- `packages/api` - Shared API client
-- `packages/utils` - Shared utilities
-- `packages/types` - Shared TypeScript types
-- `packages/hooks` - Shared React hooks
-- `packages/logger` - Shared logging utilities
+- **Authentication** - NextAuth.js with OAuth and credential providers
+- **RBAC** - Role-based access control with dynamic permissions
+- **File Uploads** - S3-compatible storage with presigned URLs
+- **Activity Logging** - Comprehensive audit trail
+- **Type Safety** - Full TypeScript coverage with Zod validation
+- **Responsive UI** - Beautiful, mobile-first design with dark mode
+- **ISR Caching** - Incremental Static Regeneration
+- **Service Layer** - Clean architecture pattern
 
-## 🚀 Quick Start
+## Quick Start
 
 ```bash
 # Install dependencies
@@ -22,105 +22,87 @@ pnpm install
 # Run all apps in development
 pnpm dev
 
-# Run specific app
-pnpm --filter landing dev    # http://localhost:3000
-pnpm --filter backoffice dev # http://localhost:3001
+# Applications:
+# - Backoffice: http://localhost:3000
+# - Landing: http://localhost:3001
 ```
 
-## 📚 Documentation
+## Documentation
 
-See [DEVELOPMENT.md](./DEVELOPMENT.md) for detailed development instructions.
+For detailed documentation, see:
 
-## 🐳 Docker
+- [BOILERPLATE.md](./BOILERPLATE.md) - Boilerplate overview
+- [docs/](./docs/) - Full documentation
 
-> ⚠️ **Note**: Docker configuration needs further testing and refinement.
-> See `docker/` directory for Docker deployment configuration.
+### Documentation Sections
 
-### Quick Docker Commands
+- [Getting Started](./docs/getting-started/) - Installation and setup
+- [Architecture](./docs/architecture/) - System architecture
+- [Patterns](./docs/patterns/) - Development patterns
+- [Customization](./docs/customization/) - Tailoring to your needs
+- [Deployment](./docs/deployment/) - Production deployment
+
+## Project Structure
+
+```
+.
+├── apps/
+│   ├── backoffice/          # Admin dashboard
+│   └── landing/             # Public website
+├── packages/                # Shared packages
+│   ├── ui/                  # Shared UI components
+│   ├── hooks/               # Shared React hooks
+│   ├── utils/               # Shared utilities
+│   └── ...
+├── prisma/                  # Database schema
+└── docs/                    # Documentation
+```
+
+## Tech Stack
+
+- **Framework**: Next.js 15 (App Router)
+- **Language**: TypeScript
+- **Database**: PostgreSQL with Prisma ORM
+- **Auth**: NextAuth.js v5
+- **Styling**: Tailwind CSS + shadcn/ui
+- **Monorepo**: Turborepo
+
+## Environment Variables
 
 ```bash
-cd docker
-docker compose build
-docker compose up -d
-docker compose down
+# Database
+DATABASE_URL="postgresql://user:password@localhost:5432/dbname"
+
+# Auth
+AUTH_SECRET="your-secret-key-here"
+
+# Storage (S3-compatible)
+S3_ACCESS_KEY_ID="your-access-key"
+S3_SECRET_ACCESS_KEY="your-secret-key"
+S3_BUCKET_NAME="your-bucket"
+S3_REGION="us-east-1"
 ```
 
-### Domain Routing
-
-- `http://bandanaiera.local` or `http://landing.bandanaiera.local` → Landing app
-- `http://admin.bandanaiera.local` → Backoffice app
-
-Add to your `/etc/hosts`:
-```
-127.0.0.1 bandanaiera.local landing.bandanaiera.local admin.bandanaiera.local
-```
-
-## 📦 Packages
-
-### @workspace/ui
-Shared UI components powered by shadcn/ui.
+## Scripts
 
 ```bash
-# Add new shadcn components
-npx shadcn@latest add button
-npx shadcn@latest add input
+# Development
+pnpm dev                    # Start all apps
+pnpm --filter backoffice dev # Start backoffice only
+
+# Building
+pnpm build                  # Build all packages
+
+# Database
+pnpm --filter backoffice db:push   # Push schema
+pnpm --filter backoffice db:seed    # Seed data
+pnpm --filter backoffice db:studio  # Open Prisma Studio
+
+# Quality
+pnpm lint                   # Check for issues
+pnpm format                 # Format code
 ```
 
-### @workspace/api
-API client for backend communication.
+## License
 
-### @workspace/utils
-Common utility functions.
-
-```typescript
-import { formatCurrency } from '@workspace/utils'
-```
-
-### @workspace/types
-Shared TypeScript types.
-
-```typescript
-import type { User, PaginatedResponse } from '@workspace/types'
-```
-
-### @workspace/hooks
-Custom React hooks.
-
-```typescript
-import { useCounter } from '@workspace/hooks'
-```
-
-### @workspace/logger
-Logging utilities.
-
-```typescript
-import { logger } from '@workspace/logger'
-logger.info('Application started')
-```
-
-## 🛠️ Development
-
-### Build
-
-```bash
-# Build all
-pnpm build
-
-# Build specific app
-pnpm --filter landing build
-pnpm --filter backoffice build
-```
-
-### Lint
-
-```bash
-# Lint all
-pnpm lint
-
-# Lint specific app
-pnpm --filter landing lint
-```
-
-## 📝 License
-
-Private project - All rights reserved.
+MIT License - feel free to use this boilerplate for your projects.
