@@ -23,7 +23,7 @@ export default async function InformasiPublikLayout({
       <TopBar />
       <Header servicesByCategory={servicesByCategory} />
       {children}
-      <Footer />
+      <Footer categories={servicesByCategory} />
       <AccessibilityWidget />
     </div>
   );

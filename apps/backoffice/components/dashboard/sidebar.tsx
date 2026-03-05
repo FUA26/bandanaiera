@@ -28,6 +28,7 @@ import {
   Shield,
   Key,
   Settings,
+  Map,
 } from "lucide-react";
 
 const navItems = [
@@ -44,6 +45,8 @@ const navItems = [
   { href: "/manage/news-categories", label: "News Categories", icon: FolderKanban, permission: "NEWS_CATEGORIES_MANAGE" },
   { href: "/manage/events", label: "Events", icon: Calendar, permission: "EVENTS_VIEW" },
   { href: "/manage/event-categories", label: "Event Categories", icon: FolderKanban, permission: "EVENT_CATEGORIES_MANAGE" },
+  { href: "/manage/tourism", label: "Tourism", icon: Map, permission: "TOURISM_VIEW" },
+  { href: "/manage/tourism-categories", label: "Tourism Categories", icon: FolderKanban, permission: "TOURISM_CATEGORIES_MANAGE" },
 
   // User & Access Management Group
   { heading: "Users & Access" },

@@ -173,6 +173,18 @@ export function MegaMenuClient({ servicesByCategory }: MegaMenuClientProps) {
           </NavigationMenuContent>
         </NavigationMenuItem>
 
+        {/* Tourism Link - Top Level */}
+        <NavigationMenuItem>
+          <NavigationMenuLink asChild>
+            <Link
+              href="/informasi-publik/destinasi-wisata"
+              className={cn(navigationMenuTriggerStyle(), "bg-transparent")}
+            >
+              {tNav("tourism")}
+            </Link>
+          </NavigationMenuLink>
+        </NavigationMenuItem>
+
         {/* Government - Mega Menu */}
         <NavigationMenuItem>
           <NavigationMenuTrigger className="bg-transparent">

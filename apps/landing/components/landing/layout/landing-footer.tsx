@@ -15,10 +15,16 @@ import {
   Info,
 } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { useSettings } from "@/components/providers";
+import type { ServiceCategory } from "@/lib/services-data";
 
-export function Footer() {
+interface FooterProps {
+  categories?: ServiceCategory[];
+}
+
+export function Footer({ categories = [] }: FooterProps) {
   const t = useTranslations("Footer");
   const { settings } = useSettings();
   const currentYear = new Date().getFullYear();
@@ -125,24 +131,15 @@ export function Footer() {
               {t("services.title")}
             </h3>
             <ul className="space-y-3">
-              {[
-                { key: "population", slug: "/layanan/e-ktp" },
-                { key: "health", slug: "/layanan/bpjs-kesehatan" },
-                { key: "education", slug: "/layanan/ppdb" },
-                { key: "economy", slug: "/layanan/pajak-daerah" },
-                { key: "manpower", slug: "/layanan/kartu-kuning" },
-                { key: "tourism", slug: "/informasi-publik/destinasi-wisata" },
-                { key: "infrastructure", slug: "/layanan/imb" },
-                { key: "social", slug: "/layanan/bansos" },
-              ].map(({ key, slug }) => (
-                <li key={key}>
-                  <a
-                    href={slug}
+              {categories.slice(0, 8).map((category) => (
+                <li key={category.id}>
+                  <Link
+                    href={`/layanan?kategori=${category.slug}`}
                     className="group inline-flex items-center gap-2 text-blue-100/80 transition-colors hover:text-white"
                   >
                     <span className="h-1 w-1 rounded-full bg-blue-400 opacity-0 transition-opacity group-hover:opacity-100" />
-                    {t(`services.${key}`)}
-                  </a>
+                    {category.name}
+                  </Link>
                 </li>
               ))}
             </ul>

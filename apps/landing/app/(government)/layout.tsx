@@ -38,7 +38,7 @@ export default async function GovernmentLayout({
       <TopBar />
       <Header servicesByCategory={servicesByCategory} />
       {children}
-      <Footer />
+      <Footer categories={servicesByCategory} />
       <AccessibilityWidget />
     </div>
   );

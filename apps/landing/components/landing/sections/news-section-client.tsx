@@ -1,4 +1,5 @@
 "use client";
+import { useState, useEffect } from "react";
 
 import { Calendar, Clock, ArrowRight } from "lucide-react";
 import { useTranslations, useLocale } from "next-intl";
@@ -16,12 +17,33 @@ export function NewsSectionClient({
   const locale = useLocale();
   const dateLocale = locale === "id" ? "id-ID" : "en-US";
 
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   const formatDate = (dateStr: string) => {
-    return new Intl.DateTimeFormat(dateLocale, {
-      day: "numeric",
-      month: "long",
-      year: "numeric",
-    }).format(new Date(dateStr));
+    if (!dateStr) return "";
+    try {
+      // Parse YYYY-MM-DD from ISO string to be timezone-independent
+      const parts = dateStr.substring(0, 10).split('-');
+      if (parts.length !== 3) return dateStr;
+
+      const year = parseInt(parts[0] || "0", 10);
+      const month = parseInt(parts[1] || "0", 10);
+      const day = parseInt(parts[2] || "0", 10);
+
+      const date = new Date(year, month - 1, day);
+
+      return new Intl.DateTimeFormat(dateLocale, {
+        day: "numeric",
+        month: "long",
+        year: "numeric",
+      }).format(date);
+    } catch (e) {
+      console.error("Format date error:", e);
+      return dateStr;
+    }
   };
 
   return (
@@ -134,7 +156,7 @@ function NewsCard({ article, tRead, formatDate }: NewsCardProps) {
 
         <div className="border-border text-muted-foreground flex items-center justify-between border-t pt-4 text-xs">
           <div className="flex items-center gap-4">
-            <span className="flex items-center gap-1">
+            <span suppressHydrationWarning className="flex items-center gap-1">
               <Calendar size={14} />
               {formatDate(article.date)}
             </span>
@@ -183,7 +205,7 @@ function NewsCardCompact({ article, formatDate }: { article: NewsArticle, format
           {article.title}
         </h4>
         <div className="text-muted-foreground flex items-center gap-3 text-xs">
-          <span>{formatDate(article.date)}</span>
+          <span suppressHydrationWarning>{formatDate(article.date)}</span>
           <span>•</span>
           <span>{article.readTime}</span>
         </div>

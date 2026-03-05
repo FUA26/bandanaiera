@@ -23,7 +23,7 @@ export default async function Page() {
         <EventsSection />
         <AppDownloadSection />
       </main>
-      <Footer />
+      <Footer categories={servicesByCategory} />
     </div>
   );
 }

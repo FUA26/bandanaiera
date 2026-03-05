@@ -40,7 +40,7 @@ export default async function RootLayout({
   const settings = await getPublicSettings();
 
   return (
-    <html lang={locale} className="light">
+    <html lang={locale} className="light" suppressHydrationWarning>
       <body className={`${fontSans.variable} font-sans antialiased`}>
         <NextIntlClientProvider messages={messages}>
           <Providers settings={settings}>

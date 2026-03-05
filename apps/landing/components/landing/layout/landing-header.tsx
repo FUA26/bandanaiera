@@ -29,6 +29,7 @@ export function Header({ servicesByCategory = [] }: HeaderProps) {
       href: "/informasi-publik/berita-terkini",
       active: false,
     },
+    { label: t("tourism"), href: "/informasi-publik/destinasi-wisata", active: false },
     { label: t("contact"), href: "/kontak", active: false },
   ];
 
@@ -128,11 +129,10 @@ export function Header({ servicesByCategory = [] }: HeaderProps) {
                     key={item.label}
                     href={item.href}
                     onClick={() => setMobileMenuOpen(false)}
-                    className={`border-border block border-b px-6 py-4 font-medium transition-colors ${
-                      item.active
+                    className={`border-border block border-b px-6 py-4 font-medium transition-colors ${item.active
                         ? "bg-primary-lighter text-primary"
                         : "hover:text-primary text-foreground hover:bg-accent"
-                    }`}
+                      }`}
                   >
                     {item.label}
                   </a>

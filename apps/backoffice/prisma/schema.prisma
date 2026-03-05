@@ -74,6 +74,11 @@ model User {
   createdEvents      Event[]            @relation("EventCreator")
   updatedEvents      Event[]            @relation("EventUpdater")
   eventActivityLogs EventActivityLog[] @relation("EventActivityLogs")
+
+  // Tourism Management Relations
+  createdTourism      TourismDestination[]    @relation("TourismCreator")
+  updatedTourism      TourismDestination[]    @relation("TourismUpdater")
+  tourismActivityLogs TourismActivityLog[]    @relation("TourismActivityLogs")
 }
 
 model PermissionCache {
@@ -193,6 +198,7 @@ model File {
   heroBackgrounds SystemSettings[] @relation("HeroBackground")
   newsAsFeaturedImage News[] @relation("NewsFeaturedImage")
   eventsAsImage Event[] @relation("EventImage")
+  tourismAsImage TourismDestination[] @relation("TourismImage")
 
   @@index([uploadedById])
   @@index([category])
@@ -465,6 +471,91 @@ model EventActivityLog {
   createdAt   DateTime @default(now())
 
   @@index([eventId])
+  @@index([userId])
+  @@index([createdAt])
+}
+
+enum TourismStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+model TourismCategory {
+  id          String               @id @default(cuid())
+  name        String
+  slug        String               @unique
+  color       String               @default("primary")
+  showInMenu  Boolean              @default(true)
+  order       Int                  @default(0)
+  destinations TourismDestination[]
+  createdAt   DateTime             @default(now())
+  updatedAt   DateTime             @updatedAt
+
+  @@index([showInMenu])
+  @@index([order])
+}
+
+model TourismDestination {
+  id                   String             @id @default(cuid())
+  slug                 String             @unique
+  name                 String
+  description          String
+  content              String?            @db.Text
+
+  categoryId           String
+  category             TourismCategory    @relation(fields: [categoryId], references: [id])
+
+  // Destination specifics
+  location             String?
+  locationUrl          String?
+  price                String?
+  openHours            String?
+  facilities           Json?
+
+  // Media
+  imageId              String?
+  image                File?              @relation("TourismImage", fields: [imageId], references: [id], onDelete: SetNull)
+
+  // Display options
+  featured             Boolean            @default(false)
+  showInMenu           Boolean            @default(true)
+  order                Int                @default(0)
+  rating               Float              @default(0.0)
+  reviews              Int                @default(0)
+
+  // Publishing workflow
+  status               TourismStatus      @default(DRAFT)
+
+  // Audit
+  createdById          String
+  createdBy            User               @relation("TourismCreator", fields: [createdById], references: [id])
+  updatedById          String?
+  updatedBy            User?              @relation("TourismUpdater", fields: [updatedById], references: [id])
+
+  createdAt            DateTime           @default(now())
+  updatedAt            DateTime           @updatedAt
+
+  activityLogs         TourismActivityLog[]
+
+  @@index([categoryId])
+  @@index([status])
+  @@index([featured])
+  @@index([order])
+  @@index([slug])
+}
+
+model TourismActivityLog {
+  id              String             @id @default(cuid())
+  destinationId   String
+  destination     TourismDestination @relation(fields: [destinationId], references: [id], onDelete: Cascade)
+  userId          String
+  user            User               @relation("TourismActivityLogs", fields: [userId], references: [id])
+  action          String
+  changes         Json?
+  createdAt       DateTime           @default(now())
+
+  @@index([destinationId])
   @@index([userId])
   @@index([createdAt])
 }

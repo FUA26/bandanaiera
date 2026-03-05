@@ -98,6 +98,18 @@ const permissions = [
     description: "Manage event categories",
   },
 
+  // Tourism Management
+  { name: "TOURISM_VIEW", category: "TOURISM", description: "View tourism destinations" },
+  { name: "TOURISM_CREATE", category: "TOURISM", description: "Create new tourism destination" },
+  { name: "TOURISM_EDIT", category: "TOURISM", description: "Edit tourism destinations" },
+  { name: "TOURISM_PUBLISH", category: "TOURISM", description: "Publish/unpublish tourism destinations" },
+  { name: "TOURISM_DELETE", category: "TOURISM", description: "Delete tourism destinations" },
+  {
+    name: "TOURISM_CATEGORIES_MANAGE",
+    category: "TOURISM",
+    description: "Manage tourism categories",
+  },
+
   // Admin
   { name: "ADMIN_PANEL_ACCESS", category: "ADMIN", description: "Access admin panel" },
   { name: "ADMIN_USERS_MANAGE", category: "ADMIN", description: "Manage users in admin panel" },

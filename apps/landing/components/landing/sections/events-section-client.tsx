@@ -10,7 +10,7 @@ import {
   Clock,
   Sparkles,
 } from "lucide-react";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { useTranslations, useLocale } from "next-intl";
 import type { Event } from "@/lib/events-data";
 import Link from "next/link";
@@ -25,15 +25,32 @@ export function EventsSectionClient({ events }: EventsSectionClientProps) {
   const locale = useLocale();
   const dateLocale = locale === "id" ? "id-ID" : "en-US";
 
-  const [currentMonth, setCurrentMonth] = useState(new Date()); // Current date
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const [currentMonth, setCurrentMonth] = useState(() => new Date()); // Current date
   const [selectedDate, setSelectedDate] = useState<number | null>(null);
 
   const formatDate = (dateStr: string) => {
-    return new Intl.DateTimeFormat(dateLocale, {
-      day: "numeric",
-      month: "short",
-      year: "numeric",
-    }).format(new Date(dateStr));
+    try {
+      const parts = dateStr.substring(0, 10).split('-');
+      if (parts.length !== 3) return dateStr;
+
+      const year = parseInt(parts[0] || "0", 10);
+      const month = parseInt(parts[1] || "0", 10);
+      const day = parseInt(parts[2] || "0", 10);
+
+      const date = new Date(year, month - 1, day);
+      return new Intl.DateTimeFormat(dateLocale, {
+        day: "numeric",
+        month: "short",
+        year: "numeric",
+      }).format(date);
+    } catch (e) {
+      return dateStr;
+    }
   };
 
   const getDaysInMonth = (date: Date) => {
@@ -181,7 +198,7 @@ export function EventsSectionClient({ events }: EventsSectionClientProps) {
                     <div className="text-muted-foreground flex flex-wrap items-center gap-y-2 gap-x-4 text-sm md:text-base">
                       <div className="flex items-center gap-2">
                         <Calendar size={18} className="text-primary" />
-                        <span className="font-medium">
+                        <span suppressHydrationWarning className="font-medium">
                           {formatDate(featuredEvent.date)}
                         </span>
                       </div>
@@ -332,7 +349,7 @@ export function EventsSectionClient({ events }: EventsSectionClientProps) {
                     </h5>
                     <div className="text-muted-foreground mb-2 flex items-center gap-2 text-sm">
                       <Calendar size={14} />
-                      <span>{formatDate(event.date)}</span>
+                      <span suppressHydrationWarning>{formatDate(event.date)}</span>
                       <span>•</span>
                       <span>{event.time}</span>
                     </div>
@@ -392,7 +409,7 @@ export function EventsSectionClient({ events }: EventsSectionClientProps) {
                 >
                   <ChevronLeft size={20} className="text-muted-foreground" />
                 </button>
-                <div className="text-foreground text-lg font-bold tracking-tight">{monthName}</div>
+                <div suppressHydrationWarning className="text-foreground text-lg font-bold tracking-tight">{monthName}</div>
                 <button
                   onClick={() => {
                     setCurrentMonth(
@@ -440,6 +457,7 @@ export function EventsSectionClient({ events }: EventsSectionClientProps) {
                     return (
                       <button
                         key={day}
+                        suppressHydrationWarning
                         onClick={() => {
                           if (hasEvent) {
                             setSelectedDate(isSelected ? null : day);
