@@ -6,6 +6,7 @@
 
 import { prisma } from "@/lib/db/prisma";
 import { NextResponse } from "next/server";
+import { cachedQuery, generateCacheKey } from "@/lib/cache/cache";
 
 /**
  * CORS headers for public API
@@ -47,86 +48,99 @@ export const GET = async (request: Request) => {
     const sortBy = searchParams.get("sortBy") || "order";
     const sortOrder = (searchParams.get("sortOrder") || "asc") as "asc" | "desc";
 
-    // Build where clause - only PUBLISHED services
-    const where: Record<string, unknown> = {
-      status: "PUBLISHED",
-    };
+    const params = { categoryId, search, showInMenu, page, pageSize, sortBy, sortOrder };
+    const cacheKey = generateCacheKey('services:list', { params });
 
-    if (categoryId) {
-      where.categoryId = categoryId;
-    }
+    const result = await cachedQuery(
+      cacheKey,
+      async () => {
+        // Build where clause - only PUBLISHED services
+        const where: Record<string, unknown> = {
+          status: "PUBLISHED",
+        };
 
-    if (showInMenu !== null) {
-      where.showInMenu = showInMenu === "true";
-    }
+        if (categoryId) {
+          where.categoryId = categoryId;
+        }
 
-    if (search) {
-      where.OR = [
-        { name: { contains: search, mode: "insensitive" as const } },
-        { description: { contains: search, mode: "insensitive" as const } },
-        { slug: { contains: search, mode: "insensitive" as const } },
-      ];
-    }
+        if (showInMenu !== null) {
+          where.showInMenu = showInMenu === "true";
+        }
 
-    // Calculate pagination
-    const skip = (page - 1) * pageSize;
+        if (search) {
+          where.OR = [
+            { name: { contains: search, mode: "insensitive" as const } },
+            { description: { contains: search, mode: "insensitive" as const } },
+            { slug: { contains: search, mode: "insensitive" as const } },
+          ];
+        }
 
-    // Fetch services with pagination
-    const [services, totalCount] = await Promise.all([
-      prisma.service.findMany({
-        where,
-        skip,
-        take: pageSize,
-        orderBy: { [sortBy]: sortOrder },
-        select: {
-          id: true,
-          slug: true,
-          icon: true,
-          name: true,
-          description: true,
-          detailedDescription: true,
-          categoryId: true,
-          badge: true,
-          stats: true,
-          showInMenu: true,
-          order: true,
-          isIntegrated: true,
-          duration: true,
-          cost: true,
-          requirements: true,
-          process: true,
-          contactInfo: true,
-          faqs: true,
-          downloadForms: true,
-          relatedServices: true,
-          status: true,
-          category: {
+        // Calculate pagination
+        const skip = (page - 1) * pageSize;
+
+        // Fetch services with pagination
+        const [services, totalCount] = await Promise.all([
+          prisma.service.findMany({
+            where,
+            skip,
+            take: pageSize,
+            orderBy: { [sortBy]: sortOrder },
             select: {
               id: true,
-              name: true,
               slug: true,
               icon: true,
-              color: true,
-              bgColor: true,
+              name: true,
+              description: true,
+              detailedDescription: true,
+              categoryId: true,
+              badge: true,
+              stats: true,
+              showInMenu: true,
+              order: true,
+              isIntegrated: true,
+              duration: true,
+              cost: true,
+              requirements: true,
+              process: true,
+              contactInfo: true,
+              faqs: true,
+              downloadForms: true,
+              relatedServices: true,
+              status: true,
+              category: {
+                select: {
+                  id: true,
+                  name: true,
+                  slug: true,
+                  icon: true,
+                  color: true,
+                  bgColor: true,
+                },
+              },
             },
-          },
-        },
-      }),
-      prisma.service.count({ where }),
-    ]);
+          }),
+          prisma.service.count({ where }),
+        ]);
 
-    return NextResponse.json(
-      {
-        services,
-        pagination: {
-          page,
-          pageSize,
-          total: totalCount,
-          totalPages: Math.ceil(totalCount / pageSize),
-        },
+        return {
+          services,
+          pagination: {
+            page,
+            pageSize,
+            total: totalCount,
+            totalPages: Math.ceil(totalCount / pageSize),
+          },
+        };
       },
-      { headers: corsHeaders }
+      300
     );
+
+    return NextResponse.json(result, {
+      headers: {
+        ...corsHeaders,
+        'Cache-Control': 'public, s-maxage=300, stale-while-revalidate=600',
+      },
+    });
   } catch (error) {
     console.error("Error fetching public services:", error);
     return NextResponse.json(

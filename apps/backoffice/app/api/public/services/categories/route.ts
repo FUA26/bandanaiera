@@ -11,6 +11,7 @@
 
 import { prisma } from "@/lib/db/prisma";
 import { NextResponse } from "next/server";
+import { cachedQuery, generateCacheKey } from "@/lib/cache/cache";
 
 /**
  * CORS headers for public API
@@ -46,58 +47,71 @@ export const GET = async (request: Request) => {
     const sortBy = searchParams.get("sortBy") || "order";
     const sortOrder = (searchParams.get("sortOrder") || "asc") as "asc" | "desc";
 
-    // Build where clause
-    const where: Record<string, unknown> = {};
+    const params = { search, showInMenu: showInMenuParam, sortBy, sortOrder };
+    const cacheKey = generateCacheKey('service-categories:list', { params });
 
-    // Filter by showInMenu only if explicitly requested
-    if (showInMenuParam === "true") {
-      where.showInMenu = true;
-    } else if (showInMenuParam === "false") {
-      where.showInMenu = false;
-    }
-    // If showInMenu is "all" or not provided, don't filter by it
+    const result = await cachedQuery(
+      cacheKey,
+      async () => {
+        // Build where clause
+        const where: Record<string, unknown> = {};
 
-    if (search) {
-      where.OR = [
-        { name: { contains: search, mode: "insensitive" as const } },
-        { slug: { contains: search, mode: "insensitive" as const } },
-      ];
-    }
+        // Filter by showInMenu only if explicitly requested
+        if (showInMenuParam === "true") {
+          where.showInMenu = true;
+        } else if (showInMenuParam === "false") {
+          where.showInMenu = false;
+        }
+        // If showInMenu is "all" or not provided, don't filter by it
 
-    // Fetch categories
-    const categories = await prisma.serviceCategory.findMany({
-      where,
-      orderBy: { [sortBy]: sortOrder },
-      select: {
-        id: true,
-        name: true,
-        slug: true,
-        icon: true,
-        color: true,
-        bgColor: true,
-        showInMenu: true,
-        order: true,
-        _count: {
+        if (search) {
+          where.OR = [
+            { name: { contains: search, mode: "insensitive" as const } },
+            { slug: { contains: search, mode: "insensitive" as const } },
+          ];
+        }
+
+        // Fetch categories
+        const categories = await prisma.serviceCategory.findMany({
+          where,
+          orderBy: { [sortBy]: sortOrder },
           select: {
-            services: {
-              where: {
-                status: "PUBLISHED",
+            id: true,
+            name: true,
+            slug: true,
+            icon: true,
+            color: true,
+            bgColor: true,
+            showInMenu: true,
+            order: true,
+            _count: {
+              select: {
+                services: {
+                  where: {
+                    status: "PUBLISHED",
+                  },
+                },
               },
             },
           },
-        },
+        });
+
+        return {
+          categories: categories.map((cat) => ({
+            ...cat,
+            serviceCount: cat._count.services,
+          })),
+        };
+      },
+      300
+    );
+
+    return NextResponse.json(result, {
+      headers: {
+        ...corsHeaders,
+        'Cache-Control': 'public, s-maxage=300, stale-while-revalidate=600',
       },
     });
-
-    return NextResponse.json(
-      {
-        categories: categories.map((cat) => ({
-          ...cat,
-          serviceCount: cat._count.services,
-        })),
-      },
-      { headers: corsHeaders }
-    );
   } catch (error) {
     console.error("Error fetching public categories:", error);
     return NextResponse.json(

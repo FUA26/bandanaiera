@@ -6,6 +6,7 @@
 
 import { prisma } from "@/lib/db/prisma";
 import { NextResponse } from "next/server";
+import { cachedQuery, generateCacheKey } from "@/lib/cache/cache";
 
 /**
  * CORS headers for public API
@@ -39,49 +40,97 @@ export const GET = async (
     const params = await (args[0] as { params: Promise<{ slug: string }> }).params;
     const serviceSlug = params.slug;
 
-    const service = await prisma.service.findUnique({
-      where: {
-        slug: serviceSlug,
-        status: "PUBLISHED",
-      },
-      select: {
-        id: true,
-        slug: true,
-        icon: true,
-        name: true,
-        description: true,
-        detailedDescription: true,
-        categoryId: true,
-        badge: true,
-        stats: true,
-        showInMenu: true,
-        order: true,
-        isIntegrated: true,
-        duration: true,
-        cost: true,
-        requirements: true,
-        process: true,
-        contactInfo: true,
-        faqs: true,
-        downloadForms: true,
-        relatedServices: true,
-        status: true,
-        createdAt: true,
-        updatedAt: true,
-        category: {
+    const cacheKey = generateCacheKey('services:item', { slug: serviceSlug });
+
+    const result = await cachedQuery(
+      cacheKey,
+      async () => {
+        const service = await prisma.service.findUnique({
+          where: {
+            slug: serviceSlug,
+            status: "PUBLISHED",
+          },
           select: {
             id: true,
-            name: true,
             slug: true,
             icon: true,
-            color: true,
-            bgColor: true,
+            name: true,
+            description: true,
+            detailedDescription: true,
+            categoryId: true,
+            badge: true,
+            stats: true,
+            showInMenu: true,
+            order: true,
+            isIntegrated: true,
+            duration: true,
+            cost: true,
+            requirements: true,
+            process: true,
+            contactInfo: true,
+            faqs: true,
+            downloadForms: true,
+            relatedServices: true,
+            status: true,
+            createdAt: true,
+            updatedAt: true,
+            category: {
+              select: {
+                id: true,
+                name: true,
+                slug: true,
+                icon: true,
+                color: true,
+                bgColor: true,
+              },
+            },
           },
-        },
-      },
-    });
+        });
 
-    if (!service) {
+        if (!service) {
+          return null;
+        }
+
+        // Fetch related services if specified
+        let relatedServicesData = null;
+        if (service.relatedServices && Array.isArray(service.relatedServices) && service.relatedServices.length > 0) {
+          const relatedServicesList = await prisma.service.findMany({
+            where: {
+              id: { in: service.relatedServices as string[] },
+              status: "PUBLISHED",
+            },
+            select: {
+              id: true,
+              slug: true,
+              icon: true,
+              name: true,
+              description: true,
+              category: {
+                select: {
+                  id: true,
+                  name: true,
+                  slug: true,
+                  icon: true,
+                  color: true,
+                  bgColor: true,
+                },
+              },
+            },
+          });
+          relatedServicesData = relatedServicesList;
+        }
+
+        return {
+          service: {
+            ...service,
+            relatedServices: relatedServicesData,
+          },
+        };
+      },
+      300
+    );
+
+    if (!result) {
       return NextResponse.json(
         {
           error: "Not Found",
@@ -91,44 +140,12 @@ export const GET = async (
       );
     }
 
-    // Fetch related services if specified
-    let relatedServicesData = null;
-    if (service.relatedServices && Array.isArray(service.relatedServices) && service.relatedServices.length > 0) {
-      const relatedServicesList = await prisma.service.findMany({
-        where: {
-          id: { in: service.relatedServices as string[] },
-          status: "PUBLISHED",
-        },
-        select: {
-          id: true,
-          slug: true,
-          icon: true,
-          name: true,
-          description: true,
-          category: {
-            select: {
-              id: true,
-              name: true,
-              slug: true,
-              icon: true,
-              color: true,
-              bgColor: true,
-            },
-          },
-        },
-      });
-      relatedServicesData = relatedServicesList;
-    }
-
-    return NextResponse.json(
-      {
-        service: {
-          ...service,
-          relatedServices: relatedServicesData,
-        },
+    return NextResponse.json(result, {
+      headers: {
+        ...corsHeaders,
+        'Cache-Control': 'public, s-maxage=300, stale-while-revalidate=600',
       },
-      { headers: corsHeaders }
-    );
+    });
   } catch (error) {
     console.error("Error fetching public service:", error);
     return NextResponse.json(
