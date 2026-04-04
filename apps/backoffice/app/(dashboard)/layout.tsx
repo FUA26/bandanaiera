@@ -1,48 +1,104 @@
-import { DashboardLayout } from "@/components/dashboard/dashboard-layout";
-import { Providers } from "@/components/shared/providers";
-import { auth } from "@/lib/auth/config";
-import { PermissionProvider } from "@/lib/rbac-client/provider";
-import { loadUserPermissions } from "@/lib/rbac-server/loader";
-// Import NextAuth type extensions
-import "@/lib/auth/types";
+import { SidebarProvider, Sidebar, SidebarHeader, SidebarContent, SidebarMenu, SidebarMenuItem, SidebarMenuButton, SidebarInset, Header, Breadcrumb, BreadcrumbList, BreadcrumbItem, BreadcrumbLink, BreadcrumbPage, BreadcrumbSeparator } from "@workspace/feedback-ui"
+import { Home, Settings2, Tags, Building2, MapPin, Image } from "lucide-react"
 
-export default async function Layout({ children }: { children: React.ReactNode }) {
-  const session = await auth();
-
-  // Note: Auth check is handled by middleware - no redirect here to avoid loops
-  // If there's no session, this shouldn't normally be reached due to middleware protection
-  if (!session) {
-    return (
-      <div className="flex min-h-screen items-center justify-center">
-        <p>Redirecting to login...</p>
-      </div>
-    );
-  }
-
-  // Load permissions on server-side to avoid client-side fetching
-  const permissions = await loadUserPermissions(session.user.id);
-
-  // Fetch full user data including role
-  const { prisma } = await import("@/lib/db/prisma");
-  const user = await prisma.user.findUnique({
-    where: { id: session.user.id },
-    select: {
-      email: true,
-      name: true,
-      avatarId: true,
-      role: {
-        select: {
-          name: true,
-        },
-      },
-    },
-  });
-
+export default function DashboardLayout({
+  children,
+}: {
+  children: React.ReactNode
+}) {
   return (
-    <PermissionProvider initialPermissions={permissions}>
-      <Providers>
-        <DashboardLayout user={user ?? session.user}>{children}</DashboardLayout>
-      </Providers>
-    </PermissionProvider>
-  );
+    <SidebarProvider>
+      <div className="flex min-h-screen w-full">
+        <Sidebar collapsible="icon">
+          <SidebarHeader>
+            <SidebarMenu>
+              <SidebarMenuItem>
+                <SidebarMenuButton size="lg" asChild>
+                  <a href="/">
+                    <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
+                      <Home className="size-4" />
+                    </div>
+                    <div className="flex flex-col gap-0.5 leading-none">
+                      <span className="font-semibold">Backoffice</span>
+                      <span className="text-xs">Dashboard</span>
+                    </div>
+                  </a>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            </SidebarMenu>
+          </SidebarHeader>
+          <SidebarContent>
+            <SidebarMenu>
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild>
+                  <a href="/dashboard">
+                    <Home />
+                    <span>Dashboard</span>
+                  </a>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild>
+                  <a href="/dashboard/admin/tags">
+                    <Tags />
+                    <span>Tags</span>
+                  </a>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild>
+                  <a href="/dashboard/admin/facilities">
+                    <Building2 />
+                    <span>Facilities</span>
+                  </a>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild>
+                  <a href="/dashboard/admin/destinations">
+                    <MapPin />
+                    <span>Destinations</span>
+                  </a>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild>
+                  <a href="/dashboard/admin/galleries">
+                    <Image />
+                    <span>Galleries</span>
+                  </a>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild>
+                  <a href="/dashboard/settings/profile">
+                    <Settings2 />
+                    <span>Settings</span>
+                  </a>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            </SidebarMenu>
+          </SidebarContent>
+        </Sidebar>
+        <SidebarInset>
+          <Header>
+            <Breadcrumb>
+              <BreadcrumbList>
+                <BreadcrumbItem>
+                  <BreadcrumbLink href="/dashboard">Dashboard</BreadcrumbLink>
+                </BreadcrumbItem>
+                <BreadcrumbSeparator />
+                <BreadcrumbItem>
+                  <BreadcrumbPage>Home</BreadcrumbPage>
+                </BreadcrumbItem>
+              </BreadcrumbList>
+            </Breadcrumb>
+          </Header>
+          <div className="flex flex-1 flex-col gap-4 p-4 pt-6">
+            {children}
+          </div>
+        </SidebarInset>
+      </div>
+    </SidebarProvider>
+  )
 }
