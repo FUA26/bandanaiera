@@ -1,9 +1,12 @@
+"use client"
+
 /**
  * Advanced Data Table Demo Page
  *
  * Demonstration of the new advanced data table features
  */
 
+import * as React from "react"
 import {
   DataTable,
   DataTableActionBar,
@@ -198,105 +201,83 @@ const columns: ColumnDef<Role>[] = [
     header: ({ column }) => <DataTableColumnHeader column={column} title="Created" />,
     cell: ({ row }) => {
       const date = new Date(row.getValue("createdAt"));
-      return <span className="text-sm">{date.toLocaleDateString()}</span>;
+      return <div className="text-sm text-muted-foreground">{date.toLocaleDateString()}</div>;
     },
   },
   {
     id: "actions",
-    cell: ({ row }) => {
-      const role = row.original;
-
-      return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="icon" aria-label="Actions">
-              <HugeiconsIcon icon={MoreVerticalIcon} className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuItem>
-              <HugeiconsIcon icon={Edit01Icon} className="mr-2 h-4 w-4" />
-              Edit
-            </DropdownMenuItem>
-            <DropdownMenuItem>
-              <HugeiconsIcon icon={Copy01Icon} className="mr-2 h-4 w-4" />
-              Clone
-            </DropdownMenuItem>
-            <DropdownMenuItem className="text-destructive" disabled={role.users > 0}>
-              <HugeiconsIcon icon={Delete01Icon} className="mr-2 h-4 w-4" />
-              Delete
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      );
-    },
+    header: "Actions",
+    cell: ({ row }) => (
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button variant="ghost" size="icon" className="h-8 w-8 p-0">
+            <span className="sr-only">Open menu</span>
+            <HugeiconsIcon icon={MoreVerticalIcon} className="h-4 w-4" />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end">
+          <DropdownMenuItem>
+            <HugeiconsIcon icon={Copy01Icon} className="mr-2 h-4 w-4" />
+            Copy ID
+          </DropdownMenuItem>
+          <DropdownMenuItem>
+            <HugeiconsIcon icon={Edit01Icon} className="mr-2 h-4 w-4" />
+            Edit Role
+          </DropdownMenuItem>
+          <DropdownMenuItem className="text-destructive">
+            <HugeiconsIcon icon={Delete01Icon} className="mr-2 h-4 w-4" />
+            Delete Role
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    ),
   },
 ];
 
 export default function AdvancedTableDemoPage() {
+  const [data, setData] = React.useState<Role[]>(mockRoles);
+
   return (
-    <div className="container mx-auto py-8 space-y-8">
-      {/* Page Header */}
-      <div className="space-y-2">
-        <h1 className="text-3xl font-bold">Advanced Data Table Demo</h1>
-        <p className="text-muted-foreground">
-          Demonstrating sorting, filtering, pagination, row selection, and bulk actions
-        </p>
-      </div>
-
-      {/* Feature Highlights */}
-      <div className="grid gap-4 md:grid-cols-3">
-        <div className="rounded-lg border p-4 space-y-2">
-          <h3 className="font-semibold">🎯 Column Sorting</h3>
-          <p className="text-sm text-muted-foreground">
-            Click column headers to sort ascending/descending. Multi-column sorting supported.
+    <div className="flex flex-col gap-4 p-4">
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-bold tracking-tight">Advanced Table Demo</h1>
+          <p className="text-muted-foreground">
+            Demonstration of advanced data table features with filtering, sorting, and pagination
           </p>
         </div>
-
-        <div className="rounded-lg border p-4 space-y-2">
-          <h3 className="font-semibold">🔍 Faceted Filters</h3>
-          <p className="text-sm text-muted-foreground">
-            Filter by user count ranges, search by name, and toggle column visibility.
-          </p>
-        </div>
-
-        <div className="rounded-lg border p-4 space-y-2">
-          <h3 className="font-semibold">✅ Row Selection</h3>
-          <p className="text-sm text-muted-foreground">
-            Select individual rows or all rows. Bulk actions appear when rows are selected.
-          </p>
-        </div>
+        <Button>
+          <Trash2 className="mr-2 h-4 w-4" />
+          Bulk Delete
+        </Button>
       </div>
 
-      {/* The Advanced Table */}
-      <div className="rounded-lg border p-6 bg-card">
-        <h2 className="text-xl font-semibold mb-4">Roles Table</h2>
-        <DataTable
-          data={mockRoles}
-          columns={columns}
-          toolbar={(table) => (
-            <div className="flex items-center justify-between">
-              <Input
-                placeholder="Search roles..."
-                value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
-                onChange={(event) => table.getColumn("name")?.setFilterValue(event.target.value)}
-                className="max-w-sm"
-              />
-              <DataTableViewOptions table={table} />
-            </div>
-          )}
-          actionBar={(table) => (
-            <DataTableActionBar table={table}>
-              {(selectedRows) => (
-                <Button size="sm" variant="destructive">
-                  <Trash2 className="mr-2 h-4 w-4" />
-                  Delete ({selectedRows.length})
-                </Button>
-              )}
-            </DataTableActionBar>
-          )}
-        />
-      </div>
+      <DataTable
+        columns={columns}
+        data={data}
+        filterableColumns={[
+          {
+            id: "name",
+            title: "Name",
+            options: mockRoles.map((role) => ({ label: role.name, value: role.name })),
+          },
+          {
+            id: "users",
+            title: "User Count",
+            options: userCountOptions,
+          },
+        ]}
+        searchableColumns={[
+          {
+            id: "name",
+            title: "Name",
+          },
+          {
+            id: "permissions",
+            title: "Permissions",
+          },
+        ]}
+      />
     </div>
   );
 }

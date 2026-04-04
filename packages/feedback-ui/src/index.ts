@@ -19,6 +19,7 @@ export { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter }
 export { Badge, badgeVariants } from './ui/badge'
 export { Avatar, AvatarImage, AvatarFallback } from './ui/avatar'
 export { Alert, AlertTitle, AlertDescription } from './ui/alert'
+export { Breadcrumb, BreadcrumbList, BreadcrumbItem, BreadcrumbLink, BreadcrumbPage, BreadcrumbSeparator } from './ui/breadcrumb'
 export { Skeleton } from './ui/skeleton'
 export { Toaster } from './ui/sonner'
 
@@ -70,4 +71,4 @@ export { ThemeToggle } from './ui/theme-toggle'
 export { Switch } from './ui/switch'
 export { Progress } from './ui/progress'
 export { Command } from './ui/command'
-export { Field } from './ui/field'
+export { Field, FieldContent, FieldError, FieldLabel, FieldDescription } from "./ui/field"

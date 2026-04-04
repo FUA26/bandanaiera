@@ -10,6 +10,7 @@ const AlertDialogTitle = Dialog.Title
 const AlertDialogDescription = Dialog.Description
 const AlertDialogFooter = Dialog.Footer
 const AlertDialogAction = Dialog.Close
+const AlertDialogCancel = Dialog.Close
 
 export {
   AlertDialog,
@@ -20,4 +21,5 @@ export {
   AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogAction,
+  AlertDialogCancel,
 }

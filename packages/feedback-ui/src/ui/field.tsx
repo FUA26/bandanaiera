@@ -1,5 +1,5 @@
 import * as React from "react"
-import { cn } from "@workspace/utils"
+import { cn } from "@workspace/feedback-ui"
 import { Label } from "./label"
 
 const Field = React.forwardRef<
@@ -46,4 +46,20 @@ const FieldLabel = React.forwardRef<
 })
 FieldLabel.displayName = "FieldLabel"
 
-export { Field, FieldContent, FieldError, FieldLabel }
+const FieldDescription = React.forwardRef<
+  HTMLParagraphElement,
+  React.ComponentPropsWithoutRef<"p">
+>(({ className, children, ...props }, ref) => {
+  return (
+    <p
+      ref={ref}
+      className={cn("text-sm text-muted-foreground", className)}
+      {...props}
+    >
+      {children}
+    </p>
+  )
+})
+FieldDescription.displayName = "FieldDescription"
+
+export { Field, FieldContent, FieldError, FieldLabel, FieldDescription }

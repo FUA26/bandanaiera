@@ -1,5 +1,5 @@
 import * as React from "react"
-import { cn } from "@workspace/utils"
+import { cn } from "@workspace/feedback-ui"
 
 const ScrollArea = React.forwardRef<
   HTMLDivElement,
