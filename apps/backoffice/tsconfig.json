@@ -7,7 +7,9 @@
       }
     ],
     "paths": {
-      "@/*": ["./*"]
+      "@/*": ["./*"],
+      "@/components/ui/*": ["../../packages/feedback-ui/src/ui/*"],
+      "@workspace/feedback-ui": ["../../packages/feedback-ui/src"]
     },
     "declaration": false,
     "declarationMap": false
