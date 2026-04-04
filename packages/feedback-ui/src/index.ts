@@ -63,3 +63,5 @@ export {
 } from './ui/sidebar'
 export { Header } from './ui/header'
 export { ScrollArea } from './ui/scroll-area'
+
+export { Tooltip } from './ui/tooltip'
