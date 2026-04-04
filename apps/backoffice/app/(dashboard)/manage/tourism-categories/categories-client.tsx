@@ -10,14 +10,6 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import {
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow,
-} from '@/components/ui/table';
-import {
     Dialog,
     DialogContent,
     DialogFooter,
@@ -25,16 +17,12 @@ import {
     DialogTitle,
     DialogTrigger,
 } from '@/components/ui/dialog';
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
 import { Badge } from '@/components/ui/badge';
-import { MoreHorizontal, Plus, Pencil, Trash2, Loader2 } from 'lucide-react';
+import { Plus, Loader2 } from 'lucide-react';
 import { tourismCategorySchema } from '@/lib/validations/tourism';
 import type { z } from 'zod';
+import { DataTable } from '@/components/data-table';
+import { tourismCategoriesColumns, type TourismCategory } from '@/components/data-table/columns/tourism-categories';
 
 type CategoryFormValues = z.infer<typeof tourismCategorySchema>;
 
@@ -52,10 +40,9 @@ interface Category {
 
 export function CategoriesClient({ categoriesPromise }: { categoriesPromise: Promise<Category[]> }) {
     const router = useRouter();
-    const [categories, setCategories] = useState<Category[]>([]);
-    const [searchQuery, setSearchQuery] = useState('');
+    const [categories, setCategories] = useState<TourismCategory[]>([]);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
-    const [editingCategory, setEditingCategory] = useState<Category | null>(null);
+    const [editingCategory, setEditingCategory] = useState<TourismCategory | null>(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [deleteDialog, setDeleteDialog] = useState<{ open: boolean; id: string | null; name: string }>({
         open: false,
@@ -64,8 +51,49 @@ export function CategoriesClient({ categoriesPromise }: { categoriesPromise: Pro
     });
 
     useEffect(() => {
-        categoriesPromise.then(setCategories);
+        categoriesPromise.then(data => {
+            // Transform Category to TourismCategory format
+            const transformed = data.map(cat => ({
+                ...cat,
+                _count: {
+                    tourism: cat._count.destinations
+                }
+            }));
+            setCategories(transformed);
+        });
     }, [categoriesPromise]);
+
+    // Handle edit event from DataTable
+    useEffect(() => {
+        const handleEdit = (e: CustomEvent<TourismCategory>) => {
+            const category = e.detail;
+            setEditingCategory(category);
+            form.reset({
+                name: category.name,
+                slug: category.slug,
+                color: category.color,
+                showInMenu: category.showInMenu,
+                order: category.order,
+            });
+            setIsDialogOpen(true);
+        };
+
+        const handleDelete = (e: CustomEvent<TourismCategory>) => {
+            setDeleteDialog({
+                open: true,
+                id: e.detail.id,
+                name: e.detail.name,
+            });
+        };
+
+        window.addEventListener('edit-tourism-category', handleEdit as EventListener);
+        window.addEventListener('delete-tourism-category', handleDelete as EventListener);
+
+        return () => {
+            window.removeEventListener('edit-tourism-category', handleEdit as EventListener);
+            window.removeEventListener('delete-tourism-category', handleDelete as EventListener);
+        };
+    }, []);
 
     const form = useForm<CategoryFormValues>({
         resolver: zodResolver(tourismCategorySchema),
@@ -100,7 +128,13 @@ export function CategoriesClient({ categoriesPromise }: { categoriesPromise: Pro
             router.refresh();
 
             const updatedCategories = await categoriesPromise;
-            setCategories(updatedCategories);
+            const transformed = updatedCategories.map(cat => ({
+                ...cat,
+                _count: {
+                    tourism: cat._count.destinations
+                }
+            }));
+            setCategories(transformed);
         } catch (error) {
             toast.error(error instanceof Error ? error.message : 'Gagal menyimpan kategori');
         } finally {
@@ -126,26 +160,21 @@ export function CategoriesClient({ categoriesPromise }: { categoriesPromise: Pro
             router.refresh();
 
             const updatedCategories = await categoriesPromise;
-            setCategories(updatedCategories);
+            const transformed = updatedCategories.map(cat => ({
+                ...cat,
+                _count: {
+                    tourism: cat._count.destinations
+                }
+            }));
+            setCategories(transformed);
         } catch (error) {
             toast.error(error instanceof Error ? error.message : 'Gagal menghapus kategori');
         }
     };
 
-    const filteredCategories = categories.filter(c =>
-        c.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        c.slug.toLowerCase().includes(searchQuery.toLowerCase())
-    );
-
     return (
         <>
-            <div className="flex gap-4">
-                <Input
-                    placeholder="Cari kategori..."
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    className="max-w-sm"
-                />
+            <div className="flex justify-end mb-4">
                 <Dialog
                     open={isDialogOpen}
                     onOpenChange={(open) => {
@@ -242,82 +271,12 @@ export function CategoriesClient({ categoriesPromise }: { categoriesPromise: Pro
                 </Dialog>
             </div>
 
-            <div className="rounded-md border mt-4">
-                <Table>
-                    <TableHeader>
-                        <TableRow>
-                            <TableHead>Nama</TableHead>
-                            <TableHead>Slug</TableHead>
-                            <TableHead>Destinasi</TableHead>
-                            <TableHead>Status</TableHead>
-                            <TableHead>Urutan</TableHead>
-                            <TableHead className="w-[70px]"></TableHead>
-                        </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                        {filteredCategories.map((category) => (
-                            <TableRow key={category.id}>
-                                <TableCell className="font-medium">{category.name}</TableCell>
-                                <TableCell className="text-muted-foreground">{category.slug}</TableCell>
-                                <TableCell>
-                                    <Badge variant="secondary">
-                                        {category._count.destinations} item
-                                    </Badge>
-                                </TableCell>
-                                <TableCell>
-                                    {category.showInMenu ? (
-                                        <Badge variant="default">Tampil</Badge>
-                                    ) : (
-                                        <Badge variant="outline">Sembunyi</Badge>
-                                    )}
-                                </TableCell>
-                                <TableCell>{category.order}</TableCell>
-                                <TableCell>
-                                    <DropdownMenu>
-                                        <DropdownMenuTrigger asChild>
-                                            <Button variant="ghost" size="icon">
-                                                <MoreHorizontal className="h-4 w-4" />
-                                            </Button>
-                                        </DropdownMenuTrigger>
-                                        <DropdownMenuContent align="end">
-                                            <DropdownMenuItem
-                                                onClick={() => {
-                                                    setEditingCategory(category);
-                                                    form.reset({
-                                                        name: category.name,
-                                                        slug: category.slug,
-                                                        color: category.color,
-                                                        showInMenu: category.showInMenu,
-                                                        order: category.order,
-                                                    });
-                                                    setIsDialogOpen(true);
-                                                }}
-                                            >
-                                                <Pencil className="mr-2 h-4 w-4" />
-                                                Edit
-                                            </DropdownMenuItem>
-                                            <DropdownMenuItem
-                                                onClick={() => setDeleteDialog({ open: true, id: category.id, name: category.name })}
-                                                className="text-destructive"
-                                            >
-                                                <Trash2 className="mr-2 h-4 w-4" />
-                                                Hapus
-                                            </DropdownMenuItem>
-                                        </DropdownMenuContent>
-                                    </DropdownMenu>
-                                </TableCell>
-                            </TableRow>
-                        ))}
-                        {filteredCategories.length === 0 && (
-                            <TableRow>
-                                <TableCell colSpan={6} className="h-24 text-center text-muted-foreground">
-                                    Tidak ada kategori ditemukan.
-                                </TableCell>
-                            </TableRow>
-                        )}
-                    </TableBody>
-                </Table>
-            </div>
+            <DataTable
+                columns={tourismCategoriesColumns}
+                data={categories}
+                filterKey="name"
+                toolbarPlaceholder="Cari kategori..."
+            />
 
             <Dialog open={deleteDialog.open} onOpenChange={(open) => setDeleteDialog({ ...deleteDialog, open })}>
                 <DialogContent>

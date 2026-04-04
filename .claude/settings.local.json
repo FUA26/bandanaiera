@@ -61,7 +61,10 @@
       "Bash(wait:*)",
       "Bash(kill:*)",
       "Skill(shadcn)",
-      "Bash(fuser:*)"
+      "Bash(fuser:*)",
+      "Bash(wc:*)",
+      "Bash(head:*)",
+      "Bash(tail:*)"
     ]
   }
 }
