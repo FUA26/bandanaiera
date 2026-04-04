@@ -8,14 +8,6 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
-import {
   Dialog,
   DialogContent,
   DialogFooter,
@@ -36,33 +28,10 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
-import { MoreHorizontal, Pencil, Trash2, Plus, CalendarIcon } from 'lucide-react';
+import { Plus, CalendarIcon } from 'lucide-react';
 import { EventStatus, EventType } from '@prisma/client';
-
-interface Event {
-  id: string;
-  slug: string;
-  title: string;
-  description: string | null;
-  categoryId: string;
-  category: { id: string; name: string; slug: string };
-  date: Date;
-  time: string | null;
-  location: string | null;
-  locationUrl: string | null;
-  type: EventType;
-  imageId: string | null;
-  image: { id: string; cdnUrl: string } | null;
-  organizer: string;
-  organizerContact: string | null;
-  registrationRequired: boolean;
-  registrationUrl: string | null;
-  maxAttendees: number | null;
-  featured: boolean;
-  showInMenu: boolean;
-  order: number;
-  status: EventStatus;
-}
+import { DataTable } from '@/components/data-table';
+import { eventsColumns, type Event } from '@/components/data-table/columns/events';
 
 interface Category {
   id: string;
@@ -104,10 +73,8 @@ export function EventsClient({ eventsPromise, categoriesPromise, header }: Event
   });
 
   useEffect(() => {
-    Promise.all([eventsPromise, categoriesPromise]).then(([eventsData, categoriesData]) => {
-      setEvents(eventsData);
-      setCategories(categoriesData);
-    });
+    eventsPromise.then(setEvents);
+    categoriesPromise.then(setCategories);
   }, [eventsPromise, categoriesPromise]);
 
   useEffect(() => {
@@ -128,6 +95,37 @@ export function EventsClient({ eventsPromise, categoriesPromise, header }: Event
     setFilteredEvents(filtered);
   }, [events, statusFilter, typeFilter, categoryFilter]);
 
+  // Handle events from DataTable
+  useEffect(() => {
+    const handleView = (e: CustomEvent<Event>) => {
+      // Navigate to event detail
+      router.push(`/manage/events/${e.detail.id}`);
+    };
+
+    const handleEdit = (e: CustomEvent<Event>) => {
+      // Navigate to edit page
+      router.push(`/manage/events/${e.detail.id}`);
+    };
+
+    const handleDelete = (e: CustomEvent<Event>) => {
+      setDeleteDialog({
+        open: true,
+        id: e.detail.id,
+        title: e.detail.title,
+      });
+    };
+
+    window.addEventListener('view-event', handleView as EventListener);
+    window.addEventListener('edit-event', handleEdit as EventListener);
+    window.addEventListener('delete-event', handleDelete as EventListener);
+
+    return () => {
+      window.removeEventListener('view-event', handleView as EventListener);
+      window.removeEventListener('edit-event', handleEdit as EventListener);
+      window.removeEventListener('delete-event', handleDelete as EventListener);
+    };
+  }, [router]);
+
   const handleDelete = async () => {
     if (!deleteDialog.id) return;
 
@@ -138,42 +136,39 @@ export function EventsClient({ eventsPromise, categoriesPromise, header }: Event
 
       if (!response.ok) {
         const error = await response.json();
-        throw new Error(error.error || 'Failed to delete');
+        throw new Error(error.error || 'Failed to delete event');
       }
 
       toast.success('Event deleted');
       setDeleteDialog({ open: false, id: null, title: '' });
       router.refresh();
-
-      const updated = await eventsPromise;
-      setEvents(updated);
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : 'Failed to delete');
+      toast.error(error instanceof Error ? error.message : 'Failed to delete event');
     }
   };
 
-  const handleStatusUpdate = async (id: string, status: EventStatus) => {
-    try {
-      const response = await fetch(`/api/events/${id}/status`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ status }),
-      });
-
-      if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.error || 'Failed to update status');
-      }
-
-      toast.success(`Event ${status.toLowerCase()}`);
-      router.refresh();
-
-      const updated = await eventsPromise;
-      setEvents(updated);
-    } catch (error) {
-      toast.error(error instanceof Error ? error.message : 'Failed to update status');
-    }
-  };
+  // Prepare faceted filters
+  const facetedFilters = [
+    {
+      columnId: 'status',
+      title: 'Status',
+      options: [
+        { label: 'Published', value: 'PUBLISHED' },
+        { label: 'Draft', value: 'DRAFT' },
+        { label: 'Cancelled', value: 'CANCELLED' },
+        { label: 'Completed', value: 'COMPLETED' },
+      ],
+    },
+    {
+      columnId: 'type',
+      title: 'Type',
+      options: [
+        { label: 'Online', value: 'ONLINE' },
+        { label: 'Offline', value: 'OFFLINE' },
+        { label: 'Hybrid', value: 'HYBRID' },
+      ],
+    },
+  ];
 
   return (
     <>
@@ -189,157 +184,14 @@ export function EventsClient({ eventsPromise, categoriesPromise, header }: Event
         </div>
       )}
 
-      {/* Filters */}
-      <div className="flex gap-4 mb-4">
-        <Select value={statusFilter} onValueChange={setStatusFilter}>
-          <SelectTrigger className="w-[180px]">
-            <SelectValue placeholder="Filter by status" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All Status</SelectItem>
-            <SelectItem value="DRAFT">Draft</SelectItem>
-            <SelectItem value="PUBLISHED">Published</SelectItem>
-            <SelectItem value="CANCELLED">Cancelled</SelectItem>
-            <SelectItem value="COMPLETED">Completed</SelectItem>
-          </SelectContent>
-        </Select>
+      <DataTable
+        columns={eventsColumns}
+        data={filteredEvents}
+        filterKey="title"
+        toolbarPlaceholder="Search events..."
+        facetedFilters={facetedFilters}
+      />
 
-        <Select value={typeFilter} onValueChange={setTypeFilter}>
-          <SelectTrigger className="w-[180px]">
-            <SelectValue placeholder="Filter by type" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All Types</SelectItem>
-            <SelectItem value="ONLINE">Online</SelectItem>
-            <SelectItem value="OFFLINE">Offline</SelectItem>
-            <SelectItem value="HYBRID">Hybrid</SelectItem>
-          </SelectContent>
-        </Select>
-
-        <Select value={categoryFilter} onValueChange={setCategoryFilter}>
-          <SelectTrigger className="w-[180px]">
-            <SelectValue placeholder="Filter by category" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All Categories</SelectItem>
-            {categories.map((cat) => (
-              <SelectItem key={cat.id} value={cat.id}>{cat.name}</SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>
-
-      <div className="rounded-md border">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Image</TableHead>
-              <TableHead>Title</TableHead>
-              <TableHead>Date</TableHead>
-              <TableHead>Category</TableHead>
-              <TableHead>Type</TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead className="w-[70px]"></TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {filteredEvents.map((event) => (
-              <TableRow key={event.id}>
-                <TableCell>
-                  {event.image ? (
-                    <div className="relative h-12 w-12 rounded overflow-hidden bg-muted">
-                      <Image src={event.image.cdnUrl} alt="" fill className="object-cover" />
-                    </div>
-                  ) : (
-                    <div className="h-12 w-12 rounded bg-muted flex items-center justify-center text-xs text-muted-foreground">
-                      No img
-                    </div>
-                  )}
-                </TableCell>
-                <TableCell>
-                  <div className="max-w-[300px]">
-                    <div className="font-medium truncate">{event.title}</div>
-                    {event.featured && <Badge variant="secondary" className="mt-1">Featured</Badge>}
-                  </div>
-                </TableCell>
-                <TableCell>
-                  <div className="flex items-center gap-2">
-                    <CalendarIcon className="h-4 w-4 text-muted-foreground" />
-                    {format(new Date(event.date), 'MMM d, yyyy')}
-                    {event.time && <span className="text-muted-foreground text-sm">({event.time})</span>}
-                  </div>
-                </TableCell>
-                <TableCell>{event.category.name}</TableCell>
-                <TableCell>{TYPE_LABELS[event.type]}</TableCell>
-                <TableCell>
-                  <Badge variant={STATUS_COLORS[event.status] as any}>
-                    {event.status}
-                  </Badge>
-                </TableCell>
-                <TableCell>
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button variant="ghost" size="icon">
-                        <MoreHorizontal className="h-4 w-4" />
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                      <DropdownMenuItem asChild>
-                        <Link href={`/manage/events/${event.id}`}>
-                          <Pencil className="mr-2 h-4 w-4" />
-                          Edit
-                        </Link>
-                      </DropdownMenuItem>
-                      {event.status === 'DRAFT' && (
-                        <DropdownMenuItem onClick={() => handleStatusUpdate(event.id, 'PUBLISHED')}>
-                          Publish
-                        </DropdownMenuItem>
-                      )}
-                      {event.status === 'PUBLISHED' && (
-                        <>
-                          <DropdownMenuItem onClick={() => handleStatusUpdate(event.id, 'CANCELLED')}>
-                            Cancel
-                          </DropdownMenuItem>
-                          <DropdownMenuItem onClick={() => handleStatusUpdate(event.id, 'COMPLETED')}>
-                            Mark Complete
-                          </DropdownMenuItem>
-                        </>
-                      )}
-                      {event.status === 'CANCELLED' && (
-                        <DropdownMenuItem onClick={() => handleStatusUpdate(event.id, 'PUBLISHED')}>
-                          Republish
-                        </DropdownMenuItem>
-                      )}
-                      <DropdownMenuItem
-                        onClick={() =>
-                          setDeleteDialog({
-                            open: true,
-                            id: event.id,
-                            title: event.title,
-                          })
-                        }
-                        className="text-destructive"
-                      >
-                        <Trash2 className="mr-2 h-4 w-4" />
-                        Delete
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </TableCell>
-              </TableRow>
-            ))}
-            {filteredEvents.length === 0 && (
-              <TableRow>
-                <TableCell colSpan={7} className="h-24 text-center text-muted-foreground">
-                  No events found.
-                </TableCell>
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
-      </div>
-
-      {/* Delete Dialog */}
       <Dialog open={deleteDialog.open} onOpenChange={(open) => setDeleteDialog({ ...deleteDialog, open })}>
         <DialogContent>
           <DialogHeader>
