@@ -52,7 +52,12 @@
       "Bash(turbo dev:*)",
       "Skill(superpowers:brainstorming)",
       "Skill(superpowers:writing-plans)",
-      "Bash(cd:*)"
+      "Bash(cd:*)",
+      "Bash(pnpm build:*)",
+      "Bash(pnpm install:*)",
+      "Bash(git cherry-pick:*)",
+      "Bash(git checkout:*)",
+      "Bash(pnpm:*)"
     ]
   }
 }
