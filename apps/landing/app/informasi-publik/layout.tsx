@@ -5,6 +5,9 @@ import { Footer } from "@/components/landing/layout/landing-footer";
 import { AccessibilityWidget } from "@/components/shared/accessibility-widget";
 import { getVisibleServicesGroupedByCategory } from "@/lib/services-data";
 
+// Force dynamic rendering to prevent build-time fetch
+export const dynamic = 'force-dynamic';
+
 export const metadata: Metadata = {
   title: "Informasi Publik - Super App Naiera",
   description: "Akses informasi publik Kabupaten Naiera secara transparan dan akuntabel",

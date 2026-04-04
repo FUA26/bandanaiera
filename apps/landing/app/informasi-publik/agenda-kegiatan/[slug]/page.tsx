@@ -3,18 +3,13 @@ import { AgendaDetailClient } from "./agenda-detail-client";
 import { getEventBySlug, getAllEvents } from "@/lib/events-data";
 import type { Metadata } from "next";
 
+// Force dynamic rendering to prevent build-time fetch
+export const dynamic = 'force-dynamic';
+
 interface AgendaPageProps {
   params: Promise<{
     slug: string;
   }>;
-}
-
-// Generate static params for all events
-export async function generateStaticParams() {
-  const events = await getAllEvents();
-  return events.map((event) => ({
-    slug: event.slug,
-  }));
 }
 
 // Generate metadata for SEO
