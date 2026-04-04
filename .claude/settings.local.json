@@ -58,7 +58,9 @@
       "Bash(git cherry-pick:*)",
       "Bash(git checkout:*)",
       "Bash(pnpm:*)",
-      "Bash(wait:*)"
+      "Bash(wait:*)",
+      "Bash(kill:*)",
+      "Skill(shadcn)"
     ]
   }
 }

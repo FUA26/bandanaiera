@@ -1,17 +1,9 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
 import {
   Dialog,
   DialogContent,
@@ -19,12 +11,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
@@ -35,10 +21,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { MoreHorizontal, Pencil, Trash2, Plus } from 'lucide-react';
+import { Plus } from 'lucide-react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
+import { DataTable } from '@/components/data-table';
+import { eventCategoriesColumns, type EventCategory } from '@/components/data-table/columns/event-categories';
 
 const categorySchema = z.object({
   name: z.string().min(1).max(100),
@@ -58,30 +46,20 @@ const COLORS = [
   { value: 'cyan', label: 'Cyan' },
 ];
 
-interface Category {
-  id: string;
-  name: string;
-  slug: string;
-  color: string;
-  showInMenu: boolean;
-  order: number;
-  _count?: { events: number };
-}
-
 interface EventCategoriesClientProps {
-  categoriesPromise: Promise<Category[]>;
+  categoriesPromise: Promise<EventCategory[]>;
 }
 
 export function EventCategoriesClient({ categoriesPromise }: EventCategoriesClientProps) {
   const router = useRouter();
-  const [categories, setCategories] = useState<Category[]>([]);
+  const [categories, setCategories] = useState<EventCategory[]>([]);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [deleteDialog, setDeleteDialog] = useState<{ open: boolean; id: string | null; name: string }>({
     open: false,
     id: null,
     name: '',
   });
-  const [editingCategory, setEditingCategory] = useState<Category | null>(null);
+  const [editingCategory, setEditingCategory] = useState<EventCategory | null>(null);
 
   const form = useForm({
     resolver: zodResolver(categorySchema),
@@ -98,13 +76,36 @@ export function EventCategoriesClient({ categoriesPromise }: EventCategoriesClie
     categoriesPromise.then(setCategories);
   }, [categoriesPromise]);
 
+  // Handle edit event from DataTable
+  useEffect(() => {
+    const handleEdit = (e: CustomEvent<EventCategory>) => {
+      openEditDialog(e.detail);
+    };
+
+    const handleDelete = (e: CustomEvent<EventCategory>) => {
+      setDeleteDialog({
+        open: true,
+        id: e.detail.id,
+        name: e.detail.name,
+      });
+    };
+
+    window.addEventListener('edit-category', handleEdit as EventListener);
+    window.addEventListener('delete-category', handleDelete as EventListener);
+
+    return () => {
+      window.removeEventListener('edit-category', handleEdit as EventListener);
+      window.removeEventListener('delete-category', handleDelete as EventListener);
+    };
+  }, []);
+
   const openCreateDialog = () => {
     setEditingCategory(null);
     form.reset();
     setDialogOpen(true);
   };
 
-  const openEditDialog = (category: Category) => {
+  const openEditDialog = (category: EventCategory) => {
     setEditingCategory(category);
     form.reset(category);
     setDialogOpen(true);
@@ -173,76 +174,12 @@ export function EventCategoriesClient({ categoriesPromise }: EventCategoriesClie
         </Button>
       </div>
 
-      <div className="rounded-md border">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Name</TableHead>
-              <TableHead>Slug</TableHead>
-              <TableHead>Color</TableHead>
-              <TableHead>Visible</TableHead>
-              <TableHead>Order</TableHead>
-              <TableHead>Events</TableHead>
-              <TableHead className="w-[70px]"></TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {categories.map((category) => (
-              <TableRow key={category.id}>
-                <TableCell className="font-medium">{category.name}</TableCell>
-                <TableCell>
-                  <code className="text-xs bg-muted px-2 py-1 rounded">
-                    {category.slug}
-                  </code>
-                </TableCell>
-                <TableCell>
-                  <span className={`inline-flex items-center justify-center w-4 h-4 rounded-full bg-${category.color}`} />
-                  <span className="ml-2">{category.color}</span>
-                </TableCell>
-                <TableCell>{category.showInMenu ? 'Yes' : 'No'}</TableCell>
-                <TableCell>{category.order}</TableCell>
-                <TableCell>{category._count?.events || 0}</TableCell>
-                <TableCell>
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button variant="ghost" size="icon">
-                        <MoreHorizontal className="h-4 w-4" />
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                      <DropdownMenuItem onClick={() => openEditDialog(category)}>
-                        <Pencil className="mr-2 h-4 w-4" />
-                        Edit
-                      </DropdownMenuItem>
-                      <DropdownMenuItem
-                        onClick={() =>
-                          setDeleteDialog({
-                            open: true,
-                            id: category.id,
-                            name: category.name,
-                          })
-                        }
-                        className="text-destructive"
-                        disabled={(category._count?.events || 0) > 0}
-                      >
-                        <Trash2 className="mr-2 h-4 w-4" />
-                        Delete
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </TableCell>
-              </TableRow>
-            ))}
-            {categories.length === 0 && (
-              <TableRow>
-                <TableCell colSpan={7} className="h-24 text-center text-muted-foreground">
-                  No categories found. Create one to get started.
-                </TableCell>
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
-      </div>
+      <DataTable
+        columns={eventCategoriesColumns}
+        data={categories}
+        filterKey="name"
+        toolbarPlaceholder="Search categories..."
+      />
 
       {/* Create/Edit Dialog */}
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
