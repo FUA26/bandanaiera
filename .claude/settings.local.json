@@ -60,7 +60,8 @@
       "Bash(pnpm:*)",
       "Bash(wait:*)",
       "Bash(kill:*)",
-      "Skill(shadcn)"
+      "Skill(shadcn)",
+      "Bash(fuser:*)"
     ]
   }
 }

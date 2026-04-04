@@ -5,26 +5,12 @@ import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
-import {
   Dialog,
   DialogContent,
   DialogFooter,
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
@@ -35,10 +21,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { MoreHorizontal, Pencil, Trash2, Plus } from 'lucide-react';
+import { Plus } from 'lucide-react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
+import { DataTable } from '@/components/data-table';
+import { newsCategoriesColumns, type NewsCategory } from '@/components/data-table/columns/news-categories';
 
 const categorySchema = z.object({
   name: z.string().min(1).max(100),
@@ -58,30 +46,20 @@ const COLORS = [
   { value: 'cyan', label: 'Cyan' },
 ];
 
-interface Category {
-  id: string;
-  name: string;
-  slug: string;
-  color: string;
-  showInMenu: boolean;
-  order: number;
-  _count?: { news: number };
-}
-
 interface NewsCategoriesClientProps {
-  categoriesPromise: Promise<Category[]>;
+  categoriesPromise: Promise<NewsCategory[]>;
 }
 
 export function NewsCategoriesClient({ categoriesPromise }: NewsCategoriesClientProps) {
   const router = useRouter();
-  const [categories, setCategories] = useState<Category[]>([]);
+  const [categories, setCategories] = useState<NewsCategory[]>([]);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [deleteDialog, setDeleteDialog] = useState<{ open: boolean; id: string | null; name: string }>({
     open: false,
     id: null,
     name: '',
   });
-  const [editingCategory, setEditingCategory] = useState<Category | null>(null);
+  const [editingCategory, setEditingCategory] = useState<NewsCategory | null>(null);
 
   const form = useForm({
     resolver: zodResolver(categorySchema),
@@ -98,13 +76,36 @@ export function NewsCategoriesClient({ categoriesPromise }: NewsCategoriesClient
     categoriesPromise.then(setCategories);
   }, [categoriesPromise]);
 
+  // Handle edit event from DataTable
+  useEffect(() => {
+    const handleEdit = (e: CustomEvent<NewsCategory>) => {
+      openEditDialog(e.detail);
+    };
+
+    const handleDelete = (e: CustomEvent<NewsCategory>) => {
+      setDeleteDialog({
+        open: true,
+        id: e.detail.id,
+        name: e.detail.name,
+      });
+    };
+
+    window.addEventListener('edit-news-category', handleEdit as EventListener);
+    window.addEventListener('delete-news-category', handleDelete as EventListener);
+
+    return () => {
+      window.removeEventListener('edit-news-category', handleEdit as EventListener);
+      window.removeEventListener('delete-news-category', handleDelete as EventListener);
+    };
+  }, []);
+
   const openCreateDialog = () => {
     setEditingCategory(null);
     form.reset();
     setDialogOpen(true);
   };
 
-  const openEditDialog = (category: Category) => {
+  const openEditDialog = (category: NewsCategory) => {
     setEditingCategory(category);
     form.reset(category);
     setDialogOpen(true);
@@ -173,76 +174,12 @@ export function NewsCategoriesClient({ categoriesPromise }: NewsCategoriesClient
         </Button>
       </div>
 
-      <div className="rounded-md border">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Name</TableHead>
-              <TableHead>Slug</TableHead>
-              <TableHead>Color</TableHead>
-              <TableHead>Visible</TableHead>
-              <TableHead>Order</TableHead>
-              <TableHead>News</TableHead>
-              <TableHead className="w-[70px]"></TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {categories.map((category) => (
-              <TableRow key={category.id}>
-                <TableCell className="font-medium">{category.name}</TableCell>
-                <TableCell>
-                  <code className="text-xs bg-muted px-2 py-1 rounded">
-                    {category.slug}
-                  </code>
-                </TableCell>
-                <TableCell>
-                  <span className={`inline-flex items-center justify-center w-4 h-4 rounded-full bg-${category.color}`} />
-                  <span className="ml-2">{category.color}</span>
-                </TableCell>
-                <TableCell>{category.showInMenu ? 'Yes' : 'No'}</TableCell>
-                <TableCell>{category.order}</TableCell>
-                <TableCell>{category._count?.news || 0}</TableCell>
-                <TableCell>
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button variant="ghost" size="icon">
-                        <MoreHorizontal className="h-4 w-4" />
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                      <DropdownMenuItem onClick={() => openEditDialog(category)}>
-                        <Pencil className="mr-2 h-4 w-4" />
-                        Edit
-                      </DropdownMenuItem>
-                      <DropdownMenuItem
-                        onClick={() =>
-                          setDeleteDialog({
-                            open: true,
-                            id: category.id,
-                            name: category.name,
-                          })
-                        }
-                        className="text-destructive"
-                        disabled={(category._count?.news || 0) > 0}
-                      >
-                        <Trash2 className="mr-2 h-4 w-4" />
-                        Delete
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </TableCell>
-              </TableRow>
-            ))}
-            {categories.length === 0 && (
-              <TableRow>
-                <TableCell colSpan={7} className="h-24 text-center text-muted-foreground">
-                  No categories found. Create one to get started.
-                </TableCell>
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
-      </div>
+      <DataTable
+        columns={newsCategoriesColumns}
+        data={categories}
+        filterKey="name"
+        toolbarPlaceholder="Search categories..."
+      />
 
       {/* Create/Edit Dialog */}
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
@@ -255,7 +192,7 @@ export function NewsCategoriesClient({ categoriesPromise }: NewsCategoriesClient
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="name">Name</Label>
-              <Input id="name" {...form.register('name')} placeholder="Pemerintahan" />
+              <Input id="name" {...form.register('name')} placeholder="Technology" />
               {form.formState.errors.name && (
                 <p className="text-sm text-destructive">{form.formState.errors.name.message}</p>
               )}
@@ -263,7 +200,7 @@ export function NewsCategoriesClient({ categoriesPromise }: NewsCategoriesClient
 
             <div className="space-y-2">
               <Label htmlFor="slug">Slug</Label>
-              <Input id="slug" {...form.register('slug')} placeholder="pemerintahan" />
+              <Input id="slug" {...form.register('slug')} placeholder="technology" />
               {form.formState.errors.slug && (
                 <p className="text-sm text-destructive">{form.formState.errors.slug.message}</p>
               )}
