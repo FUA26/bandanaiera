@@ -204,7 +204,9 @@ export async function getCacheStats(): Promise<{
     // Get memory usage info
     const info = await redis.info('memory');
     const usedMemoryMatch = info.match(/used_memory:(\d+)/);
-    const usedMemoryBytes = usedMemoryMatch ? parseInt(usedMemoryMatch[1], 10) : 0;
+    const usedMemoryBytes = usedMemoryMatch && usedMemoryMatch[1]
+      ? parseInt(usedMemoryMatch[1], 10)
+      : 0;
     const usedMemoryMB = Math.round(usedMemoryBytes / (1024 * 1024));
 
     return {
