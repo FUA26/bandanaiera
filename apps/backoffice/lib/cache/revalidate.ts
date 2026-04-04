@@ -6,29 +6,32 @@ import { clearCachePattern, clearCacheKey } from './cache';
 const LANDING_URL = process.env.LANDING_URL || 'http://localhost:3000';
 
 /**
- * Revalidate a specific path on the landing page
- * @param path - Path to revalidate (e.g., '/informasi-publik/berita')
+ * Revalidate cache by tag on the landing page
+ * @param tag - Tag to revalidate (e.g., 'news', 'events', 'services', 'all')
  * @returns Promise indicating success
  */
-export async function revalidatePath(path: string): Promise<boolean> {
+export async function revalidatePath(tag: string): Promise<boolean> {
   try {
+    const secret = process.env.REVALIDATE_SECRET || 'dev-secret-change-in-production';
+
     const response = await fetch(`${LANDING_URL}/api/revalidate`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'x-revalidate-secret': secret,
       },
-      body: JSON.stringify({ path }),
+      body: JSON.stringify({ tag }),
     });
 
-    if (!response.ok) {
-      console.error(`[Revalidate] Failed to revalidate ${path}: ${response.statusText}`);
+    if (response.ok) {
+      console.log(`[Revalidate] Success for tag: ${tag}`);
+      return true;
+    } else {
+      console.error(`[Revalidate] Failed for tag ${tag}: ${response.statusText}`);
       return false;
     }
-
-    console.log(`[Revalidate] Successfully revalidated: ${path}`);
-    return true;
   } catch (error) {
-    console.error(`[Revalidate] Error revalidating ${path}:`, error);
+    console.error(`[Revalidate] Error for tag ${tag}:`, error);
     return false;
   }
 }
@@ -48,9 +51,8 @@ export async function invalidateNewsCache(newsId?: string): Promise<void> {
     await clearCacheKey(`news:${newsId}`);
   }
 
-  // Revalidate news pages
-  await revalidatePath('/informasi-publik/berita');
-  await revalidatePath('/informasi-publik/berita/[slug]');
+  // Revalidate news pages using tag-based revalidation
+  await revalidatePath('news');
 
   console.log('[Revalidate] News cache invalidated');
 }
@@ -65,9 +67,9 @@ export async function invalidateTourismCache(): Promise<void> {
   await clearCachePattern('tourism:*');
   await clearCachePattern('tourism-categories:*');
 
-  // Revalidate tourism pages
-  await revalidatePath('/informasi-publik/pariwisata');
-  await revalidatePath('/informasi-publik/pariwisata/[slug]');
+  // Revalidate tourism pages using tag-based revalidation
+  // Note: Using 'news' tag as tourism is part of news/information
+  await revalidatePath('news');
 
   console.log('[Revalidate] Tourism cache invalidated');
 }
@@ -82,9 +84,8 @@ export async function invalidateEventsCache(): Promise<void> {
   await clearCachePattern('events:*');
   await clearCachePattern('event-categories:*');
 
-  // Revalidate events pages
-  await revalidatePath('/informasi-publik/agenda');
-  await revalidatePath('/informasi-publik/agenda/[slug]');
+  // Revalidate events pages using tag-based revalidation
+  await revalidatePath('events');
 
   console.log('[Revalidate] Events cache invalidated');
 }
@@ -99,15 +100,14 @@ export async function invalidateServicesCache(): Promise<void> {
   await clearCachePattern('services:*');
   await clearCachePattern('service-categories:*');
 
-  // Revalidate services pages
-  await revalidatePath('/layanan');
-  await revalidatePath('/layanan/[slug]');
+  // Revalidate services pages using tag-based revalidation
+  await revalidatePath('services');
 
   console.log('[Revalidate] Services cache invalidated');
 }
 
 /**
- * Invalidate all cache and revalidate all major paths
+ * Invalidate all cache and revalidate all major tags
  * @returns Promise with count of cleared keys
  */
 export async function invalidateAllCache(): Promise<number> {
@@ -116,17 +116,9 @@ export async function invalidateAllCache(): Promise<number> {
   // Clear all cache entries
   const count = await clearCachePattern('*');
 
-  // Revalidate all major paths in parallel
+  // Revalidate all major tags in parallel
   await Promise.all([
-    revalidatePath('/'),
-    revalidatePath('/informasi-publik/berita'),
-    revalidatePath('/informasi-publik/berita/[slug]'),
-    revalidatePath('/informasi-publik/pariwisata'),
-    revalidatePath('/informasi-publik/pariwisata/[slug]'),
-    revalidatePath('/informasi-publik/agenda'),
-    revalidatePath('/informasi-publik/agenda/[slug]'),
-    revalidatePath('/layanan'),
-    revalidatePath('/layanan/[slug]'),
+    revalidatePath('all'),
   ]);
 
   console.log(`[Revalidate] All cache invalidated (${count} keys cleared)`);
