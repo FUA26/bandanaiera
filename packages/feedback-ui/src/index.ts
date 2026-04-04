@@ -62,6 +62,10 @@ export {
   SidebarTrigger,
 } from './ui/sidebar'
 export { Header } from './ui/header'
-export { ScrollArea } from './ui/scroll-area'
 
+// Additional components
+export { ScrollArea } from './ui/scroll-area'
 export { Tooltip } from './ui/tooltip'
+export { ThemeToggle } from './ui/theme-toggle'
+export { Command } from './ui/command'
+export { Field } from './ui/field'
