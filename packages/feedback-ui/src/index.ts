@@ -62,3 +62,4 @@ export {
   SidebarTrigger,
 } from './ui/sidebar'
 export { Header } from './ui/header'
+export { ScrollArea } from './ui/scroll-area'
