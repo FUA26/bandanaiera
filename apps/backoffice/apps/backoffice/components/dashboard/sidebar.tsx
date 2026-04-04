@@ -38,6 +38,8 @@ const navItems = [
 
   // Content Management Group
   { heading: "Content" },
+  { href: "/services", label: "Services", icon: FolderOpen, permission: "CONTENT_READ_ANY" },
+  { href: "/services/categories", label: "Categories", icon: Folders, permission: "CONTENT_READ_ANY" },
   { href: "/manage/news", label: "News", icon: Newspaper, permission: "NEWS_VIEW" },
   { href: "/manage/news-categories", label: "News Categories", icon: FolderKanban, permission: "NEWS_CATEGORIES_MANAGE" },
   { href: "/manage/events", label: "Events", icon: Calendar, permission: "EVENTS_VIEW" },

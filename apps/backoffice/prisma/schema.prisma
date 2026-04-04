@@ -60,11 +60,6 @@ model User {
   avatarUrl     String? // Cache URL from File.cdnUrl
   uploadedFiles File[]
 
-  // Service Management Relations
-  createdServices     Service[]            @relation("ServiceCreator")
-  updatedServices     Service[]            @relation("ServiceUpdater")
-  serviceActivityLogs ServiceActivityLog[] @relation("ServiceActivityLogs")
-
   // News Management Relations
   createdNews      News[]            @relation("NewsCreator")
   updatedNews      News[]            @relation("NewsUpdater")
@@ -84,6 +79,20 @@ model User {
   createdDestinations      Destination[]            @relation("DestinationCreator")
   updatedDestinations      Destination[]            @relation("DestinationUpdater")
   destinationActivityLogs  DestinationActivityLog[] @relation("DestinationActivityLogs")
+
+  // Task Management Relations
+  createdTasks      Task[]            @relation("TaskCreator")
+  updatedTasks      Task[]            @relation("TaskUpdater")
+  completedTasks    Task[]            @relation("TaskCompleter")
+  assignedTasks     TaskAssignment[]  @relation("TaskAssignments")
+  uploadedTaskAttachments TaskAttachment[] @relation("TaskAttachmentUploaders")
+  taskComments      TaskComment[]     @relation("TaskCommentAuthors")
+  taskActivityLogs  TaskActivityLog[] @relation("TaskActivityLogs")
+
+  // Service Management Relations
+  createdServices     Service[]            @relation("ServiceCreator")
+  updatedServices     Service[]            @relation("ServiceUpdater")
+  serviceActivityLogs ServiceActivityLog[] @relation("ServiceActivityLogs")
 }
 
 model PermissionCache {
@@ -207,6 +216,7 @@ model File {
   photosAsImage Photo[] @relation("PhotoImage")
   destinationsAsCover Destination[] @relation("DestinationCover")
   destinationImages DestinationImage[] @relation("DestinationImage")
+  tasksAsAttachments TaskAttachment[] @relation("TaskAttachments")
 
   @@index([uploadedById])
   @@index([category])
@@ -222,12 +232,6 @@ enum FileCategory {
   AUDIO
   ARCHIVE
   OTHER
-}
-
-enum ServiceStatus {
-  DRAFT
-  PUBLISHED
-  ARCHIVED
 }
 
 enum NewsStatus {
@@ -259,75 +263,6 @@ enum EventStatus {
   PUBLISHED
   CANCELLED
   COMPLETED
-}
-
-model ServiceCategory {
-  id         String    @id @default(cuid())
-  name       String
-  slug       String    @unique
-  icon       String
-  color      String
-  bgColor    String
-  showInMenu Boolean   @default(true)
-  order      Int
-  services   Service[]
-  createdAt  DateTime  @default(now())
-  updatedAt  DateTime  @updatedAt
-
-  @@index([showInMenu])
-  @@index([order])
-}
-
-model Service {
-  id                  String               @id @default(cuid())
-  slug                String               @unique
-  icon                String
-  name                String
-  description         String
-  categoryId          String
-  category            ServiceCategory      @relation(fields: [categoryId], references: [id])
-  badge               String?
-  stats               String?
-  showInMenu          Boolean              @default(true)
-  order               Int                  @default(0)
-  isIntegrated        Boolean              @default(false)
-  detailedDescription String?
-  requirements        Json?
-  process             Json?
-  duration            String?
-  cost                String?
-  contactInfo         Json?
-  faqs                Json?
-  downloadForms       Json?
-  relatedServices     Json?
-  status              ServiceStatus        @default(DRAFT)
-  createdById         String
-  createdBy           User                 @relation("ServiceCreator", fields: [createdById], references: [id])
-  updatedById         String?
-  updatedBy           User?                @relation("ServiceUpdater", fields: [updatedById], references: [id])
-  createdAt           DateTime             @default(now())
-  updatedAt           DateTime             @updatedAt
-  activityLogs        ServiceActivityLog[]
-
-  @@index([categoryId])
-  @@index([status])
-  @@index([order])
-  @@index([slug])
-}
-
-model ServiceActivityLog {
-  id        String   @id @default(cuid())
-  serviceId String
-  service   Service  @relation(fields: [serviceId], references: [id], onDelete: Cascade)
-  userId    String
-  action    String
-  changes   Json?
-  createdAt DateTime @default(now())
-  user      User     @relation("ServiceActivityLogs", fields: [userId], references: [id])
-
-  @@index([serviceId])
-  @@index([userId])
-  @@index([createdAt])
 }
 
 model NewsCategory {
@@ -710,6 +645,252 @@ model DestinationActivityLog {
   createdAt     DateTime     @default(now())
 
   @@index([destinationId])
+  @@index([userId])
+  @@index([createdAt])
+}
+
+// ============================================================================
+// TASKS MODULE
+// Demonstrates comprehensive CRUD patterns, workflows, and relationships
+// ============================================================================
+
+enum TaskStatus {
+  TODO
+  IN_PROGRESS
+  REVIEW
+  DONE
+  ARCHIVED
+}
+
+enum TaskPriority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
+}
+
+enum ServiceStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+model TaskCategory {
+  id          String     @id @default(cuid())
+  name        String
+  slug        String     @unique
+  color       String     @default("primary")
+  description String?
+  order       Int        @default(0)
+  tasks       Task[]
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  @@index([order])
+}
+
+model TaskTag {
+  id        String             @id @default(cuid())
+  name      String             @unique
+  slug      String             @unique
+  color     String             @default("default")
+  tasks     TaskTagRelation[]
+  createdAt DateTime           @default(now())
+
+  @@index([slug])
+}
+
+model Task {
+  id             String       @id @default(cuid())
+  title          String
+  description    String?      @db.Text
+  status         TaskStatus   @default(TODO)
+  priority       TaskPriority @default(MEDIUM)
+
+  categoryId     String?
+  category       TaskCategory? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+
+  dueDate        DateTime?
+  startDate      DateTime?
+  completedAt    DateTime?
+  estimatedHours Decimal?     @db.Decimal(5, 2)
+  actualHours    Decimal?     @db.Decimal(5, 2)
+
+  // Display options
+  order          Int          @default(0)
+  isFeatured     Boolean      @default(false)
+
+  // Audit
+  createdById    String
+  createdBy      User         @relation("TaskCreator", fields: [createdById], references: [id])
+  updatedById    String?
+  updatedBy      User?        @relation("TaskUpdater", fields: [updatedById], references: [id])
+  completedBy    String?
+  completedByUser User?       @relation("TaskCompleter", fields: [completedBy], references: [id])
+
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+
+  // Relations
+  assignees      TaskAssignment[]
+  tags           TaskTagRelation[]
+  attachments    TaskAttachment[]
+  comments       TaskComment[]
+  activityLogs   TaskActivityLog[]
+
+  @@index([status])
+  @@index([priority])
+  @@index([categoryId])
+  @@index([dueDate])
+  @@index([order])
+  @@index([createdById])
+}
+
+model TaskAssignment {
+  id       String @id @default(cuid())
+  taskId   String
+  task     Task   @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  userId   String
+  user     User   @relation("TaskAssignments", fields: [userId], references: [id], onDelete: Cascade)
+  assignedAt DateTime @default(now())
+
+  @@unique([taskId, userId])
+  @@index([taskId])
+  @@index([userId])
+}
+
+model TaskTagRelation {
+  taskId String
+  task   Task   @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  tagId  String
+  tag    TaskTag @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@id([taskId, tagId])
+  @@index([taskId])
+  @@index([tagId])
+}
+
+model TaskAttachment {
+  id        String   @id @default(cuid())
+  taskId    String
+  task      Task     @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  fileId    String
+  file      File     @relation("TaskAttachments", fields: [fileId], references: [id], onDelete: Cascade)
+  fileName  String
+  fileSize  Int
+  mimeType  String
+  uploadedBy String
+  uploader  User     @relation("TaskAttachmentUploaders", fields: [uploadedBy], references: [id])
+  createdAt DateTime @default(now())
+
+  @@index([taskId])
+  @@index([fileId])
+}
+
+model TaskComment {
+  id        String   @id @default(cuid())
+  taskId    String
+  task      Task     @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  userId    String
+  user      User     @relation("TaskCommentAuthors", fields: [userId], references: [id])
+  content   String   @db.Text
+  parentId  String?  // For nested comments/replies
+  parent    TaskComment? @relation("TaskCommentReplies", fields: [parentId], references: [id], onDelete: Cascade)
+  replies   TaskComment[] @relation("TaskCommentReplies")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([taskId])
+  @@index([userId])
+  @@index([parentId])
+}
+
+model TaskActivityLog {
+  id        String   @id @default(cuid())
+  taskId    String
+  task      Task     @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  userId    String
+  user      User     @relation("TaskActivityLogs", fields: [userId], references: [id])
+  action    String   // created, updated, deleted, status_changed, assigned, comment_added, etc.
+  changes   Json?    // Stores before/after state or additional context
+  createdAt DateTime @default(now())
+
+  @@index([taskId])
+  @@index([userId])
+  @@index([action])
+  @@index([createdAt])
+}
+
+// ============================================================================
+// SERVICES MODULE
+// Demonstrates service catalog management with categories and workflow
+// ============================================================================
+
+model ServiceCategory {
+  id         String    @id @default(cuid())
+  name       String
+  slug       String    @unique
+  icon       String
+  color      String
+  bgColor    String
+  showInMenu Boolean   @default(true)
+  order      Int
+  services   Service[]
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+
+  @@index([showInMenu])
+  @@index([order])
+}
+
+model Service {
+  id                  String               @id @default(cuid())
+  slug                String               @unique
+  icon                String
+  name                String
+  description         String
+  categoryId          String
+  category            ServiceCategory      @relation(fields: [categoryId], references: [id])
+  badge               String?
+  stats               String?
+  showInMenu          Boolean              @default(true)
+  order               Int                  @default(0)
+  isIntegrated        Boolean              @default(false)
+  detailedDescription String?
+  requirements        Json?
+  process             Json?
+  duration            String?
+  cost                String?
+  contactInfo         Json?
+  faqs                Json?
+  downloadForms       Json?
+  relatedServices     Json?
+  status              ServiceStatus        @default(DRAFT)
+  createdById         String
+  createdBy           User                 @relation("ServiceCreator", fields: [createdById], references: [id])
+  updatedById         String?
+  updatedBy           User?                @relation("ServiceUpdater", fields: [updatedById], references: [id])
+  createdAt           DateTime             @default(now())
+  updatedAt           DateTime             @updatedAt
+  activityLogs        ServiceActivityLog[]
+
+  @@index([categoryId])
+  @@index([status])
+  @@index([order])
+  @@index([slug])
+}
+
+model ServiceActivityLog {
+  id        String   @id @default(cuid())
+  serviceId String
+  service   Service  @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+  userId    String
+  action    String
+  changes   Json?
+  createdAt DateTime @default(now())
+  user      User     @relation("ServiceActivityLogs", fields: [userId], references: [id])
+
+  @@index([serviceId])
   @@index([userId])
   @@index([createdAt])
 }
