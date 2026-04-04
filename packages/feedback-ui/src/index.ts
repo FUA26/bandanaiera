@@ -1,2 +1,1 @@
-// Placeholder - will be updated in later tasks
-export {}
+export { cn } from './lib/utils'
