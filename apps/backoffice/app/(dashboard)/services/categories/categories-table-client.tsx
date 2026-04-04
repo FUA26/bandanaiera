@@ -8,25 +8,13 @@
 
 import { CategoryDialog } from "@/components/admin/category-dialog";
 import { useCan } from "@/lib/rbac-client/hooks";
-import { Plus, Trash2, Edit, MoreVertical, Eye, EyeOff } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Switch } from "@/components/ui/switch";
-import { cn } from "@/lib/utils";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+import { Loader2 } from "lucide-react";
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
+import type { ServiceCategoryInput } from "@/lib/services/validations";
+import { DataTable } from "@/components/data-table";
+import { serviceCategoryColumns, type ServiceCategory } from "@/components/data-table/columns/service-categories";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -37,10 +25,6 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { Loader2 } from "lucide-react";
-import { useEffect, useState } from "react";
-import { toast } from "sonner";
-import type { ServiceCategoryInput } from "@/lib/services/validations";
 
 interface Category {
   id: string;
@@ -64,7 +48,19 @@ interface CategoriesTableProps {
 }
 
 export function CategoriesTable({ categories: initialCategories, onRefresh }: CategoriesTableProps) {
-  const [categories, setCategories] = useState<Category[]>(initialCategories);
+  const [categories, setCategories] = useState<ServiceCategory[]>(
+    initialCategories.map((cat) => ({
+      id: cat.id,
+      name: cat.name,
+      slug: cat.slug,
+      icon: cat.icon,
+      color: cat.color,
+      bgColor: cat.bgColor,
+      showInMenu: cat.showInMenu,
+      order: cat.order,
+      _count: cat._count,
+    }))
+  );
   const [createDialog, setCreateDialog] = useState(false);
   const [editDialog, setEditDialog] = useState<{ open: boolean; categoryId: string; category: Category }>({
     open: false,
@@ -83,35 +79,6 @@ export function CategoriesTable({ categories: initialCategories, onRefresh }: Ca
   const canDeleteAny = useCan(["CONTENT_DELETE_ANY"]);
   const canCreate = useCan(["CONTENT_CREATE"]);
 
-  const handleToggleMenu = async (categoryId: string, newValue: boolean) => {
-    try {
-      // Optimistic update
-      setCategories((prev) =>
-        prev.map((c) => (c.id === categoryId ? { ...c, showInMenu: newValue } : c))
-      );
-
-      const response = await fetch(`/api/categories/${categoryId}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ showInMenu: newValue }),
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to update status");
-      }
-
-      toast.success("Category menu status updated");
-    } catch (error) {
-      // Revert on error
-      toast.error("Failed to update status");
-      const res = await fetch("/api/categories");
-      if (res.ok) {
-        const data = await res.json();
-        setCategories(data.categories);
-      }
-    }
-  };
-
   // Listen for create event from button
   useEffect(() => {
     const handleOpenCreate = () => setCreateDialog(true);
@@ -119,12 +86,40 @@ export function CategoriesTable({ categories: initialCategories, onRefresh }: Ca
     return () => window.removeEventListener('open-category-create', handleOpenCreate);
   }, []);
 
-  const handleEdit = async (categoryId: string) => {
-    const category = categories.find((c) => c.id === categoryId);
-    if (category) {
-      setEditDialog({ open: true, categoryId, category });
-    }
-  };
+  // Handle events from DataTable
+  useEffect(() => {
+    const handleEdit = (e: CustomEvent<ServiceCategory>) => {
+      const category = categories.find((c) => c.id === e.detail.id);
+      if (category) {
+        setEditDialog({
+          open: true,
+          categoryId: category.id,
+          category: {
+            ...category,
+            createdAt: new Date(),
+            updatedAt: new Date(),
+          },
+        });
+      }
+    };
+
+    const handleDelete = (e: CustomEvent<ServiceCategory>) => {
+      setDeleteDialog({
+        open: true,
+        categoryId: e.detail.id,
+        categoryName: e.detail.name,
+        serviceCount: e.detail._count.services,
+      });
+    };
+
+    window.addEventListener('edit-service-category', handleEdit as EventListener);
+    window.addEventListener('delete-service-category', handleDelete as EventListener);
+
+    return () => {
+      window.removeEventListener('edit-service-category', handleEdit as EventListener);
+      window.removeEventListener('delete-service-category', handleDelete as EventListener);
+    };
+  }, [categories]);
 
   const handleDelete = async () => {
     setIsDeleting(true);
@@ -167,130 +162,12 @@ export function CategoriesTable({ categories: initialCategories, onRefresh }: Ca
 
   return (
     <>
-      <div className="rounded-md border">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Order</TableHead>
-              <TableHead>Category</TableHead>
-              <TableHead>Slug</TableHead>
-              <TableHead>Preview</TableHead>
-              <TableHead>Services</TableHead>
-              <TableHead>Show in Menu</TableHead>
-              <TableHead className="text-right">Actions</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {categories.length === 0 ? (
-              <TableRow>
-                <TableCell colSpan={7} className="h-24 text-center">
-                  <div className="flex flex-col items-center justify-center text-muted-foreground">
-                    <p>No categories found</p>
-                    {canCreate && (
-                      <Button
-                        variant="link"
-                        onClick={() => setCreateDialog(true)}
-                        className="mt-2"
-                      >
-                        Create your first category
-                      </Button>
-                    )}
-                  </div>
-                </TableCell>
-              </TableRow>
-            ) : (
-              categories.map((category) => (
-                <TableRow key={category.id}>
-                  <TableCell className="w-16">{category.order}</TableCell>
-                  <TableCell className="font-medium">{category.name}</TableCell>
-                  <TableCell className="text-muted-foreground">{category.slug}</TableCell>
-                  <TableCell>
-                    <Badge
-                      style={{
-                        backgroundColor: category.bgColor,
-                        color: category.color,
-                      }}
-                    >
-                      {category.icon.charAt(0)} {category.name}
-                    </Badge>
-                  </TableCell>
-                  <TableCell>
-                    <span className={category._count.services > 0 ? "font-medium" : "text-muted-foreground"}>
-                      {category._count.services} service{category._count.services !== 1 ? "s" : ""}
-                    </span>
-                  </TableCell>
-                  <TableCell>
-                    <div className="flex items-center gap-2">
-                      <Switch
-                        checked={category.showInMenu}
-                        onCheckedChange={(checked: boolean) => handleToggleMenu(category.id, checked)}
-                        disabled={!canUpdateAny}
-                        className={cn(
-                          "data-[state=checked]:bg-emerald-600"
-                        )}
-                      />
-                      <Badge
-                        variant={category.showInMenu ? "default" : "outline"}
-                        className={cn(
-                          "text-xs font-medium whitespace-nowrap",
-                          category.showInMenu
-                            ? "bg-emerald-100 text-emerald-700 border-emerald-200 dark:bg-emerald-900/30 dark:text-emerald-400 dark:border-emerald-800"
-                            : "bg-gray-100 text-gray-600 border-gray-200 dark:bg-gray-800/30 dark:text-gray-400 dark:border-gray-700"
-                        )}
-                      >
-                        {category.showInMenu ? (
-                          <span className="flex items-center gap-1">
-                            <Eye className="h-3 w-3" />
-                            Visible
-                          </span>
-                        ) : (
-                          <span className="flex items-center gap-1">
-                            <EyeOff className="h-3 w-3" />
-                            Hidden
-                          </span>
-                        )}
-                      </Badge>
-                    </div>
-                  </TableCell>
-                  <TableCell className="text-right">
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" size="icon" aria-label="Actions">
-                          <MoreVertical className="h-4 w-4" />
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end">
-                        {canUpdateAny && (
-                          <DropdownMenuItem onClick={() => handleEdit(category.id)}>
-                            <Edit className="mr-2 h-4 w-4" />
-                            Edit
-                          </DropdownMenuItem>
-                        )}
-                        {canDeleteAny && (
-                          <DropdownMenuItem
-                            onClick={() =>
-                              setDeleteDialog({
-                                open: true,
-                                categoryId: category.id,
-                                categoryName: category.name,
-                                serviceCount: category._count.services,
-                              })
-                            }
-                            className="text-destructive focus:text-destructive"
-                          >
-                            <Trash2 className="mr-2 h-4 w-4" />
-                            Delete
-                          </DropdownMenuItem>
-                        )}
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  </TableCell>
-                </TableRow>
-              ))
-            )}
-          </TableBody>
-        </Table>
-      </div>
+      <DataTable
+        columns={serviceCategoryColumns}
+        data={categories}
+        filterKey="name"
+        toolbarPlaceholder="Search categories..."
+      />
 
       {/* Create Category Dialog */}
       <CategoryDialog
@@ -363,34 +240,22 @@ export function CategoriesTable({ categories: initialCategories, onRefresh }: Ca
 // Skeleton component (exported separately)
 export function CategoriesTableSkeleton() {
   return (
-    <div className="rounded-md border">
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>Order</TableHead>
-            <TableHead>Category</TableHead>
-            <TableHead>Slug</TableHead>
-            <TableHead>Preview</TableHead>
-            <TableHead>Services</TableHead>
-            <TableHead>Show in Menu</TableHead>
-            <TableHead className="text-right">Actions</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {Array.from({ length: 5 }).map((_, i) => (
-            <TableRow key={i}>
-              <TableCell><div className="h-4 w-8 animate-pulse rounded bg-muted" /></TableCell>
-              <TableCell><div className="h-4 w-32 animate-pulse rounded bg-muted" /></TableCell>
-              <TableCell><div className="h-4 w-24 animate-pulse rounded bg-muted" /></TableCell>
-              <TableCell><div className="h-6 w-24 animate-pulse rounded bg-muted" /></TableCell>
-              <TableCell><div className="h-4 w-16 animate-pulse rounded bg-muted" /></TableCell>
-              <TableCell><div className="flex items-center gap-2"><div className="h-4 w-8 animate-pulse rounded bg-muted" /><div className="h-5 w-16 animate-pulse rounded bg-muted" /></div></TableCell>
-              <TableCell className="text-right"><div className="ml-auto h-8 w-8 animate-pulse rounded bg-muted" /></TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+    <div className="rounded-md border p-8">
+      <div className="space-y-4">
+        {Array.from({ length: 5 }).map((_, i) => (
+          <div key={i} className="flex items-center space-x-4">
+            <div className="h-4 w-8 animate-pulse rounded bg-muted" />
+            <div className="h-4 w-32 animate-pulse rounded bg-muted" />
+            <div className="h-4 w-24 animate-pulse rounded bg-muted" />
+            <div className="h-6 w-24 animate-pulse rounded bg-muted" />
+            <div className="h-4 w-16 animate-pulse rounded bg-muted" />
+            <div className="flex items-center gap-2">
+              <div className="h-4 w-8 animate-pulse rounded bg-muted" />
+              <div className="h-5 w-16 animate-pulse rounded bg-muted" />
+            </div>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
-
