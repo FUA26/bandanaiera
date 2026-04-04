@@ -28,6 +28,7 @@
     "@workspace/logger": "workspace:*",
     "@workspace/types": "workspace:*",
     "@workspace/ui": "workspace:*",
+    "@workspace/feedback-ui": "workspace:*",
     "@workspace/utils": "workspace:*",
     "bcryptjs": "^3.0.3",
     "class-variance-authority": "^0.7.1",
