@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getTourismList } from '@/lib/services/tourism-service';
+import { cachedQuery, generateCacheKey } from '@/lib/cache/cache';
 
 export async function GET(request: NextRequest) {
     try {
@@ -13,16 +14,20 @@ export async function GET(request: NextRequest) {
         const featuredParam = searchParams.get('featured');
         const featured = featuredParam === 'true' ? true : (featuredParam === 'false' ? false : undefined);
 
-        const result = await getTourismList({
-            page,
-            pageSize,
-            categoryId,
-            status: 'PUBLISHED',
-            featured,
-            search,
-        });
+        const params = { page, pageSize, categoryId, status: 'PUBLISHED' as const, featured, search };
+        const cacheKey = generateCacheKey('tourism:list', { params });
 
-        return NextResponse.json(result);
+        const result = await cachedQuery(
+            cacheKey,
+            () => getTourismList(params),
+            300
+        );
+
+        return NextResponse.json(result, {
+            headers: {
+                'Cache-Control': 'public, s-maxage=300, stale-while-revalidate=600',
+            },
+        });
     } catch (error) {
         console.error('Error fetching public tourism destinations:', error);
         return NextResponse.json(
