@@ -7,9 +7,12 @@
       }
     ],
     "paths": {
-      "@/*": ["./*"],
+      "@/*": ["./*", "../../packages/feedback-ui/src/*"],
+      "@/components/ui": ["../../packages/feedback-ui/src/ui"],
       "@/components/ui/*": ["../../packages/feedback-ui/src/ui/*"],
-      "@workspace/feedback-ui": ["../../packages/feedback-ui/src"]
+      "@workspace/*": ["../../packages/*/src"],
+      "@workspace/feedback-ui": ["../../packages/feedback-ui/src"],
+      "@workspace/utils": ["../../packages/utils/src"]
     },
     "declaration": false,
     "declarationMap": false

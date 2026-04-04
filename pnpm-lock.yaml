@@ -65,6 +65,9 @@ importers:
       '@types/bcryptjs':
         specifier: ^3.0.0
         version: 3.0.0
+      '@workspace/feedback-ui':
+        specifier: workspace:*
+        version: link:../../packages/feedback-ui
       '@workspace/hooks':
         specifier: workspace:*
         version: link:../../packages/hooks
