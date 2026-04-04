@@ -11,7 +11,7 @@ export interface CacheResult<T> {
 /**
  * Cache key prefix to avoid collisions
  */
-const CACHE_PREFIX = 'bandanaiera:';
+const CACHE_PREFIX = 'cache:';
 
 /**
  * Default TTL for cache entries (5 minutes)
@@ -54,8 +54,8 @@ export function generateCacheKey(prefix: string, params?: Record<string, any>): 
  * @returns Sanitized key string
  */
 function sanitizeCacheKey(key: string): string {
-  // Remove any characters that aren't alphanumeric, dash, underscore, or dot
-  return key.replace(/[^a-zA-Z0-9-_\.]/g, '');
+  // Remove any characters that aren't alphanumeric, colon, dash, or underscore
+  return key.replace(/[^a-zA-Z0-9:_-]/g, '');
 }
 
 /**
@@ -185,7 +185,7 @@ export async function clearCacheKey(key: string): Promise<boolean> {
 export async function getCacheStats(): Promise<{
   keyCount: number;
   memoryUsage: number;
-  hitRate: number;
+  connected: boolean;
 }> {
   const redis = getRedisClient();
 
@@ -193,7 +193,7 @@ export async function getCacheStats(): Promise<{
     return {
       keyCount: 0,
       memoryUsage: 0,
-      hitRate: 0,
+      connected: false,
     };
   }
 
@@ -207,24 +207,17 @@ export async function getCacheStats(): Promise<{
     const usedMemoryBytes = usedMemoryMatch ? parseInt(usedMemoryMatch[1], 10) : 0;
     const usedMemoryMB = Math.round(usedMemoryBytes / (1024 * 1024));
 
-    // Get stats info
-    const stats = await redis.info('stats');
-    const keySpaceHits = parseInt(stats.match(/keyspace_hits:(\d+)/)?.[1] || '0', 10);
-    const keySpaceMisses = parseInt(stats.match(/keyspace_misses:(\d+)/)?.[1] || '0', 10);
-    const totalRequests = keySpaceHits + keySpaceMisses;
-    const hitRate = totalRequests > 0 ? Math.round((keySpaceHits / totalRequests) * 100) : 0;
-
     return {
       keyCount: keys.length,
       memoryUsage: usedMemoryMB,
-      hitRate,
+      connected: true,
     };
   } catch (error) {
     console.error('[Cache] Error getting cache stats:', error);
     return {
       keyCount: 0,
       memoryUsage: 0,
-      hitRate: 0,
+      connected: false,
     };
   }
 }
