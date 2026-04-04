@@ -9,6 +9,7 @@ import {
     publishTourism,
 } from '@/lib/services/tourism-service';
 import { revalidatePath } from 'next/cache';
+import { invalidateTourismCache } from '@/lib/cache/revalidate';
 
 async function triggerLandingRevalidation(tag: 'tourism') {
     const revalidateSecret = process.env.REVALIDATE_SECRET;
@@ -78,6 +79,9 @@ export async function PUT(
             revalidatePath(`/informasi-publik/destinasi-wisata/${destination.slug}`);
         }
 
+        // Invalidate Redis cache
+        await invalidateTourismCache();
+
         return NextResponse.json(destination);
     } catch (error) {
         console.error('Error updating tourism destination:', error);
@@ -108,6 +112,9 @@ export async function DELETE(
             revalidatePath('/informasi-publik/destinasi-wisata');
             revalidatePath(`/informasi-publik/destinasi-wisata/${destination.slug}`);
         }
+
+        // Invalidate Redis cache
+        await invalidateTourismCache();
 
         return new NextResponse(null, { status: 204 });
     } catch (error) {
@@ -140,6 +147,9 @@ export async function PATCH(
         revalidatePath('/api/public/tourism');
         revalidatePath('/informasi-publik/destinasi-wisata');
         revalidatePath(`/informasi-publik/destinasi-wisata/${destination.slug}`);
+
+        // Invalidate Redis cache
+        await invalidateTourismCache();
 
         return NextResponse.json(destination);
     } catch (error) {

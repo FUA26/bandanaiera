@@ -9,6 +9,7 @@ import { protectApiRoute } from "@/lib/rbac-server/api-protect";
 import { Permission } from "@/lib/rbac/types";
 import { NextResponse } from "next/server";
 import { Prisma } from "@prisma/client";
+import { invalidateServicesCache } from "@/lib/cache/revalidate";
 
 /**
  * PATCH /api/services/[id]/publish
@@ -117,6 +118,9 @@ export const PATCH = protectApiRoute({
           } as Prisma.InputJsonValue,
         },
       });
+
+      // Invalidate Redis cache
+      await invalidateServicesCache();
 
       return NextResponse.json({
         service: updatedService,

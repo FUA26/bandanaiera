@@ -8,6 +8,7 @@ import {
   deleteNews,
 } from '@/lib/services/news-service';
 import { revalidatePath } from 'next/cache';
+import { invalidateNewsCache } from '@/lib/cache/revalidate';
 
 async function triggerLandingRevalidation(tag: 'events' | 'news') {
   const revalidateSecret = process.env.REVALIDATE_SECRET;
@@ -81,6 +82,9 @@ export async function PUT(
       revalidatePath('/informasi-publik/berita-terkini');
     }
 
+    // Invalidate Redis cache
+    await invalidateNewsCache(id);
+
     return NextResponse.json(news);
   } catch (error) {
     console.error('Error updating news:', error);
@@ -110,6 +114,9 @@ export async function DELETE(
     await triggerLandingRevalidation('news');
     revalidatePath('/api/public/news');
     revalidatePath('/informasi-publik/berita-terkini');
+
+    // Invalidate Redis cache
+    await invalidateNewsCache(id);
 
     return NextResponse.json(news);
   } catch (error) {

@@ -15,6 +15,7 @@ import {
 } from "@/lib/services/validations";
 import { NextResponse } from "next/server";
 import { Prisma } from "@prisma/client";
+import { invalidateServicesCache } from "@/lib/cache/revalidate";
 
 /**
  * GET /api/services/[id]
@@ -249,6 +250,9 @@ export const PUT = protectApiRoute({
         },
       });
 
+      // Invalidate Redis cache
+      await invalidateServicesCache();
+
       return NextResponse.json({
         service: updatedService,
         message: "Service updated successfully",
@@ -318,6 +322,9 @@ export const DELETE = protectApiRoute({
     await prisma.service.delete({
       where: { id: serviceId },
     });
+
+    // Invalidate Redis cache
+    await invalidateServicesCache();
 
     return NextResponse.json({
       success: true,
