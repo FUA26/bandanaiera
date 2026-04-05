@@ -22,11 +22,18 @@ import { Loader2, ArrowLeft, CalendarIcon } from 'lucide-react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
-import { ImageUploader } from '@/components/news';
+import { EnhancedImageUploader } from '@/components/ui/image-upload/enhanced-image-uploader';
 import { RichTextEditor } from '@/components/ui/rich-text-editor';
 import { EventStatus, EventType } from '@prisma/client';
 import { cn } from '@/lib/utils';
 import Link from 'next/link';
+import {
+    FormField,
+    FormItem,
+    FormLabel,
+    FormControl,
+    FormMessage,
+} from '@/components/ui/form';
 
 const eventSchema = z.object({
     title: z.string().min(1).max(200),
@@ -66,9 +73,6 @@ interface EventFormProps {
 export function EventForm({ initialData, categories }: EventFormProps) {
     const router = useRouter();
     const [isSubmitting, setIsSubmitting] = useState(false);
-    const [imagePreviewUrl, setImagePreviewUrl] = useState<string | null>(
-        initialData?.image?.cdnUrl || null
-    );
 
     const form = useForm({
         resolver: zodResolver(eventSchema),
@@ -255,15 +259,23 @@ export function EventForm({ initialData, categories }: EventFormProps) {
                 </div>
 
                 <div className="space-y-6">
-                    <div className="space-y-2">
-                        <Label>Event Cover Image</Label>
-                        <ImageUploader
-                            value={form.watch('imageId') || null}
-                            onChange={(id) => form.setValue('imageId', id ?? '')}
-                            onError={(error) => toast.error(error)}
-                            previewSrc={imagePreviewUrl}
-                        />
-                    </div>
+                    <FormField
+                        control={form.control}
+                        name="imageId"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Event Cover Image</FormLabel>
+                                <FormControl>
+                                    <EnhancedImageUploader
+                                        value={field.value ? [field.value] : []}
+                                        onChange={(ids) => field.onChange(ids[0] || null)}
+                                        multiple={false}
+                                    />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
 
                     <div className="grid grid-cols-2 gap-4">
                         <div className="space-y-2">

@@ -20,9 +20,16 @@ import { X, Loader2, ArrowLeft } from 'lucide-react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
-import { ImageUploader } from '@/components/news';
+import { EnhancedImageUploader } from '@/components/ui/image-upload/enhanced-image-uploader';
 import { RichTextEditor } from '@/components/ui/rich-text-editor';
 import Link from 'next/link';
+import {
+    FormField,
+    FormItem,
+    FormLabel,
+    FormControl,
+    FormMessage,
+} from '@/components/ui/form';
 
 const newsSchema = z.object({
     title: z.string().min(1).max(200),
@@ -57,9 +64,6 @@ export function NewsForm({ initialData, categories }: NewsFormProps) {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [tags, setTags] = useState<string[]>(initialData?.tags || []);
     const [tagInput, setTagInput] = useState('');
-    const [imagePreviewUrl, setImagePreviewUrl] = useState<string | null>(
-        initialData?.featuredImage?.cdnUrl || null
-    );
 
     const form = useForm({
         resolver: zodResolver(newsSchema),
@@ -201,11 +205,22 @@ export function NewsForm({ initialData, categories }: NewsFormProps) {
                 </div>
 
                 <div className="space-y-6">
-                    <ImageUploader
-                        value={form.watch('featuredImageId') || null}
-                        onChange={(id) => form.setValue('featuredImageId', id ?? '')}
-                        onError={(error) => toast.error(error)}
-                        previewSrc={imagePreviewUrl}
+                    <FormField
+                        control={form.control}
+                        name="featuredImageId"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Featured Image</FormLabel>
+                                <FormControl>
+                                    <EnhancedImageUploader
+                                        value={field.value ? [field.value] : []}
+                                        onChange={(ids) => field.onChange(ids[0] || null)}
+                                        multiple={false}
+                                    />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
                     />
 
                     <div className="grid grid-cols-2 gap-4">
