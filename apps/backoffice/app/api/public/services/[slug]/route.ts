@@ -74,6 +74,7 @@ export const GET = async (
             status: true,
             createdAt: true,
             updatedAt: true,
+            images: true,
             category: {
               select: {
                 id: true,

@@ -107,6 +107,7 @@ export const GET = async (request: Request) => {
               downloadForms: true,
               relatedServices: true,
               status: true,
+              images: true,
               category: {
                 select: {
                   id: true,
