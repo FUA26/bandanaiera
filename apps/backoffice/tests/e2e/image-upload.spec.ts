@@ -25,7 +25,7 @@ test.describe('Image Upload', () => {
     const categorySelect = page.locator('[role="combobox"]').first();
     if (await categorySelect.isVisible()) {
       await categorySelect.click();
-      await page.waitForTimeout(500);
+      await page.waitForSelector('[role="option"]', { timeout: 5000 });
       const firstOption = page.locator('[role="option"]').first();
       if (await firstOption.isVisible()) {
         await firstOption.click();
@@ -37,7 +37,7 @@ test.describe('Image Upload', () => {
     await fileInput.setInputFiles('tests/fixtures/test-image.jpg');
 
     // Wait for upload to complete - look for uploaded image preview
-    await page.waitForSelector('img[src^="http"], [data-testid="image-uploader-preview"], .image-preview', { timeout: 15000 });
+    await page.waitForSelector('img[src^="/api/files/"]', { timeout: 15000 });
 
     // Submit form
     await page.click('button[type="submit"]');
@@ -62,7 +62,7 @@ test.describe('Image Upload', () => {
     const categorySelect = page.locator('[role="combobox"]').first();
     if (await categorySelect.isVisible()) {
       await categorySelect.click();
-      await page.waitForTimeout(500);
+      await page.waitForSelector('[role="option"]', { timeout: 5000 });
       const firstOption = page.locator('[role="option"]').first();
       if (await firstOption.isVisible()) {
         await firstOption.click();
@@ -78,10 +78,10 @@ test.describe('Image Upload', () => {
     ]);
 
     // Wait for all uploads - look for multiple image previews
-    await page.waitForSelector('img[src^="http"], [data-testid="image-uploader-preview"], .image-preview', { timeout: 20000 });
+    await page.waitForSelector('img[src^="/api/files/"]', { timeout: 20000 });
 
     // Verify images are shown in gallery
-    const images = page.locator('img[src^="http"], [data-testid="image-gallery-item"], .image-preview');
+    const images = page.locator('img[src^="/api/files/"]');
     const count = await images.count();
     expect(count).toBeGreaterThanOrEqual(3);
 
@@ -103,7 +103,7 @@ test.describe('Image Upload', () => {
     await fileInput.setInputFiles('tests/fixtures/test-document.pdf');
 
     // Verify error message - check for toast notification (using sonner)
-    await expect(page.locator('text=JPG, PNG, and WEBP, text=Invalid file type, text=Hanya mendukung, [data-testid="toast-error"], .toast-error').first()).toBeVisible({ timeout: 5000 });
+    await expect(page.locator('text=Hanya file JPG, PNG, dan WEBP')).toBeVisible({ timeout: 5000 });
   });
 
   test('should remove uploaded image', async ({ page }) => {
@@ -121,15 +121,15 @@ test.describe('Image Upload', () => {
     await fileInput.setInputFiles('tests/fixtures/test-image.jpg');
 
     // Wait for upload
-    await page.waitForSelector('img[src^="http"], [data-testid="image-uploader-preview"], .image-preview', { timeout: 15000 });
+    await page.waitForSelector('img[src^="/api/files/"]', { timeout: 15000 });
 
     // Remove the image (look for remove/delete button)
-    const removeButton = page.locator('[data-testid="remove-image"], button[aria-label*="remove"], button[aria-label*="delete"], .remove-image').first();
+    const removeButton = page.locator('[data-testid="remove-image"]').first();
     if (await removeButton.isVisible()) {
       await removeButton.click();
 
       // Verify image is removed
-      const images = page.locator('img[src^="http"], [data-testid="image-uploader-preview"]');
+      const images = page.locator('img[src^="/api/files/"]');
       await expect(images).toHaveCount(0, { timeout: 3000 });
     }
   });
