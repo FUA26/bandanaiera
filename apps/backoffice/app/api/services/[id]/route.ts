@@ -55,6 +55,7 @@ export const GET = protectApiRoute({
             email: true,
           },
         },
+        images: true,
       },
     });
 
@@ -207,6 +208,9 @@ export const PUT = protectApiRoute({
       if (validatedData.relatedServices !== undefined) {
         updateData.relatedServices = validatedData.relatedServices;
       }
+      if (body.imageIds !== undefined) {
+        updateData.imageIds = body.imageIds;
+      }
 
       // Update service
       const updatedService = await prisma.service.update({
@@ -237,6 +241,7 @@ export const PUT = protectApiRoute({
               email: true,
             },
           },
+          images: true,
         },
       });
 

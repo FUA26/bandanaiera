@@ -109,6 +109,7 @@ export const GET = protectApiRoute({
               email: true,
             },
           },
+          images: true,
         },
       }),
       prisma.service.count({ where }),
@@ -182,6 +183,7 @@ export const POST = protectApiRoute({
           faqs: validatedData.faqs || [],
           downloadForms: validatedData.downloadForms || [],
           relatedServices: validatedData.relatedServices || [],
+          imageIds: body.imageIds || [],
         },
         include: {
           category: {
@@ -201,6 +203,7 @@ export const POST = protectApiRoute({
               email: true,
             },
           },
+          images: true,
         },
       });
 
