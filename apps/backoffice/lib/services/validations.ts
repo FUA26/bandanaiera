@@ -113,6 +113,7 @@ export const serviceSchema = z.object({
   downloadForms: z.array(downloadFormSchema).optional(),
   relatedServices: z.array(z.string().min(1, "Invalid related service ID format")).optional(),
   status: z.enum(["DRAFT", "PUBLISHED", "ARCHIVED"], { required_error: "Status is required" }).default("DRAFT"),
+  imageIds: z.array(z.string()).default([]),
 });
 
 /**
@@ -157,6 +158,7 @@ export const serviceUpdateSchema = z.object({
   })).optional(),
   relatedServices: z.array(z.string()).optional(),
   status: z.enum(["DRAFT", "PUBLISHED", "ARCHIVED"]).optional(),
+  imageIds: z.array(z.string()).optional(),
 });
 
 /**

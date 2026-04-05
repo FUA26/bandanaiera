@@ -21,6 +21,9 @@ import {
 import { Checkbox } from "@/components/ui/checkbox";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
+import { EnhancedImageUploader } from "@/components/ui/image-upload/enhanced-image-uploader";
+import type { UploadedImage } from "@/lib/image-upload/types";
+import { toast } from "sonner";
 import { serviceCreateSchema, serviceUpdateSchema } from "@/lib/services/validations";
 import { ServiceStatus } from "@/lib/services/types";
 import type { ServiceInput, ServiceUpdateInput } from "@/lib/services/validations";
@@ -61,6 +64,9 @@ export function ServiceForm({
 }: ServiceFormProps) {
   const schema = mode === "create" ? serviceCreateSchema : serviceUpdateSchema;
 
+  // State for image uploader (manages full UploadedImage objects)
+  const [images, setImages] = useState<UploadedImage[]>([]);
+
   const form = useForm<ServiceInput | ServiceUpdateInput>({
     resolver: zodResolver(schema) as any,
     mode: "onSubmit",
@@ -79,6 +85,7 @@ export function ServiceForm({
       faqs: [],
       downloadForms: [],
       relatedServices: [],
+      imageIds: [],
     },
   });
 
@@ -103,12 +110,41 @@ export function ServiceForm({
     name: "downloadForms" as any,
   });
 
+  // Sync images state with form's imageIds
+  useEffect(() => {
+    const imageIds = images
+      .filter(img => img.status === 'success' && img.serverResponse?.id)
+      .map(img => img.serverResponse!.id);
+    form.setValue('imageIds', imageIds);
+  }, [images, form]);
+
   // Reset form when initialData changes
   useEffect(() => {
     console.log("initialData changed:", initialData);
     if (initialData) {
       console.log("Resetting form with initialData");
       form.reset(initialData);
+
+      // Load existing images in edit mode
+      const existingImageIds = (initialData as any).imageIds || [];
+      if (existingImageIds.length > 0) {
+        // Convert image IDs to UploadedImage objects
+        const uploadedImages: UploadedImage[] = existingImageIds.map((id: string) => ({
+          id,
+          file: new File([], ""), // Empty file for existing images
+          preview: "", // Will be loaded from server
+          status: 'success',
+          progress: 100,
+          serverResponse: {
+            id,
+            cdnUrl: '',
+            serveUrl: '',
+          },
+        }));
+        setImages(uploadedImages);
+      } else {
+        setImages([]);
+      }
     }
   }, [initialData, form]);
 
@@ -224,6 +260,25 @@ export function ServiceForm({
                 />
               </Field>
             </div>
+
+            <Field>
+              <FieldLabel>Images</FieldLabel>
+              <FieldContent>
+                <EnhancedImageUploader
+                  value={images}
+                  onChange={setImages}
+                  multiple={true}
+                  category="SERVICES"
+                />
+              </FieldContent>
+              <p className="text-xs text-muted-foreground mt-1">
+                Upload up to 10 images. Max 5MB per image. Images will be auto-compressed.
+              </p>
+              <FieldError
+                errors={form.formState.errors.imageIds ? [form.formState.errors.imageIds] : undefined}
+              />
+            </Field>
+
 
             <Field>
               <FieldLabel htmlFor="description">Description *</FieldLabel>
