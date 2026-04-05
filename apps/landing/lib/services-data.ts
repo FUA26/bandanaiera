@@ -39,6 +39,15 @@ export interface DownloadForm {
   fileId?: string;
 }
 
+export interface ServiceImage {
+  id: string;
+  cdnUrl?: string | null;
+  serveUrl?: string | null;
+  originalFilename: string;
+  mimeType: string;
+  size: number;
+}
+
 export interface Service {
   id: string;
   slug: string;
@@ -61,6 +70,7 @@ export interface Service {
   relatedServices?: string[] | null;
   faqs?: FAQ[] | null;
   status: string;
+  images?: ServiceImage[] | null;
   category: ServiceCategory;
 }
 

@@ -60,6 +60,11 @@ const iconMap: Record<string, LucideIcon> = {
   CreditCard,
 };
 
+interface ServiceImage {
+  cdnUrl?: string | null;
+  serveUrl?: string | null;
+}
+
 interface Service {
   slug: string;
   icon: LucideIcon;
@@ -69,9 +74,11 @@ interface Service {
   badge?: string;
   stats?: string;
   category: string;
+  images?: ServiceImage[] | null;
 }
 
 interface ServiceCategory {
+  id: string;
   name: string;
   icon: LucideIcon;
   color: string;
@@ -95,6 +102,10 @@ interface ServicesSectionClientProps {
       categoryId: string;
       badge?: string;
       stats?: string;
+      images?: Array<{
+        cdnUrl?: string | null;
+        serveUrl?: string | null;
+      }>;
     }>;
   }>;
 }
@@ -109,6 +120,7 @@ export function ServicesSectionClient({
   // Transform raw data to include icon components
   const serviceCategories = useMemo(() => {
     return rawData.map((category) => ({
+      id: category.id,
       name: category.name,
       icon: iconMap[category.icon] || Users,
       color: category.color,
@@ -122,6 +134,7 @@ export function ServicesSectionClient({
         badge: service.badge,
         stats: service.stats,
         category: category.name,
+        images: service.images,
       })),
     }));
   }, [rawData]);
@@ -285,12 +298,22 @@ function ServiceCard({ service, index, tAccess }: ServiceCardProps) {
   return (
     <a
       href={service.href}
-      className="group animate-fade-in-up hover:border-primary/30 border-border bg-card relative overflow-hidden rounded-2xl border p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
+      className="group animate-fade-in-up hover:border-primary/30 border-border bg-card relative overflow-hidden rounded-2xl border shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
       style={{ animationDelay: `${index * 50}ms` }}
       aria-label={`Layanan ${service.name} - ${service.description}`}
     >
-      {/* Decorative gradient background */}
-      <div className="from-primary-lighter absolute top-0 right-0 -mt-16 -mr-16 h-32 w-32 rounded-full bg-gradient-to-br to-transparent opacity-0 blur-2xl transition-opacity duration-500 group-hover:opacity-100" />
+      {/* Service Image - Display at top of card */}
+      {service.images && service.images.length > 0 && service.images[0] && (
+        <div className="relative h-48 overflow-hidden rounded-t-xl">
+          <img
+            src={service.images[0].cdnUrl || service.images[0].serveUrl || ''}
+            alt={service.name}
+            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+          />
+          {/* Gradient overlay for better text readability */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+        </div>
+      )}
 
       {/* Badge */}
       {service.badge && (
@@ -310,33 +333,38 @@ function ServiceCard({ service, index, tAccess }: ServiceCardProps) {
       )}
 
       {/* Content */}
-      <div className="relative">
-        {/* Icon */}
-        <div className="bg-primary-lighter text-primary group-hover:bg-primary group-hover:text-primary-foreground mb-4 flex h-14 w-14 items-center justify-center rounded-xl transition-all duration-300 group-hover:scale-110 group-hover:rotate-3">
-          <Icon size={28} strokeWidth={2} />
-        </div>
+      <div className="p-6">
+        {/* Decorative gradient background */}
+        <div className="from-primary-lighter absolute top-0 right-0 -mt-16 -mr-16 h-32 w-32 rounded-full bg-gradient-to-br to-transparent opacity-0 blur-2xl transition-opacity duration-500 group-hover:opacity-100" />
 
-        {/* Service Name */}
-        <h3 className="group-hover:text-primary text-foreground mb-2 text-lg font-bold transition-colors">
-          {service.name}
-        </h3>
+        <div className="relative">
+          {/* Icon - Keep as fallback when no images */}
+          <div className="bg-primary-lighter text-primary group-hover:bg-primary group-hover:text-primary-foreground mb-4 flex h-14 w-14 items-center justify-center rounded-xl transition-all duration-300 group-hover:scale-110 group-hover:rotate-3">
+            <Icon size={28} strokeWidth={2} />
+          </div>
 
-        {/* Description */}
-        <p className="text-muted-foreground mb-4 text-sm leading-relaxed">
-          {service.description}
-        </p>
+          {/* Service Name */}
+          <h3 className="group-hover:text-primary text-foreground mb-2 text-lg font-bold transition-colors">
+            {service.name}
+          </h3>
 
-        {/* Stats & Action */}
-        <div className="border-border flex items-center justify-between border-t pt-3">
-          <span className="text-muted-foreground text-xs font-medium">
-            {service.stats}
-          </span>
-          <div className="text-primary flex items-center gap-1 text-sm font-semibold opacity-0 transition-opacity group-hover:opacity-100">
-            {tAccess}
-            <ArrowRight
-              size={16}
-              className="transition-transform group-hover:translate-x-1"
-            />
+          {/* Description */}
+          <p className="text-muted-foreground mb-4 text-sm leading-relaxed">
+            {service.description}
+          </p>
+
+          {/* Stats & Action */}
+          <div className="border-border flex items-center justify-between border-t pt-3">
+            <span className="text-muted-foreground text-xs font-medium">
+              {service.stats}
+            </span>
+            <div className="text-primary flex items-center gap-1 text-sm font-semibold opacity-0 transition-opacity group-hover:opacity-100">
+              {tAccess}
+              <ArrowRight
+                size={16}
+                className="transition-transform group-hover:translate-x-1"
+              />
+            </div>
           </div>
         </div>
       </div>

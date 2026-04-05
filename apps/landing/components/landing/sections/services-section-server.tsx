@@ -11,11 +11,24 @@ export async function ServicesSection() {
 
   // Map categories and services to convert null to undefined for optional fields
   const mappedCategories = serviceCategories.map((category) => ({
-    ...category,
+    id: category.id,
+    name: category.name,
+    icon: category.icon,
+    color: category.color,
+    bgColor: category.bgColor,
+    slug: category.slug,
     services: category.services.map((service) => ({
-      ...service,
+      slug: service.slug,
+      icon: service.icon,
+      name: service.name,
+      description: service.description,
+      categoryId: service.categoryId,
       badge: service.badge ?? undefined,
       stats: service.stats ?? undefined,
+      images: service.images?.map(img => ({
+        cdnUrl: img.cdnUrl,
+        serveUrl: img.serveUrl,
+      })) ?? undefined,
     })),
   }));
 
