@@ -11,8 +11,8 @@ import type { UploadedImage, ImageUploadOptions } from '@/lib/image-upload/types
 import { toast } from 'sonner';
 
 interface EnhancedImageUploaderProps {
-  value: UploadedImage[];
-  onChange: (images: UploadedImage[]) => void;
+  value: string[];  // Array of uploaded file IDs
+  onChange: (ids: string[]) => void;  // Callback with IDs
   multiple?: boolean;
   category?: string;
   maxSize?: number;
@@ -33,6 +33,7 @@ export function EnhancedImageUploader({
 }: EnhancedImageUploaderProps) {
   const [isDragging, setIsDragging] = useState(false);
   const [abortControllers, setAbortControllers] = useState<Map<string, AbortController>>(new Map());
+  const [uploadQueue, setUploadQueue] = useState<UploadedImage[]>([]);
 
   // Cleanup on unmount
   useEffect(() => {
@@ -42,8 +43,10 @@ export function EnhancedImageUploader({
   }, [abortControllers]);
 
   const processFile = useCallback(async (file: File): Promise<UploadedImage | null> => {
-    // Create temporary ID
-    const id = crypto.randomUUID();
+    // Create temporary ID with fallback for older browsers
+    const id = typeof crypto !== 'undefined' && crypto.randomUUID
+      ? crypto.randomUUID()
+      : `temp-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
 
     try {
       // Validate file type and size
@@ -86,9 +89,9 @@ export function EnhancedImageUploader({
     setAbortControllers(prev => new Map(prev).set(image.id, controller));
 
     try {
-      // Update status to uploading
-      onChange((prevValue) =>
-        prevValue.map((img) =>
+      // Update status to uploading in queue
+      setUploadQueue(prev =>
+        prev.map((img) =>
           img.id === image.id ? { ...img, status: 'uploading' as const, progress: 0 } : img
         )
       );
@@ -128,19 +131,9 @@ export function EnhancedImageUploader({
 
       const result = await response.json();
 
-      // Update with server response
-      onChange((prevValue) =>
-        prevValue.map((img) =>
-          img.id === image.id
-            ? {
-                ...img,
-                status: 'success' as const,
-                progress: 100,
-                serverResponse: result.file,
-              }
-            : img
-        )
-      );
+      // Remove from queue and add the ID to value
+      setUploadQueue(prev => prev.filter(img => img.id !== image.id));
+      onChange([...value, result.file.id]);
 
       toast.success('Image uploaded successfully');
     } catch (error) {
@@ -152,8 +145,9 @@ export function EnhancedImageUploader({
       console.error('Upload error:', error);
       const errorMessage = error instanceof Error ? error.message : 'Upload failed';
 
-      onChange((prevValue) =>
-        prevValue.map((img) =>
+      // Update queue with error
+      setUploadQueue(prev =>
+        prev.map((img) =>
           img.id === image.id
             ? {
                 ...img,
@@ -173,13 +167,19 @@ export function EnhancedImageUploader({
         return next;
       });
     }
-  }, [onChange, category, maxSize, maxWidth, quality]);
+  }, [onChange, category, maxSize, maxWidth, quality, value]);
 
   const handleFiles = useCallback(async (files: FileList | File[]) => {
     const fileArray = Array.from(files);
 
     if (!multiple && fileArray.length > 1) {
       toast.error('Only one image allowed');
+      return;
+    }
+
+    // Check if we already have images in single mode
+    if (!multiple && value.length > 0) {
+      toast.error('Remove existing image first');
       return;
     }
 
@@ -196,20 +196,14 @@ export function EnhancedImageUploader({
       return;
     }
 
-    // Add to state
-    onChange((prevValue) => {
-      if (!multiple && prevValue.length > 0) {
-        toast.error('Remove existing image first');
-        return prevValue;
-      }
-      return [...prevValue, ...validImages];
-    });
+    // Add to upload queue
+    setUploadQueue(prev => [...prev, ...validImages]);
 
     // Start uploads
     for (const image of validImages) {
       await uploadFile(image);
     }
-  }, [multiple, onChange, processFile, uploadFile]);
+  }, [multiple, value, processFile, uploadFile]);
 
   const handleDrop = useCallback(
     (e: React.DragEvent<HTMLDivElement>) => {
@@ -245,21 +239,22 @@ export function EnhancedImageUploader({
 
   const handleRemove = useCallback(
     (id: string) => {
-      onChange((prevValue) => prevValue.filter((img) => img.id !== id));
+      // Check if it's in the upload queue
+      setUploadQueue(prev => prev.filter(img => img.id !== id));
+      // Check if it's in the uploaded IDs
+      onChange(value.filter(imgId => imgId !== id));
     },
-    [onChange]
+    [onChange, value]
   );
 
   const handleReorder = useCallback(
     (oldIndex: number, newIndex: number) => {
-      onChange((prevValue) => {
-        const newImages = [...prevValue];
-        const [removed] = newImages.splice(oldIndex, 1);
-        newImages.splice(newIndex, 0, removed);
-        return newImages;
-      });
+      const newValue = [...value];
+      const [removed] = newValue.splice(oldIndex, 1);
+      newValue.splice(newIndex, 0, removed!);
+      onChange(newValue);
     },
-    [onChange]
+    [onChange, value]
   );
 
   return (
@@ -306,11 +301,13 @@ export function EnhancedImageUploader({
         </label>
       </Card>
 
-      {value.length > 0 && (
+      {(value.length > 0 || uploadQueue.length > 0) && (
         <ImageGallery
-          images={value}
+          uploadedIds={value}
+          uploadingImages={uploadQueue}
           onRemove={handleRemove}
           onReorder={handleReorder}
+          multiple={multiple}
         />
       )}
     </div>
