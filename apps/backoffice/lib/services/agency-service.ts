@@ -236,7 +236,7 @@ export async function deleteAgency(id: string, userId: string) {
   });
 }
 
-export async function reorderAgencies(agencies: Array<{ id: string; order: number }>) {
+export async function reorderAgencies(agencies: Array<{ id: string; order: number }>, userId: string) {
   const updates = agencies.map(({ id, order }) =>
     prisma.agency.update({
       where: { id },
@@ -244,7 +244,17 @@ export async function reorderAgencies(agencies: Array<{ id: string; order: numbe
     })
   );
 
-  await Promise.all(updates);
+  await prisma.$transaction(updates);
+
+  // Log activity
+  await prisma.agencyActivityLog.create({
+    data: {
+      agencyId: agencies[0].id, // Log first agency as representative
+      userId,
+      action: 'REORDER',
+      changes: { agencies },
+    },
+  });
 }
 
 export async function getAgencyActivityLogs(agencyId: string, page = 1, pageSize = 20) {
