@@ -30,6 +30,7 @@ import { useRouter } from "next/navigation";
 import { Plus, Trash2, Save, ArrowLeft, Loader2, Eye, EyeOff, AlertCircle } from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
+import { useEffect } from "react";
 
 interface Service {
   id: string;
@@ -73,6 +74,12 @@ interface Category {
   slug: string;
 }
 
+interface Agency {
+  id: string;
+  name: string;
+  nickname: string;
+}
+
 interface EditServiceContentProps {
   serviceId: string;
   initialService: Service;
@@ -83,6 +90,14 @@ export function EditServiceContent({ serviceId, initialService, categories }: Ed
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [activeTab, setActiveTab] = useState("basic");
+  const [agencies, setAgencies] = useState<Agency[]>([]);
+
+  useEffect(() => {
+    fetch('/api/agencies?status=ACTIVE')
+      .then((res) => res.json())
+      .then((data) => setAgencies(data.items))
+      .catch((error) => console.error('Error loading agencies:', error));
+  }, []);
 
   const form = useForm<ServiceUpdateInput>({
     resolver: zodResolver(serviceUpdateSchema) as any,
@@ -112,6 +127,8 @@ export function EditServiceContent({ serviceId, initialService, categories }: Ed
       faqs: initialService.faqs ?? [],
       downloadForms: initialService.downloadForms ?? [],
       relatedServices: initialService.relatedServices ?? [],
+      relatedAgencyIds: [],
+      agencyId: '',
     },
   });
 
@@ -188,12 +205,15 @@ export function EditServiceContent({ serviceId, initialService, categories }: Ed
 
       <form onSubmit={form.handleSubmit(handleSubmit as any, onError)} className="space-y-6">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid w-full grid-cols-4">
+          <TabsList className="grid w-full grid-cols-5">
             <TabsTrigger value="basic" className="data-[state=active]:bg-background">
               Basic
             </TabsTrigger>
             <TabsTrigger value="details" className="data-[state=active]:bg-background">
               Details
+            </TabsTrigger>
+            <TabsTrigger value="agency" className="data-[state=active]:bg-background">
+              Agency
             </TabsTrigger>
             <TabsTrigger value="contact" className="data-[state=active]:bg-background">
               Contact
@@ -508,6 +528,49 @@ export function EditServiceContent({ serviceId, initialService, categories }: Ed
                       ))
                     )}
                   </div>
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="agency" className="mt-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>Agency Information</CardTitle>
+                <CardDescription>Assign this service to a government agency</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="agencyId">Pengampu (Owner Agency) *</Label>
+                  <Select
+                    onValueChange={(value) => form.setValue('agencyId', value)}
+                    value={form.watch('agencyId')}
+                  >
+                    <SelectTrigger className={cn(errors.agencyId && 'border-destructive')}>
+                      <SelectValue placeholder="Select agency" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {agencies.map((agency) => (
+                        <SelectItem key={agency.id} value={agency.id}>
+                          {agency.nickname} - {agency.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  {errors.agencyId && (
+                    <p className="text-sm text-destructive">{errors.agencyId.message}</p>
+                  )}
+                </div>
+
+                <div className="space-y-2">
+                  <Label>Instansi Terkait (Related Agencies)</Label>
+                  <p className="text-sm text-muted-foreground">
+                    Comma-separated agency IDs (will be improved with multi-select in future)
+                  </p>
+                  <Input
+                    placeholder="agency-id-1, agency-id-2"
+                    {...form.register('relatedAgencyIds')}
+                  />
                 </div>
               </CardContent>
             </Card>
