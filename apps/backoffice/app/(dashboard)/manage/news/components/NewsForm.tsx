@@ -24,6 +24,7 @@ import { EnhancedImageUploader } from '@/components/ui/image-upload/enhanced-ima
 import { RichTextEditor } from '@/components/ui/rich-text-editor';
 import Link from 'next/link';
 import {
+    Form,
     FormField,
     FormItem,
     FormLabel,
@@ -126,7 +127,8 @@ export function NewsForm({ initialData, categories }: NewsFormProps) {
     };
 
     return (
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 max-w-4xl pb-20">
+        <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 max-w-4xl pb-20">
             <div className="flex items-center justify-between">
                 <Link href="/manage/news" className="flex items-center text-sm text-muted-foreground hover:text-primary">
                     <ArrowLeft className="mr-2 h-4 w-4" />
@@ -315,5 +317,6 @@ export function NewsForm({ initialData, categories }: NewsFormProps) {
                 />
             </div>
         </form>
+        </Form>
     );
 }

@@ -25,6 +25,7 @@ import { RichTextEditor } from '@/components/ui/rich-text-editor';
 import Link from 'next/link';
 import { tourismSchema } from '@/lib/validations/tourism';
 import {
+    Form,
     FormField,
     FormItem,
     FormLabel,
@@ -122,7 +123,8 @@ export function TourismForm({ initialData, categories }: TourismFormProps) {
     };
 
     return (
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 max-w-4xl pb-20">
+        <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 max-w-4xl pb-20">
             <div className="flex items-center justify-between">
                 <Link href="/manage/tourism" className="flex items-center text-sm text-muted-foreground hover:text-primary">
                     <ArrowLeft className="mr-2 h-4 w-4" />
@@ -345,5 +347,6 @@ export function TourismForm({ initialData, categories }: TourismFormProps) {
                 />
             </div>
         </form>
+        </Form>
     );
 }

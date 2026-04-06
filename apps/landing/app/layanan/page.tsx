@@ -1,6 +1,8 @@
 import { LayananPageClient } from "./layanan-page-client";
 import { getServiceCategories, getAllServices } from "@/lib/services-data";
 
+export const dynamic = 'force-dynamic';
+
 export default async function LayananPage({
   searchParams,
 }: {

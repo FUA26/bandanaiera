@@ -2,6 +2,8 @@ import { notFound } from "next/navigation";
 import { getServiceBySlug, getAllServices, type DownloadForm as ApiDownloadForm } from "@/lib/services-data";
 import { ServiceDetailClient } from "./service-detail-client";
 
+export const dynamic = 'force-dynamic';
+
 interface DownloadForm {
   name: string;
   url: string;

@@ -28,6 +28,7 @@ import { EventStatus, EventType } from '@prisma/client';
 import { cn } from '@/lib/utils';
 import Link from 'next/link';
 import {
+    Form,
     FormField,
     FormItem,
     FormLabel,
@@ -130,7 +131,8 @@ export function EventForm({ initialData, categories }: EventFormProps) {
     };
 
     return (
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 max-w-4xl pb-20">
+        <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 max-w-4xl pb-20">
             <div className="flex items-center justify-between">
                 <Link href="/manage/events" className="flex items-center text-sm text-muted-foreground hover:text-primary">
                     <ArrowLeft className="mr-2 h-4 w-4" />
@@ -364,5 +366,6 @@ export function EventForm({ initialData, categories }: EventFormProps) {
                 />
             </div>
         </form>
+        </Form>
     );
 }

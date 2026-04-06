@@ -5,6 +5,7 @@ import { getPageTitle } from "@/lib/dashboard/page-title";
 import { usePathname } from "next/navigation";
 import { Breadcrumbs } from "./breadcrumbs";
 import { UserDropdown } from "./user-dropdown";
+import { CacheStatusBadge } from "./cache-status-badge";
 
 interface HeaderProps {
   user: {
@@ -27,6 +28,7 @@ export function Header({ user }: HeaderProps) {
       <PageIcon className="h-5 w-5 text-muted-foreground" />
       <Breadcrumbs />
       <div className="ml-auto flex items-center gap-4">
+        <CacheStatusBadge />
         <UserDropdown user={user} />
       </div>
     </header>

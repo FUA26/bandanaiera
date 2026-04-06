@@ -1,6 +1,8 @@
 import { Suspense } from 'react';
 import { AgencyDetailClient } from './agency-detail-client';
 
+export const dynamic = 'force-dynamic';
+
 export const metadata = {
   title: 'Agency Detail',
   description: 'Government agency information',

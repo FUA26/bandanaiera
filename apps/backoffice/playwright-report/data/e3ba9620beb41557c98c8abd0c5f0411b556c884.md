@@ -1,0 +1,78 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - generic [ref=e5]:
+      - generic [ref=e6]:
+        - img "Logo Naiera" [ref=e7]
+        - generic [ref=e8]:
+          - heading "Super App Naiera" [level=2] [ref=e9]
+          - paragraph [ref=e10]: Kabupaten Naiera
+      - generic [ref=e11]:
+        - heading "Selamat Datang Kembali" [level=1] [ref=e12]
+        - paragraph [ref=e13]: Masuk untuk mengakses layanan digital Kabupaten Naiera
+      - generic [ref=e14]:
+        - generic [ref=e15]: Invalid email or password
+        - generic [ref=e16]:
+          - generic [ref=e17]: Email atau NIK
+          - generic [ref=e18]:
+            - img [ref=e19]
+            - textbox "Email atau NIK" [ref=e22]:
+              - /placeholder: Masukkan email atau NIK
+              - text: admin@example.com
+        - generic [ref=e23]:
+          - generic [ref=e24]: Password
+          - generic [ref=e25]:
+            - img [ref=e26]
+            - textbox "Password" [ref=e29]:
+              - /placeholder: Masukkan password
+              - text: password
+            - button [ref=e30]:
+              - img [ref=e31]
+        - generic [ref=e34]:
+          - generic [ref=e35]:
+            - checkbox "Ingat saya" [ref=e36]
+            - checkbox
+            - generic [ref=e37] [cursor=pointer]: Ingat saya
+          - link "Lupa password?" [ref=e38] [cursor=pointer]:
+            - /url: /forgot-password
+        - button "Masuk" [ref=e39]
+        - generic [ref=e44]: Atau masuk dengan
+        - generic [ref=e45]:
+          - button "Google" [ref=e46]:
+            - img
+            - text: Google
+          - button "E-KTP" [ref=e47]:
+            - img
+            - text: E-KTP
+        - generic [ref=e48]:
+          - text: Belum punya akun?
+          - link "Daftar sekarang" [ref=e49] [cursor=pointer]:
+            - /url: /register
+            - text: Daftar sekarang
+            - img [ref=e50]
+    - generic [ref=e55]:
+      - heading "Akses Semua Layanan dalam Satu Aplikasi" [level=1] [ref=e56]
+      - paragraph [ref=e57]: Lebih dari 100+ layanan pemerintahan Kabupaten Naiera siap melayani Anda 24/7 dengan cepat, mudah, dan aman.
+      - generic [ref=e58]:
+        - generic [ref=e59]:
+          - img [ref=e60]
+          - generic [ref=e62]: E-KTP, KK, dan layanan kependudukan
+        - generic [ref=e63]:
+          - img [ref=e64]
+          - generic [ref=e66]: Pembayaran pajak dan retribusi online
+        - generic [ref=e67]:
+          - img [ref=e68]
+          - generic [ref=e70]: Perizinan usaha dan IMB
+        - generic [ref=e71]:
+          - img [ref=e72]
+          - generic [ref=e74]: Layanan kesehatan dan pendidikan
+      - generic [ref=e75]:
+        - paragraph [ref=e76]: Dipercaya oleh
+        - paragraph [ref=e77]: 50.000+ Pengguna
+  - region "Notifications alt+T"
+  - button "Open Next.js Dev Tools" [ref=e83] [cursor=pointer]:
+    - img [ref=e84]
+  - alert [ref=e87]
+```
