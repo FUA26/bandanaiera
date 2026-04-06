@@ -2,6 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import {
   Clock,
   CreditCard,
@@ -36,6 +37,9 @@ import {
   ExternalLink,
   type LucideIcon,
 } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 // Icon mapping - same as in services-data
 const iconMap: Record<string, LucideIcon> = {
@@ -106,6 +110,30 @@ interface ServiceDetailClientProps {
       name: string;
     }>;
     faqs: FAQ[];
+    agency?: {
+      id: string;
+      name: string;
+      nickname: string;
+      slug: string;
+      logo?: {
+        cdnUrl: string;
+      } | null;
+    } | null;
+    relatedAgencies?: Array<{
+      agency: {
+        id: string;
+        name: string;
+        nickname: string;
+        slug: string;
+      };
+    }>;
+    serviceImages?: Array<{
+      id: string;
+      type: string;
+      file: {
+        cdnUrl: string;
+      };
+    }>;
   };
 }
 
@@ -114,6 +142,11 @@ export function ServiceDetailClient({
 }: ServiceDetailClientProps) {
   const ServiceIcon = iconMap[service.iconName] || FileText;
   const [openFaqIndex, setOpenFaqIndex] = React.useState<number | null>(null);
+  const router = useRouter();
+
+  // Extract typed images
+  const bannerImage = service.serviceImages?.find((img: any) => img.type === 'BANNER');
+  const documentImages = service.serviceImages?.filter((img: any) => img.type === 'DOKUMEN') || [];
 
   return (
     <main className="bg-muted">
@@ -215,9 +248,91 @@ export function ServiceDetailClient({
       {/* Main Content */}
       <section className="py-12">
         <div className="container mx-auto max-w-5xl px-4">
+          {/* Banner Image */}
+          {bannerImage && (
+            <div className="mb-6 rounded-lg overflow-hidden">
+              <img
+                src={bannerImage.file.cdnUrl}
+                alt={service.name}
+                className="w-full h-auto"
+              />
+            </div>
+          )}
+
+          {/* Agency Information */}
+          {(service.agency || (service.relatedAgencies && service.relatedAgencies.length > 0)) && (
+            <Card className="mb-6">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Building2 className="h-5 w-5" />
+                  Instansi Terkait
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                {service.agency && (
+                  <div>
+                    <p className="text-sm text-muted-foreground mb-2">Pengampu</p>
+                    <Button
+                      variant="outline"
+                      className="justify-start"
+                      onClick={() => router.push(`/perangkat-daerah/${service.agency!.slug}`)}
+                    >
+                      <Avatar className="h-6 w-6 mr-2">
+                        <AvatarImage src={service.agency.logo?.cdnUrl || undefined} />
+                        <AvatarFallback>{service.agency.nickname.slice(0, 2)}</AvatarFallback>
+                      </Avatar>
+                      {service.agency.nickname}
+                      <ArrowRight className="ml-auto h-4 w-4" />
+                    </Button>
+                  </div>
+                )}
+
+                {service.relatedAgencies && service.relatedAgencies.length > 0 && (
+                  <div>
+                    <p className="text-sm text-muted-foreground mb-2">Terkait dengan</p>
+                    <div className="flex flex-wrap gap-2">
+                      {service.relatedAgencies.map((ra: any) => (
+                        <Button
+                          key={ra.agency.id}
+                          variant="secondary"
+                          size="sm"
+                          onClick={() => router.push(`/perangkat-daerah/${ra.agency.slug}`)}
+                        >
+                          {ra.agency.nickname}
+                        </Button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          )}
+
           <div className="grid gap-8 lg:grid-cols-3">
             {/* Left Column - Main Info */}
             <div className="space-y-8 lg:col-span-2">
+              {/* Document Images */}
+              {documentImages.length > 0 && (
+                <Card className="mb-6">
+                  <CardHeader>
+                    <CardTitle>Dokumen / Alur</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="grid gap-4 md:grid-cols-2">
+                      {documentImages.map((img: any) => (
+                        <div key={img.id} className="rounded-lg overflow-hidden border">
+                          <img
+                            src={img.file.cdnUrl}
+                            alt="Document"
+                            className="w-full h-auto"
+                          />
+                        </div>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+              )}
+
               {/* Requirements */}
               {service.requirements.length > 0 && (
                 <div className="border-border bg-card rounded-2xl border p-6 shadow-sm">
