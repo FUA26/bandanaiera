@@ -22,7 +22,6 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { EnhancedImageUploader } from "@/components/ui/image-upload/enhanced-image-uploader";
-import type { UploadedImage } from "@/lib/image-upload/types";
 import { toast } from "sonner";
 import { serviceCreateSchema, serviceUpdateSchema } from "@/lib/services/validations";
 import { ServiceStatus } from "@/lib/services/types";
@@ -64,8 +63,8 @@ export function ServiceForm({
 }: ServiceFormProps) {
   const schema = mode === "create" ? serviceCreateSchema : serviceUpdateSchema;
 
-  // State for image uploader (manages full UploadedImage objects)
-  const [images, setImages] = useState<UploadedImage[]>([]);
+  // State for image uploader - now directly uses string IDs
+  const [imageIds, setImageIds] = useState<string[]>([]);
 
   const form = useForm<ServiceInput | ServiceUpdateInput>({
     resolver: zodResolver(schema) as any,
@@ -110,13 +109,10 @@ export function ServiceForm({
     name: "downloadForms" as any,
   });
 
-  // Sync images state with form's imageIds
+  // Sync imageIds state with form's imageIds
   useEffect(() => {
-    const imageIds = images
-      .filter(img => img.status === 'success' && img.serverResponse?.id)
-      .map(img => img.serverResponse!.id);
     form.setValue('imageIds', imageIds);
-  }, [images, form]);
+  }, [imageIds, form]);
 
   // Reset form when initialData changes
   useEffect(() => {
@@ -127,24 +123,7 @@ export function ServiceForm({
 
       // Load existing images in edit mode
       const existingImageIds = (initialData as any).imageIds || [];
-      if (existingImageIds.length > 0) {
-        // Convert image IDs to UploadedImage objects
-        const uploadedImages: UploadedImage[] = existingImageIds.map((id: string) => ({
-          id,
-          file: new File([], ""), // Empty file for existing images
-          preview: "", // Will be loaded from server
-          status: 'success',
-          progress: 100,
-          serverResponse: {
-            id,
-            cdnUrl: '',
-            serveUrl: '',
-          },
-        }));
-        setImages(uploadedImages);
-      } else {
-        setImages([]);
-      }
+      setImageIds(existingImageIds);
     }
   }, [initialData, form]);
 
@@ -265,10 +244,9 @@ export function ServiceForm({
               <FieldLabel>Images</FieldLabel>
               <FieldContent>
                 <EnhancedImageUploader
-                  value={images}
-                  onChange={setImages}
+                  value={imageIds}
+                  onChange={setImageIds}
                   multiple={true}
-                  category="SERVICES"
                 />
               </FieldContent>
               <p className="text-xs text-muted-foreground mt-1">

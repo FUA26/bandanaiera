@@ -25,7 +25,7 @@ export function EnhancedImageUploader({
   value = [],
   onChange,
   multiple = false,
-  category = 'SERVICES',
+  category = 'IMAGE',
   maxSize = 5 * 1024 * 1024,
   maxWidth = 1920,
   quality = 0.85,
