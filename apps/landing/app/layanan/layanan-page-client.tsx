@@ -36,6 +36,8 @@ import {
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
+import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import type { ServiceCategory, ServiceWithCategory } from "@/lib/services-data";
 
 // Icon mapping
@@ -81,6 +83,7 @@ interface LayananPageClientProps {
     name: string;
     description: string;
     categoryId: string;
+    agencyId?: string | null;
     badge?: string;
     stats?: string;
     isIntegrated?: boolean;
@@ -108,6 +111,8 @@ export function LayananPageClient({
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string | null>(initialCategory || null);
   const [integrationFilter, setIntegrationFilter] = useState<'all' | 'integrated' | 'non-integrated'>('all');
+  const [agencies, setAgencies] = useState<any[]>([]);
+  const [selectedAgency, setSelectedAgency] = useState<string>('');
 
   // Transform categories with icon components (needed for useEffect hooks)
   const categories = rawCategories.map((cat) => ({
@@ -129,6 +134,14 @@ export function LayananPageClient({
       setSearchQuery(searchParam);
     }
   }, [searchParams]);
+
+  // Load agencies for filter dropdown
+  useEffect(() => {
+    fetch('/api/public/agencies?status=ACTIVE&showInMenu=true')
+      .then((res) => res.json())
+      .then((data) => setAgencies(data.items || []))
+      .catch((error) => console.error('Error loading agencies:', error));
+  }, []);
 
   // Handle invalid category slug - redirect to clean URL if slug doesn't exist
   useEffect(() => {
@@ -197,7 +210,10 @@ export function LayananPageClient({
       integrationFilter === 'all' ||
       (integrationFilter === 'integrated' && service.isIntegrated === true) ||
       (integrationFilter === 'non-integrated' && service.isIntegrated === false);
-    return matchesSearch && matchesCategory && matchesIntegration;
+    const matchesAgency =
+      !selectedAgency ||
+      service.agencyId === selectedAgency;
+    return matchesSearch && matchesCategory && matchesIntegration && matchesAgency;
   });
 
   return (
@@ -333,6 +349,34 @@ export function LayananPageClient({
             </div>
           </div>
         </section>
+
+        {/* Agency Filter */}
+        {agencies.length > 0 && (
+          <section className="border-border bg-muted border-b py-4">
+            <div className="container mx-auto max-w-6xl px-4">
+              <div className="flex flex-wrap items-center gap-4">
+                <div className="flex items-center gap-2">
+                  <Label htmlFor="agency-filter" className="text-muted-foreground text-sm font-medium">
+                    Filter by Agency:
+                  </Label>
+                  <Select value={selectedAgency} onValueChange={setSelectedAgency}>
+                    <SelectTrigger id="agency-filter" className="w-[250px]">
+                      <SelectValue placeholder="All Agencies" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="">All Agencies</SelectItem>
+                      {agencies.map((agency) => (
+                        <SelectItem key={agency.id} value={agency.id}>
+                          {agency.nickname}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+            </div>
+          </section>
+        )}
 
         {/* Services Grid */}
         <section className="py-12">

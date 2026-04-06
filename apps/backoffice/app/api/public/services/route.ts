@@ -40,6 +40,7 @@ export const GET = async (request: Request) => {
     const categoryId = searchParams.get("categoryId");
     const search = searchParams.get("search");
     const showInMenu = searchParams.get("showInMenu");
+    const agencyId = searchParams.get("agencyId") || undefined;
     const page = Math.max(1, parseInt(searchParams.get("page") || "1", 10));
     const pageSize = Math.min(
       100,
@@ -61,6 +62,10 @@ export const GET = async (request: Request) => {
 
         if (categoryId) {
           where.categoryId = categoryId;
+        }
+
+        if (agencyId) {
+          where.agencyId = agencyId;
         }
 
         if (showInMenu !== null) {

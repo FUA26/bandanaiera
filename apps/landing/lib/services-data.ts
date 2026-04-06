@@ -56,6 +56,7 @@ export interface Service {
   description: string;
   detailedDescription?: string | null;
   categoryId: string;
+  agencyId?: string | null;
   badge?: string | null;
   stats?: string | null;
   showInMenu?: boolean;
