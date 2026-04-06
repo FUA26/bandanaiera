@@ -30,6 +30,7 @@ export function Header({ servicesByCategory = [] }: HeaderProps) {
       active: false,
     },
     { label: t("tourism"), href: "/informasi-publik/destinasi-wisata", active: false },
+    { label: "Perangkat Daerah", href: "/pemerintahan/perangkat-daerah", active: false },
     { label: t("contact"), href: "/kontak", active: false },
   ];
 
