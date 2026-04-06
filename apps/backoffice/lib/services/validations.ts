@@ -113,7 +113,8 @@ export const serviceSchema = z.object({
   downloadForms: z.array(downloadFormSchema).optional(),
   relatedServices: z.array(z.string().min(1, "Invalid related service ID format")).optional(),
   status: z.enum(["DRAFT", "PUBLISHED", "ARCHIVED"], { required_error: "Status is required" }).default("DRAFT"),
-  imageIds: z.array(z.string()).default([]),
+  agencyId: z.string().min(1, "Invalid agency ID format").optional(),
+  relatedAgencyIds: z.array(z.string().min(1, "Invalid agency ID format")).optional(),
 });
 
 /**
@@ -158,7 +159,8 @@ export const serviceUpdateSchema = z.object({
   })).optional(),
   relatedServices: z.array(z.string()).optional(),
   status: z.enum(["DRAFT", "PUBLISHED", "ARCHIVED"]).optional(),
-  imageIds: z.array(z.string()).optional(),
+  agencyId: z.string().min(1).optional(),
+  relatedAgencyIds: z.array(z.string()).optional(),
 });
 
 /**
@@ -178,6 +180,26 @@ export const serviceReorderSchema = z.object({
     })
   ).min(1, "At least one service is required"),
 });
+
+/**
+ * ============================================================================
+ * Service Image Schemas
+ * ============================================================================
+ */
+
+/**
+ * Service image schema for typed images
+ */
+export const serviceImageSchema = z.object({
+  fileId: z.string().min(1, "File ID is required"),
+  type: z.enum(["BANNER", "DOKUMEN"], { required_error: "Image type is required" }),
+  order: z.number().int().min(0, "Order must be a non-negative integer").default(0),
+});
+
+/**
+ * TypeScript Type Exports
+ */
+export type ServiceImageInput = z.infer<typeof serviceImageSchema>;
 
 /**
  * ============================================================================
@@ -228,5 +250,6 @@ export type ContactInfoInput = z.infer<typeof contactInfoSchema>;
 export type FAQInput = z.infer<typeof faqSchema>;
 export type DownloadFormInput = z.infer<typeof downloadFormSchema>;
 export type ServiceReorderInput = z.infer<typeof serviceReorderSchema>;
+export type ServiceImageInput = z.infer<typeof serviceImageSchema>;
 export type ServiceQueryInput = z.infer<typeof serviceQuerySchema>;
 export type ServiceCategoryQueryInput = z.infer<typeof serviceCategoryQuerySchema>;
