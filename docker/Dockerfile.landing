@@ -29,9 +29,8 @@ ENV NEXT_TELEMETRY_DISABLED 1
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 
-# Copy entire standalone directory structure
-COPY --from=builder --chown=nextjs:nodejs /app/apps/landing/.next/standalone/apps/landing ./
-COPY --from=builder --chown=nextjs:nodejs /app/apps/landing/.next/standalone/node_modules ./node_modules
+# Copy entire standalone output to /app (structure: apps/landing/server.js, apps/landing/node_modules)
+COPY --from=builder --chown=nextjs:nodejs /app/apps/landing/.next/standalone /app
 
 USER nextjs
 

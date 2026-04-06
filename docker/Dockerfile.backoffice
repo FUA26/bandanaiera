@@ -18,10 +18,12 @@ COPY . .
 # Build backoffice app
 ENV NEXT_TELEMETRY_DISABLED 1
 RUN corepack enable pnpm && pnpm build --filter=backoffice
+# Generate Prisma client
+RUN corepack enable pnpm && pnpm --filter backoffice exec prisma generate
 
 # Production image, copy all files and run next
 FROM base AS runner
-WORKDIR /app/apps/backoffice
+WORKDIR /app
 
 ENV NODE_ENV production
 ENV NEXT_TELEMETRY_DISABLED 1
@@ -29,9 +31,12 @@ ENV NEXT_TELEMETRY_DISABLED 1
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 
-# Copy entire standalone directory structure
-COPY --from=builder --chown=nextjs:nodejs /app/apps/backoffice/.next/standalone/apps/backoffice ./
-COPY --from=builder --chown=nextjs:nodejs /app/apps/backoffice/.next/standalone/node_modules ./node_modules
+# Copy necessary files
+COPY --from=builder --chown=nextjs:nodejs /app/node_modules ./node_modules
+COPY --from=builder --chown=nextjs:nodejs /app/apps/backoffice/.next ./apps/backoffice/.next
+COPY --from=builder --chown=nextjs:nodejs /app/apps/backoffice/public ./apps/backoffice/public
+COPY --from=builder --chown=nextjs:nodejs /app/apps/backoffice/package.json ./apps/backoffice/
+COPY --from=builder --chown=nextjs:nodejs /app/apps/backoffice/prisma ./apps/backoffice/prisma
 
 USER nextjs
 
@@ -39,5 +44,10 @@ EXPOSE 3001
 
 ENV PORT 3001
 ENV HOSTNAME "0.0.0.0"
+ENV NEXT_TELEMETRY_DISABLED 1
 
-CMD ["node", "server.js"]
+WORKDIR /app/apps/backoffice
+
+ENV PATH=/app/node_modules/.bin:$PATH
+
+CMD ["npx", "next", "start"]
