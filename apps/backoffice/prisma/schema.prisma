@@ -79,6 +79,11 @@ model User {
   createdTourism      TourismDestination[]    @relation("TourismCreator")
   updatedTourism      TourismDestination[]    @relation("TourismUpdater")
   tourismActivityLogs TourismActivityLog[]    @relation("TourismActivityLogs")
+
+  // Agency Management Relations
+  createdAgencies      Agency[]               @relation("AgencyCreator")
+  updatedAgencies      Agency[]               @relation("AgencyUpdater")
+  agencyActivityLogs   AgencyActivityLog[]    @relation("AgencyActivityLogs")
 }
 
 model PermissionCache {
@@ -199,9 +204,8 @@ model File {
   newsAsFeaturedImage News[] @relation("NewsFeaturedImage")
   eventsAsImage Event[] @relation("EventImage")
   tourismAsImage TourismDestination[] @relation("TourismImage")
-
-  // NEW: Service images relation
-  services Service[] @relation("ServiceImages")
+  agencyLogos       Agency[]                 @relation("AgencyLogo")
+  serviceImages     ServiceImage[]           @relation("ServiceImageFiles")
 
   @@index([uploadedById])
   @@index([category])
@@ -244,6 +248,23 @@ enum EventStatus {
   COMPLETED
 }
 
+enum AgencyCategory {
+  BADAN
+  DINAS
+  KECAMATAN
+  DESA
+}
+
+enum AgencyStatus {
+  ACTIVE
+  INACTIVE
+}
+
+enum ServiceImageType {
+  BANNER
+  DOKUMEN
+}
+
 model ServiceCategory {
   id         String    @id @default(cuid())
   name       String
@@ -259,6 +280,54 @@ model ServiceCategory {
 
   @@index([showInMenu])
   @@index([order])
+}
+
+model Agency {
+  id          String              @id @default(cuid())
+  slug        String              @unique
+  name        String
+  nickname    String
+  description String
+
+  // Logo
+  logoId      String?
+  logo        File?               @relation("AgencyLogo", fields: [logoId], references: [id], onDelete: SetNull)
+
+  // Category
+  category    AgencyCategory
+
+  // Contact & Location
+  address         String?
+  contactInfo     Json?    // { phone, email, website }
+  operatingHours  String?  // Text description
+  location        Json?    // { lat, lng }
+
+  // Social Media
+  socialMedia     Json?    // { facebook, twitter, instagram, youtube }
+
+  // Display & Status
+  status        AgencyStatus @default(ACTIVE)
+  showInMenu    Boolean      @default(true)
+  order         Int          @default(0)
+
+  // Audit
+  createdById   String
+  createdBy     User         @relation("AgencyCreator", fields: [createdById], references: [id])
+  updatedById   String?
+  updatedBy     User?        @relation("AgencyUpdater", fields: [updatedById], references: [id])
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+
+  // Relations
+  activityLogs            AgencyActivityLog[]
+  servicesAsOwner         Service[]                 @relation("ServiceAgencyOwner")
+  serviceRelatedAgencies  ServiceRelatedAgency[]    @relation("AgencyRelatedServices")
+
+  @@index([category])
+  @@index([status])
+  @@index([showInMenu])
+  @@index([order])
+  @@index([slug])
 }
 
 model Service {
@@ -292,9 +361,13 @@ model Service {
   updatedAt           DateTime             @updatedAt
   activityLogs        ServiceActivityLog[]
 
-  // NEW: Add image support
-  images              File[]               @relation("ServiceImages")
-  imageIds            String[]             @default([])
+  // Agency Relations
+  agencyId              String?
+  agency                Agency?                 @relation("ServiceAgencyOwner", fields: [agencyId], references: [id])
+  relatedAgencies       ServiceRelatedAgency[]  @relation("ServiceRelatedAgencies")
+
+  // Images with types
+  serviceImages         ServiceImage[]          @relation("ServiceImages")
 
   @@index([categoryId])
   @@index([status])
@@ -315,6 +388,50 @@ model ServiceActivityLog {
   @@index([serviceId])
   @@index([userId])
   @@index([createdAt])
+}
+
+model AgencyActivityLog {
+  id        String   @id @default(cuid())
+  agencyId  String
+  agency    Agency   @relation(fields: [agencyId], references: [id], onDelete: Cascade)
+  userId    String
+  action    String
+  changes   Json?
+  createdAt DateTime @default(now())
+  user      User     @relation("AgencyActivityLogs", fields: [userId], references: [id])
+
+  @@index([agencyId])
+  @@index([userId])
+  @@index([createdAt])
+}
+
+model ServiceRelatedAgency {
+  id          String   @id @default(cuid())
+  serviceId   String
+  service     Service  @relation("ServiceRelatedAgencies", fields: [serviceId], references: [id], onDelete: Cascade)
+  agencyId    String
+  agency      Agency   @relation("AgencyRelatedServices", fields: [agencyId], references: [id], onDelete: Cascade)
+  createdAt   DateTime @default(now())
+
+  @@unique([serviceId, agencyId])
+  @@index([serviceId])
+  @@index([agencyId])
+}
+
+model ServiceImage {
+  id        String            @id @default(cuid())
+  serviceId String
+  service   Service           @relation("ServiceImages", fields: [serviceId], references: [id], onDelete: Cascade)
+  fileId    String
+  file      File              @relation("ServiceImageFiles", fields: [fileId], references: [id], onDelete: Cascade)
+  type      ServiceImageType
+  order     Int               @default(0)
+  createdAt DateTime          @default(now())
+
+  @@unique([serviceId, fileId])
+  @@index([serviceId])
+  @@index([fileId])
+  @@index([type])
 }
 
 model NewsCategory {
