@@ -44,9 +44,9 @@ export const agencySchema = z.object({
     instagram: z.string().url().optional(),
     youtube: z.string().url().optional(),
   }).optional(),
-  status: z.enum(["ACTIVE", "INACTIVE"], { required_error: "Status is required" }).default("ACTIVE"),
-  showInMenu: z.boolean().default(true),
-  order: z.number().int().min(0, "Order must be a non-negative integer").default(0),
+  status: z.enum(["ACTIVE", "INACTIVE"], { required_error: "Status is required" }),
+  showInMenu: z.boolean(),
+  order: z.number().int().min(0, "Order must be a non-negative integer"),
 });
 
 /**
