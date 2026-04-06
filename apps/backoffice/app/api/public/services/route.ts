@@ -85,29 +85,7 @@ export const GET = async (request: Request) => {
             skip,
             take: pageSize,
             orderBy: { [sortBy]: sortOrder },
-            select: {
-              id: true,
-              slug: true,
-              icon: true,
-              name: true,
-              description: true,
-              detailedDescription: true,
-              categoryId: true,
-              badge: true,
-              stats: true,
-              showInMenu: true,
-              order: true,
-              isIntegrated: true,
-              duration: true,
-              cost: true,
-              requirements: true,
-              process: true,
-              contactInfo: true,
-              faqs: true,
-              downloadForms: true,
-              relatedServices: true,
-              status: true,
-              images: true,
+            include: {
               category: {
                 select: {
                   id: true,
@@ -117,6 +95,18 @@ export const GET = async (request: Request) => {
                   color: true,
                   bgColor: true,
                 },
+              },
+              agency: true,
+              relatedAgencies: {
+                include: {
+                  agency: true,
+                },
+              },
+              serviceImages: {
+                include: {
+                  file: true,
+                },
+                orderBy: [{ type: 'asc' }, { order: 'asc' }],
               },
             },
           }),

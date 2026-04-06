@@ -109,7 +109,18 @@ export const GET = protectApiRoute({
               email: true,
             },
           },
-          images: true,
+          agency: true,
+          relatedAgencies: {
+            include: {
+              agency: true,
+            },
+          },
+          serviceImages: {
+            include: {
+              file: true,
+            },
+            orderBy: [{ type: 'asc' }, { order: 'asc' }],
+          },
         },
       }),
       prisma.service.count({ where }),
@@ -171,19 +182,49 @@ export const POST = protectApiRoute({
         );
       }
 
+      // Extract agency relations and images
+      const { agencyId, relatedAgencyIds, serviceImages, ...serviceData } = validatedData as any;
+
+      // Validate banner constraint
+      if (serviceImages) {
+        const bannerCount = serviceImages.filter((img: any) => img.type === 'BANNER').length;
+        if (bannerCount > 1) {
+          return NextResponse.json(
+            { error: "Validation Error", message: 'Only one banner image is allowed' },
+            { status: 400 }
+          );
+        }
+      }
+
       // Create service
       const service = await prisma.service.create({
         data: {
-          ...validatedData,
+          ...serviceData,
           createdById: user.id,
           // Store JSON fields
-          requirements: validatedData.requirements || [],
-          process: validatedData.process || [],
-          contactInfo: (validatedData.contactInfo ?? null) as Prisma.InputJsonValue,
-          faqs: validatedData.faqs || [],
-          downloadForms: validatedData.downloadForms || [],
-          relatedServices: validatedData.relatedServices || [],
-          imageIds: body.imageIds || [],
+          requirements: serviceData.requirements || [],
+          process: serviceData.process || [],
+          contactInfo: (serviceData.contactInfo ?? null) as Prisma.InputJsonValue,
+          faqs: serviceData.faqs || [],
+          downloadForms: serviceData.downloadForms || [],
+          relatedServices: serviceData.relatedServices || [],
+          agencyId,
+          relatedAgencies: relatedAgencyIds && relatedAgencyIds.length > 0
+            ? {
+                create: relatedAgencyIds.map((agencyId: string) => ({
+                  agencyId,
+                })),
+              }
+            : undefined,
+          serviceImages: serviceImages && serviceImages.length > 0
+            ? {
+                create: serviceImages.map((img: any) => ({
+                  fileId: img.fileId,
+                  type: img.type,
+                  order: img.order || 0,
+                })),
+              }
+            : undefined,
         },
         include: {
           category: {
@@ -203,7 +244,18 @@ export const POST = protectApiRoute({
               email: true,
             },
           },
-          images: true,
+          agency: true,
+          relatedAgencies: {
+            include: {
+              agency: true,
+            },
+          },
+          serviceImages: {
+            include: {
+              file: true,
+            },
+            orderBy: [{ type: 'asc' }, { order: 'asc' }],
+          },
         },
       });
 

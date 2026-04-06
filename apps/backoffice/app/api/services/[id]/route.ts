@@ -55,7 +55,18 @@ export const GET = protectApiRoute({
             email: true,
           },
         },
-        images: true,
+        agency: true,
+        relatedAgencies: {
+          include: {
+            agency: true,
+          },
+        },
+        serviceImages: {
+          include: {
+            file: true,
+          },
+          orderBy: [{ type: 'asc' }, { order: 'asc' }],
+        },
       },
     });
 
@@ -208,8 +219,51 @@ export const PUT = protectApiRoute({
       if (validatedData.relatedServices !== undefined) {
         updateData.relatedServices = validatedData.relatedServices;
       }
-      if (body.imageIds !== undefined) {
-        updateData.imageIds = body.imageIds;
+
+      // Extract agency relations and images
+      const { agencyId, relatedAgencyIds, serviceImages } = validatedData as any;
+
+      // Validate banner constraint
+      if (serviceImages) {
+        const bannerCount = serviceImages.filter((img: any) => img.type === 'BANNER').length;
+        if (bannerCount > 1) {
+          return NextResponse.json(
+            { error: "Validation Error", message: 'Only one banner image is allowed' },
+            { status: 400 }
+          );
+        }
+      }
+
+      // Delete existing related agencies and service images
+      await prisma.serviceRelatedAgency.deleteMany({
+        where: { serviceId: serviceId },
+      });
+
+      await prisma.serviceImage.deleteMany({
+        where: { serviceId: serviceId },
+      });
+
+      // Add agency and image data to update
+      if (agencyId !== undefined) {
+        updateData.agencyId = agencyId;
+      }
+
+      if (relatedAgencyIds && relatedAgencyIds.length > 0) {
+        updateData.relatedAgencies = {
+          create: relatedAgencyIds.map((agencyId: string) => ({
+            agencyId,
+          })),
+        };
+      }
+
+      if (serviceImages && serviceImages.length > 0) {
+        updateData.serviceImages = {
+          create: serviceImages.map((img: any) => ({
+            fileId: img.fileId,
+            type: img.type,
+            order: img.order || 0,
+          })),
+        };
       }
 
       // Update service
@@ -241,7 +295,18 @@ export const PUT = protectApiRoute({
               email: true,
             },
           },
-          images: true,
+          agency: true,
+          relatedAgencies: {
+            include: {
+              agency: true,
+            },
+          },
+          serviceImages: {
+            include: {
+              file: true,
+            },
+            orderBy: [{ type: 'asc' }, { order: 'asc' }],
+          },
         },
       });
 

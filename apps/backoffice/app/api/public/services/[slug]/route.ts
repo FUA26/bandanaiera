@@ -50,31 +50,7 @@ export const GET = async (
             slug: serviceSlug,
             status: "PUBLISHED",
           },
-          select: {
-            id: true,
-            slug: true,
-            icon: true,
-            name: true,
-            description: true,
-            detailedDescription: true,
-            categoryId: true,
-            badge: true,
-            stats: true,
-            showInMenu: true,
-            order: true,
-            isIntegrated: true,
-            duration: true,
-            cost: true,
-            requirements: true,
-            process: true,
-            contactInfo: true,
-            faqs: true,
-            downloadForms: true,
-            relatedServices: true,
-            status: true,
-            createdAt: true,
-            updatedAt: true,
-            images: true,
+          include: {
             category: {
               select: {
                 id: true,
@@ -84,6 +60,18 @@ export const GET = async (
                 color: true,
                 bgColor: true,
               },
+            },
+            agency: true,
+            relatedAgencies: {
+              include: {
+                agency: true,
+              },
+            },
+            serviceImages: {
+              include: {
+                file: true,
+              },
+              orderBy: [{ type: 'asc' }, { order: 'asc' }],
             },
           },
         });

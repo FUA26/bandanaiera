@@ -82,6 +82,21 @@ export const downloadFormSchema = z.object({
 
 /**
  * ============================================================================
+ * Service Image Schemas
+ * ============================================================================
+ */
+
+/**
+ * Service image schema for typed images
+ */
+export const serviceImageSchema = z.object({
+  fileId: z.string().min(1, "File ID is required"),
+  type: z.enum(["BANNER", "DOKUMEN"], { required_error: "Image type is required" }),
+  order: z.number().int().min(0, "Order must be a non-negative integer").default(0),
+});
+
+/**
+ * ============================================================================
  * Service Schemas
  * ============================================================================
  */
@@ -115,6 +130,7 @@ export const serviceSchema = z.object({
   status: z.enum(["DRAFT", "PUBLISHED", "ARCHIVED"], { required_error: "Status is required" }).default("DRAFT"),
   agencyId: z.string().min(1, "Invalid agency ID format").optional(),
   relatedAgencyIds: z.array(z.string().min(1, "Invalid agency ID format")).optional(),
+  serviceImages: z.array(serviceImageSchema).optional(),
 });
 
 /**
@@ -161,6 +177,11 @@ export const serviceUpdateSchema = z.object({
   status: z.enum(["DRAFT", "PUBLISHED", "ARCHIVED"]).optional(),
   agencyId: z.string().min(1).optional(),
   relatedAgencyIds: z.array(z.string()).optional(),
+  serviceImages: z.array(z.object({
+    fileId: z.string().min(1),
+    type: z.enum(["BANNER", "DOKUMEN"]),
+    order: z.number().int().min(0).optional(),
+  })).optional(),
 });
 
 /**
@@ -180,26 +201,6 @@ export const serviceReorderSchema = z.object({
     })
   ).min(1, "At least one service is required"),
 });
-
-/**
- * ============================================================================
- * Service Image Schemas
- * ============================================================================
- */
-
-/**
- * Service image schema for typed images
- */
-export const serviceImageSchema = z.object({
-  fileId: z.string().min(1, "File ID is required"),
-  type: z.enum(["BANNER", "DOKUMEN"], { required_error: "Image type is required" }),
-  order: z.number().int().min(0, "Order must be a non-negative integer").default(0),
-});
-
-/**
- * TypeScript Type Exports
- */
-export type ServiceImageInput = z.infer<typeof serviceImageSchema>;
 
 /**
  * ============================================================================
