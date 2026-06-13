@@ -73,8 +73,8 @@ export function RoleForm({
       {/* Source Role selector for clone mode */}
       {mode === "clone" && (
         <Field>
-          <FieldLabel htmlFor="sourceRoleId">Source Role</FieldLabel>
-          <FieldDescription>Select the role to clone from</FieldDescription>
+          <FieldLabel htmlFor="sourceRoleId">Peran Sumber</FieldLabel>
+          <FieldDescription>Pilih peran untuk disalin</FieldDescription>
           <FieldContent>
             <select
               id="sourceRoleId"
@@ -82,7 +82,7 @@ export function RoleForm({
               {...form.register("sourceRoleId")}
               disabled={isLoading}
             >
-              <option value="">Select a role...</option>
+              <option value="">Pilih peran...</option>
               {roles.map((role) => (
                 <option key={role.id} value={role.id}>
                   {role.name}
@@ -101,7 +101,7 @@ export function RoleForm({
       )}
 
       <Field>
-        <FieldLabel htmlFor="name">Role Name</FieldLabel>
+        <FieldLabel htmlFor="name">Nama Peran</FieldLabel>
         <FieldContent>
           <Input
             id="name"
@@ -111,7 +111,7 @@ export function RoleForm({
           />
         </FieldContent>
         <FieldDescription>
-          Use uppercase letters and underscores only (e.g., CONTENT_MANAGER)
+          Gunakan huruf kapital dan garis bawah saja (misalnya, CONTENT_MANAGER)
         </FieldDescription>
         <FieldError
           errors={form.formState.errors.name ? [form.formState.errors.name] : undefined}
@@ -121,11 +121,11 @@ export function RoleForm({
       {/* Description field - only show for create and edit modes, not clone */}
       {mode !== "clone" && (
         <Field>
-          <FieldLabel htmlFor="description">Description</FieldLabel>
+          <FieldLabel htmlFor="description">Deskripsi</FieldLabel>
           <FieldContent>
             <Textarea
               id="description"
-              placeholder="Brief description of this role..."
+              placeholder="Deskripsi singkat untuk peran ini..."
               {...form.register("description")}
               disabled={isLoading}
             />
@@ -143,7 +143,7 @@ export function RoleForm({
       {/* Permissions field - only show for create and edit modes, not clone */}
       {mode !== "clone" && (
         <Field>
-          <FieldLabel>Permissions</FieldLabel>
+          <FieldLabel>Izin</FieldLabel>
           <FieldContent>
             <PermissionMatrix
               selectedPermissions={selectedPermissions}
@@ -163,19 +163,19 @@ export function RoleForm({
 
       <div className="flex justify-end gap-2 pt-4">
         <Button type="button" variant="outline" onClick={onCancel} disabled={isLoading}>
-          Cancel
+          Batal
         </Button>
         <Button
           type="submit"
           disabled={isLoading || (mode !== "clone" && selectedPermissions.length === 0)}
         >
           {isLoading
-            ? "Saving..."
+            ? "Menyimpan..."
             : mode === "create"
-              ? "Create Role"
+              ? "Buat Peran"
               : mode === "clone"
-                ? "Clone Role"
-                : "Update Role"}
+                ? "Salin Peran"
+                : "Update Peran"}
         </Button>
       </div>
     </form>

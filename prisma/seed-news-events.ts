@@ -534,6 +534,26 @@ async function main() {
 
   console.log(`👤 Using admin user: ${admin.email} (${admin.id})\n`);
 
+  // Get OPDs for news and events
+  const kominfo = await prisma.opd.findFirst({
+    where: { slug: "dinas-komunikasi-dan-informatika" },
+  });
+  const pu = await prisma.opd.findFirst({
+    where: { slug: "dinas-pekerjaan-umum" },
+  });
+  const dinkes = await prisma.opd.findFirst({
+    where: { slug: "dinas-kesehatan" },
+  });
+  const diknas = await prisma.opd.findFirst({
+    where: { slug: "dinas-pendidikan" },
+  });
+  const dinsos = await prisma.opd.findFirst({
+    where: { slug: "dinas-sosial" },
+  });
+  const bappeda = await prisma.opd.findFirst({
+    where: { slug: "bappeda" },
+  });
+
   // Clean existing data
   console.log("🧹 Cleaning existing data...");
   await prisma.newsActivityLog.deleteMany({});
@@ -556,16 +576,34 @@ async function main() {
 
   // Seed news
   console.log("📰 Seeding news articles...");
+  let createdNews = 0;
   for (const article of news) {
+    // Map news to OPD based on content
+    let opdId = null;
+    if (article.slug.includes("digital") || article.slug.includes("layanan")) {
+      opdId = kominfo?.id;
+    } else if (article.slug.includes("taman") || article.slug.includes("revitalisasi")) {
+      opdId = pu?.id;
+    } else if (article.slug.includes("posyandu") || article.slug.includes("kesehatan")) {
+      opdId = dinkes?.id;
+    } else if (article.slug.includes("beasiswa") || article.slug.includes("pendidikan")) {
+      opdId = diknas?.id;
+    } else if (article.slug.includes("bansos") || article.slug.includes("sosial")) {
+      opdId = dinsos?.id;
+    }
+
     await prisma.news.create({
       data: {
         ...article,
         createdById: admin.id,
+        updatedById: admin.id,
+        opdId,
       },
     });
+    createdNews++;
     console.log(`  ✓ ${article.title}`);
   }
-  console.log(`✅ Created ${news.length} news articles\n`);
+  console.log(`✅ Created ${createdNews} news articles\n`);
 
   // Seed event categories
   console.log("📁 Seeding event categories...");
@@ -579,16 +617,32 @@ async function main() {
 
   // Seed events
   console.log("📅 Seeding events...");
+  let createdEvents = 0;
   for (const event of events) {
+    // Map events to OPD based on organizer
+    let opdId = null;
+    if (event.organizer.includes("Bappeda")) {
+      opdId = bappeda?.id;
+    } else if (event.organizer.includes("Kebudayaan")) {
+      opdId = await prisma.opd.findFirst({ where: { slug: "dinas-kebudayaan" } }).then(o => o?.id);
+    } else if (event.organizer.includes("Pemuda dan Olahraga")) {
+      opdId = await prisma.opd.findFirst({ where: { slug: "dinas-pemuda-dan-olahraga" } }).then(o => o?.id);
+    } else if (event.organizer.includes("Koperasi")) {
+      opdId = await prisma.opd.findFirst({ where: { slug: "dinas-koperasi-dan-umkm" } }).then(o => o?.id);
+    }
+
     await prisma.event.create({
       data: {
         ...event,
         createdById: admin.id,
+        updatedById: admin.id,
+        opdId,
       },
     });
+    createdEvents++;
     console.log(`  ✓ ${event.title}`);
   }
-  console.log(`✅ Created ${events.length} events\n`);
+  console.log(`✅ Created ${createdEvents} events\n`);
 
   // Create activity logs
   console.log("📝 Creating activity logs...");

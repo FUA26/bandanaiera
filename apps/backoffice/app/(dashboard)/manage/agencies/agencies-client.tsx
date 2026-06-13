@@ -39,14 +39,14 @@ export function AgenciesClient() {
       });
   }, []);
 
-  if (loading) return <div>Loading...</div>;
+  if (loading) return <div>Memuat...</div>;
 
   return (
     <div className="space-y-4">
       <div className="flex justify-end">
         <Button onClick={() => router.push('/manage/agencies/create')}>
           <Plus className="mr-2 h-4 w-4" />
-          Add Agency
+          Tambah Perangkat Daerah
         </Button>
       </div>
 
@@ -54,12 +54,12 @@ export function AgenciesClient() {
         <TableHeader>
           <TableRow>
             <TableHead>Logo</TableHead>
-            <TableHead>Name</TableHead>
-            <TableHead>Nickname</TableHead>
-            <TableHead>Category</TableHead>
-            <TableHead>Services</TableHead>
+            <TableHead>Nama</TableHead>
+            <TableHead>Singkatan</TableHead>
+            <TableHead>Kategori</TableHead>
+            <TableHead>Layanan</TableHead>
             <TableHead>Status</TableHead>
-            <TableHead>Actions</TableHead>
+            <TableHead>Aksi</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -95,7 +95,7 @@ export function AgenciesClient() {
                     router.push(`/manage/agencies/${agency.id}`);
                   }}
                 >
-                  Edit
+                  Ubah
                 </Button>
               </TableCell>
             </TableRow>

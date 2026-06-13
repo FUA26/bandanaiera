@@ -40,7 +40,7 @@ export const GET = async (request: Request) => {
     const categoryId = searchParams.get("categoryId");
     const search = searchParams.get("search");
     const showInMenu = searchParams.get("showInMenu");
-    const agencyId = searchParams.get("agencyId") || undefined;
+    const opdId = searchParams.get("opdId") || undefined;
     const page = Math.max(1, parseInt(searchParams.get("page") || "1", 10));
     const pageSize = Math.min(
       100,
@@ -64,8 +64,8 @@ export const GET = async (request: Request) => {
           where.categoryId = categoryId;
         }
 
-        if (agencyId) {
-          where.agencyId = agencyId;
+        if (opdId) {
+          where.opdId = opdId;
         }
 
         if (showInMenu !== null) {
@@ -101,10 +101,10 @@ export const GET = async (request: Request) => {
                   bgColor: true,
                 },
               },
-              agency: true,
-              relatedAgencies: {
+              opd: true,
+              relatedOpds: {
                 include: {
-                  agency: true,
+                  opd: true,
                 },
               },
               serviceImages: {

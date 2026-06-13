@@ -44,14 +44,14 @@ export function ForgotPasswordForm() {
       const result = await response.json();
 
       if (!response.ok) {
-        throw new Error(result.message || "Failed to send reset email");
+        throw new Error(result.message || "Gagal mengirim email reset");
       }
 
       setIsSuccess(true);
-      toast.success("If an account exists with that email, a password reset link has been sent.");
+      toast.success("Jika akun dengan email tersebut ada, tautan reset password telah dikirim.");
     } catch (error) {
       console.error("Failed to send reset email:", error);
-      toast.error(error instanceof Error ? error.message : "Failed to send reset email");
+      toast.error(error instanceof Error ? error.message : "Gagal mengirim email reset");
     } finally {
       setIsLoading(false);
     }

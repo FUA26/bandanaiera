@@ -113,11 +113,11 @@ export function PermissionMatrix({
   };
 
   if (loading) {
-    return <div className="text-sm text-muted-foreground">Loading permissions...</div>;
+    return <div className="text-sm text-muted-foreground">Memuat izin...</div>;
   }
 
   if (categories.length === 0) {
-    return <div className="text-sm text-muted-foreground">No permissions found</div>;
+    return <div className="text-sm text-muted-foreground">Tidak ada izin ditemukan</div>;
   }
 
   return (
@@ -135,7 +135,7 @@ export function PermissionMatrix({
           <TabsContent key={category.name} value={category.name} className="space-y-4 mt-0">
             <div className="flex items-center justify-between">
               <div>
-                <h3 className="font-semibold">{category.name} Permissions</h3>
+                <h3 className="font-semibold">Izin {category.name}</h3>
                 <p className="text-sm text-muted-foreground">{category.description}</p>
               </div>
               <Button
@@ -146,8 +146,8 @@ export function PermissionMatrix({
                 disabled={disabled}
               >
                 {category.permissions.every((p) => selectedPermissions.includes(p))
-                  ? "Deselect All"
-                  : "Select All"}
+                  ? "Hapus Pilihan Semua"
+                  : "Pilih Semua"}
               </Button>
             </div>
 
@@ -179,7 +179,7 @@ export function PermissionMatrix({
 function getDefaultCategories(): PermissionCategory[] {
   return [
     {
-      name: "User",
+      name: "Pengguna",
       permissions: [
         "USER_READ_OWN",
         "USER_READ_ANY",
@@ -189,10 +189,10 @@ function getDefaultCategories(): PermissionCategory[] {
         "USER_DELETE_ANY",
         "USER_CREATE",
       ],
-      description: "User account management permissions",
+      description: "Izin manajemen akun pengguna",
     },
     {
-      name: "Content",
+      name: "Konten",
       permissions: [
         "CONTENT_READ_OWN",
         "CONTENT_READ_ANY",
@@ -203,17 +203,17 @@ function getDefaultCategories(): PermissionCategory[] {
         "CONTENT_DELETE_ANY",
         "CONTENT_PUBLISH",
       ],
-      description: "Content creation and management",
+      description: "Pembuatan dan manajemen konten",
     },
     {
-      name: "Settings",
+      name: "Pengaturan",
       permissions: ["SETTINGS_READ", "SETTINGS_UPDATE"],
-      description: "Application settings access",
+      description: "Akses pengaturan aplikasi",
     },
     {
-      name: "Analytics",
+      name: "Analitik",
       permissions: ["ANALYTICS_VIEW", "ANALYTICS_EXPORT"],
-      description: "Analytics and reporting",
+      description: "Analitik dan pelaporan",
     },
     {
       name: "Admin",
@@ -223,7 +223,7 @@ function getDefaultCategories(): PermissionCategory[] {
         "ADMIN_ROLES_MANAGE",
         "ADMIN_PERMISSIONS_MANAGE",
       ],
-      description: "Administrative functions",
+      description: "Fungsi administratif",
     },
   ];
 }

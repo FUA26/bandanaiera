@@ -65,13 +65,13 @@ export function UsersTable() {
   }
 
   if (loading) {
-    return <div className="rounded-lg border p-6 text-center">Loading...</div>;
+    return <div className="rounded-lg border p-6 text-center">Memuat...</div>;
   }
 
   if (!canReadAny) {
     return (
       <div className="rounded-lg border border-destructive/50 bg-destructive/10 p-6 text-center text-destructive">
-        You don&apos;t have permission to view users.
+        Anda tidak memiliki izin untuk melihat pengguna.
       </div>
     );
   }
@@ -81,10 +81,10 @@ export function UsersTable() {
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead>Name</TableHead>
+            <TableHead>Nama</TableHead>
             <TableHead>Email</TableHead>
-            <TableHead>Role</TableHead>
-            <TableHead className="text-right">Actions</TableHead>
+            <TableHead>Peran</TableHead>
+            <TableHead className="text-right">Aksi</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -114,7 +114,7 @@ export function UsersTable() {
                   {/* Delete button with Shield for visual feedback */}
                   <Shield
                     permissions={["USER_DELETE_ANY"]}
-                    message="Only administrators can delete users"
+                    message="Hanya administrator yang dapat menghapus pengguna"
                     type="tooltip"
                   >
                     <Button variant="ghost" size="icon">
@@ -132,7 +132,7 @@ export function UsersTable() {
       {permissions && (
         <div className="border-t p-4">
           <p className="text-sm text-muted-foreground">
-            Your permissions: {permissions.permissions.length} total
+            Izin Anda: {permissions.permissions.length} total
           </p>
         </div>
       )}

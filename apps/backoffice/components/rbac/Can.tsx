@@ -75,11 +75,14 @@ export function Can({
 
   // Show loading state while permissions are being fetched
   if (isLoading && showLoading) {
-    return <>{loading}</>;
+    if (loading) return <>{loading}</>;
+    return null;
   }
 
   // Render children if user has access, otherwise render fallback
-  return <>{hasAccess ? children : fallback}</>;
+  if (hasAccess) return <>{children}</>;
+  if (fallback) return <>{fallback}</>;
+  return null;
 }
 
 /**
@@ -109,7 +112,10 @@ export function CanAccessOwn({
 }) {
   const { permissions } = usePermissionContext();
 
-  if (!permissions) return <>{fallback}</>;
+  if (!permissions) {
+    if (fallback) return <>{fallback}</>;
+    return null;
+  }
 
   // Check if user has the ANY version of the permission
   const anyPermission = permission.replace("_OWN", "_ANY") as Permission;
@@ -123,7 +129,8 @@ export function CanAccessOwn({
     return <>{children}</>;
   }
 
-  return <>{fallback}</>;
+  if (fallback) return <>{fallback}</>;
+  return null;
 }
 
 /**
@@ -159,7 +166,8 @@ export function Cannot({
   }, [userPermissions, permissions, strict]);
 
   // Render children only if user does NOT have access
-  return <>{!hasAccess ? children : null}</>;
+  if (!hasAccess) return <>{children}</>;
+  return null;
 }
 
 /**
@@ -199,8 +207,13 @@ export function Match({
     }
   }, [userPermissions, permissions, strict]);
 
-  if (isLoading) return <>{loading}</>;
-  return <>{hasAccess ? onMatch : onNoMatch}</>;
+  if (isLoading) {
+    if (loading) return <>{loading}</>;
+    return null;
+  }
+  if (hasAccess) return <>{onMatch}</>;
+  if (onNoMatch) return <>{onNoMatch}</>;
+  return null;
 }
 
 export type { CanProps };

@@ -63,10 +63,10 @@ export function ResetPasswordForm({ token }: ResetPasswordFormProps) {
 
   const getStrengthLabel = (strength: number): string => {
     if (strength === 0) return "";
-    if (strength < 40) return "Weak";
-    if (strength < 70) return "Fair";
-    if (strength < 90) return "Good";
-    return "Strong";
+    if (strength < 40) return "Lemah";
+    if (strength < 70) return "Cukup";
+    if (strength < 90) return "Baik";
+    return "Kuat";
   };
 
   const getStrengthColor = (strength: number): string => {
@@ -95,11 +95,11 @@ export function ResetPasswordForm({ token }: ResetPasswordFormProps) {
       const result = await response.json();
 
       if (!response.ok) {
-        throw new Error(result.message || "Failed to reset password");
+        throw new Error(result.message || "Gagal mereset password");
       }
 
       setIsSuccess(true);
-      toast.success("Password reset successfully. You can now log in with your new password.");
+      toast.success("Password berhasil direset. Anda sekarang dapat masuk dengan password baru.");
 
       // Redirect to login after 2 seconds
       setTimeout(() => {
@@ -107,7 +107,7 @@ export function ResetPasswordForm({ token }: ResetPasswordFormProps) {
       }, 2000);
     } catch (error) {
       console.error("Failed to reset password:", error);
-      toast.error(error instanceof Error ? error.message : "Failed to reset password");
+      toast.error(error instanceof Error ? error.message : "Gagal mereset password");
     } finally {
       setIsLoading(false);
     }
@@ -122,9 +122,9 @@ export function ResetPasswordForm({ token }: ResetPasswordFormProps) {
         </div>
 
         <div className="space-y-2 text-center">
-          <h3 className="text-xl font-semibold">Password Reset Successful</h3>
+          <h3 className="text-xl font-semibold">Reset Password Berhasil</h3>
           <p className="text-sm text-muted-foreground">
-            Your password has been reset successfully. Redirecting to login...
+            Password Anda telah berhasil direset. Mengalihkan ke halaman login...
           </p>
         </div>
       </div>
@@ -134,14 +134,14 @@ export function ResetPasswordForm({ token }: ResetPasswordFormProps) {
   return (
     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
       <Field>
-        <FieldLabel htmlFor="password">New Password</FieldLabel>
+        <FieldLabel htmlFor="password">Password Baru</FieldLabel>
         <FieldContent>
           <div className="space-y-2">
             <div className="relative">
               <Input
                 id="password"
                 type={showPassword ? "text" : "password"}
-                placeholder="Enter new password"
+                placeholder="Masukkan password baru"
                 autoComplete="new-password"
                 {...form.register("password")}
                 disabled={isLoading}
@@ -159,7 +159,7 @@ export function ResetPasswordForm({ token }: ResetPasswordFormProps) {
                   icon={showPassword ? ViewOffIcon : EyeIcon}
                   className="h-4 w-4 text-muted-foreground"
                 />
-                <span className="sr-only">{showPassword ? "Hide password" : "Show password"}</span>
+                <span className="sr-only">{showPassword ? "Sembunyikan password" : "Tampilkan password"}</span>
               </Button>
             </div>
 
@@ -167,7 +167,7 @@ export function ResetPasswordForm({ token }: ResetPasswordFormProps) {
             {newPassword && (
               <div className="space-y-2">
                 <div className="flex items-center justify-between text-xs">
-                  <span className="text-muted-foreground">Password strength:</span>
+                  <span className="text-muted-foreground">Kekuatan password:</span>
                   <span
                     className={`font-medium ${
                       passwordStrength < 40
@@ -198,13 +198,13 @@ export function ResetPasswordForm({ token }: ResetPasswordFormProps) {
       </Field>
 
       <Field>
-        <FieldLabel htmlFor="confirmPassword">Confirm New Password</FieldLabel>
+        <FieldLabel htmlFor="confirmPassword">Konfirmasi Password Baru</FieldLabel>
         <FieldContent>
           <div className="relative">
             <Input
               id="confirmPassword"
               type={showConfirmPassword ? "text" : "password"}
-              placeholder="Confirm new password"
+              placeholder="Konfirmasi password baru"
               autoComplete="new-password"
               {...form.register("confirmPassword")}
               disabled={isLoading}
@@ -223,7 +223,7 @@ export function ResetPasswordForm({ token }: ResetPasswordFormProps) {
                 className="h-4 w-4 text-muted-foreground"
               />
               <span className="sr-only">
-                {showConfirmPassword ? "Hide password" : "Show password"}
+                {showConfirmPassword ? "Sembunyikan password" : "Tampilkan password"}
               </span>
             </Button>
           </div>
@@ -238,12 +238,12 @@ export function ResetPasswordForm({ token }: ResetPasswordFormProps) {
       </Field>
 
       <Button type="submit" className="w-full" disabled={isLoading}>
-        {isLoading ? "Resetting Password..." : "Reset Password"}
+        {isLoading ? "Mereset Password..." : "Reset Password"}
       </Button>
 
       <div className="text-center text-sm">
         <a href="/login" className="text-primary underline-offset-4 hover:underline">
-          Back to login
+          Kembali ke login
         </a>
       </div>
     </form>

@@ -126,10 +126,10 @@ export function EventCategoriesClient({ categoriesPromise }: EventCategoriesClie
 
       if (!response.ok) {
         const error = await response.json();
-        throw new Error(error.error || 'Failed to save category');
+        throw new Error(error.error || 'Gagal menyimpan kategori');
       }
 
-      toast.success(editingCategory ? 'Category updated' : 'Category created');
+      toast.success(editingCategory ? 'Kategori diperbarui' : 'Kategori dibuat');
       setDialogOpen(false);
       router.refresh();
 
@@ -137,7 +137,7 @@ export function EventCategoriesClient({ categoriesPromise }: EventCategoriesClie
       const updated = await categoriesPromise;
       setCategories(updated);
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : 'Failed to save');
+      toast.error(error instanceof Error ? error.message : 'Gagal menyimpan');
     }
   };
 
@@ -151,34 +151,90 @@ export function EventCategoriesClient({ categoriesPromise }: EventCategoriesClie
 
       if (!response.ok) {
         const error = await response.json();
-        throw new Error(error.error || 'Failed to delete');
+        throw new Error(error.error || 'Gagal menghapus');
       }
 
-      toast.success('Category deleted');
+      toast.success('Kategori dihapus');
       setDeleteDialog({ open: false, id: null, name: '' });
       router.refresh();
 
       const updated = await categoriesPromise;
       setCategories(updated);
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : 'Failed to delete');
+      toast.error(error instanceof Error ? error.message : 'Gagal menghapus');
     }
   };
 
   return (
     <>
       <div className="flex justify-end mb-4">
-        <Button onClick={openCreateDialog}>
-          <Plus className="mr-2 h-4 w-4" />
-          New Category
+        <Button onClick={openCreateDialog} className="gap-2">
+          <Plus className="h-4 w-4" />
+          Kategori Baru
         </Button>
       </div>
+
+      {/* Stats Overview */}
+      {categories.length > 0 && (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+          <div className="rounded-lg border bg-card p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-muted-foreground">Total Kategori</p>
+                <p className="text-2xl font-bold">{categories.length}</p>
+              </div>
+              <div className="h-8 w-8 rounded-lg bg-blue-100 dark:bg-blue-900/20 flex items-center justify-center">
+                <span className="text-blue-600 dark:text-blue-400">📁</span>
+              </div>
+            </div>
+          </div>
+          <div className="rounded-lg border bg-card p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-muted-foreground">Visible in Menu</p>
+                <p className="text-2xl font-bold">
+                  {categories.filter((c) => c.showInMenu).length}
+                </p>
+              </div>
+              <div className="h-8 w-8 rounded-lg bg-green-100 dark:bg-green-900/20 flex items-center justify-center">
+                <span className="text-green-600 dark:text-green-400">✓</span>
+              </div>
+            </div>
+          </div>
+          <div className="rounded-lg border bg-card p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-muted-foreground">Total Agenda</p>
+                <p className="text-2xl font-bold">
+                  {categories.reduce((sum, c) => sum + (c._count?.events || 0), 0)}
+                </p>
+              </div>
+              <div className="h-8 w-8 rounded-lg bg-purple-100 dark:bg-purple-900/20 flex items-center justify-center">
+                <span className="text-purple-600 dark:text-purple-400">📅</span>
+              </div>
+            </div>
+          </div>
+          <div className="rounded-lg border bg-card p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-muted-foreground">Hidden</p>
+                <p className="text-2xl font-bold">
+                  {categories.filter((c) => !c.showInMenu).length}
+                </p>
+              </div>
+              <div className="h-8 w-8 rounded-lg bg-gray-100 dark:bg-gray-900/20 flex items-center justify-center">
+                <span className="text-gray-600 dark:text-gray-400">👁️</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       <DataTable
         columns={eventCategoriesColumns}
         data={categories}
         filterKey="name"
-        toolbarPlaceholder="Search categories..."
+        toolbarPlaceholder="Cari kategori..."
       />
 
       {/* Create/Edit Dialog */}
@@ -186,12 +242,12 @@ export function EventCategoriesClient({ categoriesPromise }: EventCategoriesClie
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
             <DialogTitle>
-              {editingCategory ? 'Edit Category' : 'New Category'}
+              {editingCategory ? 'Ubah Kategori' : 'Kategori Baru'}
             </DialogTitle>
           </DialogHeader>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="name">Name</Label>
+              <Label htmlFor="name">Nama</Label>
               <Input id="name" {...form.register('name')} placeholder="Pemerintahan" />
               {form.formState.errors.name && (
                 <p className="text-sm text-destructive">{form.formState.errors.name.message}</p>
@@ -213,7 +269,7 @@ export function EventCategoriesClient({ categoriesPromise }: EventCategoriesClie
                 onValueChange={(value) => form.setValue('color', value)}
               >
                 <SelectTrigger>
-                  <SelectValue placeholder="Select color" />
+                  <SelectValue placeholder="Pilih warna" />
                 </SelectTrigger>
                 <SelectContent>
                   {COLORS.map((color) => (
@@ -226,7 +282,7 @@ export function EventCategoriesClient({ categoriesPromise }: EventCategoriesClie
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="order">Order</Label>
+              <Label htmlFor="order">Urutan</Label>
               <Input
                 id="order"
                 type="number"
@@ -236,7 +292,7 @@ export function EventCategoriesClient({ categoriesPromise }: EventCategoriesClie
 
             <div className="flex items-center justify-between rounded-lg border p-4">
               <div className="space-y-0.5">
-                <Label>Show in Menu</Label>
+                <Label>Tampilkan di Menu</Label>
               </div>
               <Switch
                 checked={form.watch('showInMenu')}
@@ -246,10 +302,10 @@ export function EventCategoriesClient({ categoriesPromise }: EventCategoriesClie
 
             <DialogFooter>
               <Button type="button" variant="outline" onClick={() => setDialogOpen(false)}>
-                Cancel
+                Batal
               </Button>
               <Button type="submit">
-                {editingCategory ? 'Update' : 'Create'}
+                {editingCategory ? 'Update' : 'Buat'}
               </Button>
             </DialogFooter>
           </form>
@@ -260,17 +316,17 @@ export function EventCategoriesClient({ categoriesPromise }: EventCategoriesClie
       <Dialog open={deleteDialog.open} onOpenChange={(open) => setDeleteDialog({ ...deleteDialog, open })}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Delete Category</DialogTitle>
+            <DialogTitle>Hapus Kategori</DialogTitle>
           </DialogHeader>
           <p className="text-sm text-muted-foreground">
-            Are you sure you want to delete &quot;{deleteDialog.name}&quot;? This action cannot be undone.
+            Apakah Anda yakin ingin menghapus &quot;{deleteDialog.name}&quot;? Tindakan ini tidak dapat dibatalkan.
           </p>
           <DialogFooter>
             <Button variant="outline" onClick={() => setDeleteDialog({ open: false, id: null, name: '' })}>
-              Cancel
+              Batal
             </Button>
             <Button variant="destructive" onClick={handleDelete}>
-              Delete
+              Hapus
             </Button>
           </DialogFooter>
         </DialogContent>

@@ -72,12 +72,12 @@ export function TourismClient({ initialTourism, initialCategories, header }: Tou
     if (!deleteDialog.id) return;
     try {
       const response = await fetch(`/api/tourism/${deleteDialog.id}`, { method: 'DELETE' });
-      if (!response.ok) throw new Error('Failed to delete');
-      toast.success('Destination deleted');
+      if (!response.ok) throw new Error('Gagal menghapus');
+      toast.success('Destinasi dihapus');
       setDeleteDialog({ open: false, id: null, title: '' });
       router.refresh();
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : 'Failed to delete destination');
+      toast.error(error instanceof Error ? error.message : 'Gagal menghapus destinasi');
     }
   };
 
@@ -101,7 +101,7 @@ export function TourismClient({ initialTourism, initialCategories, header }: Tou
           <Button asChild>
             <Link href="/manage/tourism/create">
               <Plus className="mr-2 h-4 w-4" />
-              New Destination
+              Destinasi Baru
             </Link>
           </Button>
         </div>
@@ -111,24 +111,24 @@ export function TourismClient({ initialTourism, initialCategories, header }: Tou
         columns={tourismColumns}
         data={filteredTourism}
         filterKey="name"
-        toolbarPlaceholder="Search destinations..."
+        toolbarPlaceholder="Cari destinasi..."
         facetedFilters={facetedFilters}
       />
 
       <Dialog open={deleteDialog.open} onOpenChange={(open) => setDeleteDialog({ ...deleteDialog, open })}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Delete Destination</DialogTitle>
+            <DialogTitle>Hapus Destinasi</DialogTitle>
           </DialogHeader>
           <p className="text-sm text-muted-foreground">
-            Are you sure you want to delete &quot;{deleteDialog.title}&quot;? This action cannot be undone.
+            Apakah Anda yakin ingin menghapus &quot;{deleteDialog.title}&quot;? Tindakan ini tidak dapat dibatalkan.
           </p>
           <DialogFooter>
             <Button variant="outline" onClick={() => setDeleteDialog({ open: false, id: null, title: '' })}>
-              Cancel
+              Batal
             </Button>
             <Button variant="destructive" onClick={handleDelete}>
-              Delete
+              Hapus
             </Button>
           </DialogFooter>
         </DialogContent>

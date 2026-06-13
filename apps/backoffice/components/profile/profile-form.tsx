@@ -77,13 +77,13 @@ export function ProfileForm({ initialData, onSuccess }: ProfileFormProps) {
       const result = await response.json();
 
       if (!response.ok) {
-        throw new Error(result.message || "Failed to update avatar");
+        throw new Error(result.message || "Gagal mengupdate avatar");
       }
 
-      toast.success("Avatar updated successfully");
+      toast.success("Avatar berhasil diupdate");
     } catch (error) {
       console.error("Failed to update avatar:", error);
-      toast.error(error instanceof Error ? error.message : "Failed to update avatar");
+      toast.error(error instanceof Error ? error.message : "Gagal mengupdate avatar");
       // Revert form values on error
       setAvatarId(initialData.avatarId || null);
       setAvatarUrl(initialData.avatarUrl || null);
@@ -115,10 +115,10 @@ export function ProfileForm({ initialData, onSuccess }: ProfileFormProps) {
       const result = await response.json();
 
       if (!response.ok) {
-        throw new Error(result.message || "Failed to update profile");
+        throw new Error(result.message || "Gagal mengupdate profil");
       }
 
-      toast.success("Profile updated successfully");
+      toast.success("Profil berhasil diupdate");
 
       // Reset form with new data
       form.reset(data);
@@ -127,7 +127,7 @@ export function ProfileForm({ initialData, onSuccess }: ProfileFormProps) {
       onSuccess?.();
     } catch (error) {
       console.error("Failed to update profile:", error);
-      toast.error(error instanceof Error ? error.message : "Failed to update profile");
+      toast.error(error instanceof Error ? error.message : "Gagal mengupdate profil");
     } finally {
       setIsLoading(false);
     }
@@ -146,16 +146,16 @@ export function ProfileForm({ initialData, onSuccess }: ProfileFormProps) {
 
       {/* Name Field */}
       <Field>
-        <FieldLabel htmlFor="name">Name</FieldLabel>
+        <FieldLabel htmlFor="name">Nama</FieldLabel>
         <FieldContent>
           <Input
             id="name"
-            placeholder="Your name"
+            placeholder="Nama Anda"
             {...form.register("name")}
             disabled={isLoading}
           />
         </FieldContent>
-        <FieldDescription>Your display name (2-100 characters)</FieldDescription>
+        <FieldDescription>Nama tampilan Anda (2-100 karakter)</FieldDescription>
         <FieldError
           errors={form.formState.errors.name ? [form.formState.errors.name] : undefined}
         />
@@ -168,12 +168,12 @@ export function ProfileForm({ initialData, onSuccess }: ProfileFormProps) {
           <Input
             id="email"
             type="email"
-            placeholder="your.email@example.com"
+            placeholder="email@anda.com"
             {...form.register("email")}
             disabled={isLoading}
           />
         </FieldContent>
-        <FieldDescription>Your email address for notifications and login</FieldDescription>
+        <FieldDescription>Alamat email Anda untuk notifikasi dan login</FieldDescription>
         <FieldError
           errors={form.formState.errors.email ? [form.formState.errors.email] : undefined}
         />
@@ -185,13 +185,13 @@ export function ProfileForm({ initialData, onSuccess }: ProfileFormProps) {
         <FieldContent>
           <Textarea
             id="bio"
-            placeholder="Tell us a little about yourself..."
+            placeholder="Ceritakan sedikit tentang Anda..."
             rows={4}
             {...form.register("bio")}
             disabled={isLoading}
           />
         </FieldContent>
-        <FieldDescription>A brief description about yourself (max 500 characters)</FieldDescription>
+        <FieldDescription>Deskripsi singkat tentang Anda (maksimal 500 karakter)</FieldDescription>
         <FieldError errors={form.formState.errors.bio ? [form.formState.errors.bio] : undefined} />
       </Field>
 
@@ -206,7 +206,7 @@ export function ProfileForm({ initialData, onSuccess }: ProfileFormProps) {
           Reset
         </Button>
         <Button type="submit" disabled={isLoading || !form.formState.isDirty}>
-          {isLoading ? "Saving..." : "Save Changes"}
+          {isLoading ? "Menyimpan..." : "Simpan Perubahan"}
         </Button>
       </div>
     </form>

@@ -22,12 +22,13 @@ function EventCategoriesContent() {
   const categories = getEventCategories();
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
+      {/* Header Section */}
       <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold">Event Categories</h1>
-          <p className="text-muted-foreground">
-            Manage event categories for the website
+        <div className="space-y-1">
+          <h1 className="text-3xl font-bold tracking-tight">Kategori Agenda</h1>
+          <p className="text-muted-foreground text-sm">
+            Kelola kategori agenda untuk website
           </p>
         </div>
       </div>

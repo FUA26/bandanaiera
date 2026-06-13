@@ -109,10 +109,10 @@ export const GET = protectApiRoute({
               email: true,
             },
           },
-          agency: true,
-          relatedAgencies: {
+          opd: true,
+          relatedOpds: {
             include: {
-              agency: true,
+              opd: true,
             },
           },
           serviceImages: {
@@ -121,6 +121,8 @@ export const GET = protectApiRoute({
             },
             orderBy: [{ type: 'asc' }, { order: 'asc' }],
           },
+          logoImage: true,
+          bannerImage: true,
         },
       }),
       prisma.service.count({ where }),
@@ -182,8 +184,19 @@ export const POST = protectApiRoute({
         );
       }
 
-      // Extract agency relations and images
-      const { agencyId, relatedAgencyIds, serviceImages, ...serviceData } = validatedData as any;
+      // Extract OPD relations and images
+      const {
+        opdId,
+        relatedOpdIds,
+        serviceImages,
+        logoImageId,
+        bannerImageId,
+        operatingHours,
+        serviceLink,
+        downloadAppLinks,
+        socialMedia,
+        ...serviceData
+      } = validatedData as any;
 
       // Validate banner constraint
       if (serviceImages) {
@@ -208,11 +221,17 @@ export const POST = protectApiRoute({
           faqs: serviceData.faqs || [],
           downloadForms: serviceData.downloadForms || [],
           relatedServices: serviceData.relatedServices || [],
-          agencyId,
-          relatedAgencies: relatedAgencyIds && relatedAgencyIds.length > 0
+          opdId,
+          logoImageId: logoImageId || null,
+          bannerImageId: bannerImageId || null,
+          operatingHours,
+          serviceLink,
+          downloadAppLinks,
+          socialMedia: socialMedia ?? undefined,
+          relatedOpds: relatedOpdIds && relatedOpdIds.length > 0
             ? {
-                create: relatedAgencyIds.map((agencyId: string) => ({
-                  agencyId,
+                create: relatedOpdIds.map((opdId: string) => ({
+                  opdId,
                 })),
               }
             : undefined,
@@ -244,10 +263,10 @@ export const POST = protectApiRoute({
               email: true,
             },
           },
-          agency: true,
-          relatedAgencies: {
+          opd: true,
+          relatedOpds: {
             include: {
-              agency: true,
+              opd: true,
             },
           },
           serviceImages: {
@@ -256,6 +275,8 @@ export const POST = protectApiRoute({
             },
             orderBy: [{ type: 'asc' }, { order: 'asc' }],
           },
+          logoImage: true,
+          bannerImage: true,
         },
       });
 

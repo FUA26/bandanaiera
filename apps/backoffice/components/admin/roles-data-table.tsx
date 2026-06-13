@@ -68,10 +68,10 @@ export function RolesDataTable({ roles, onRefresh }: RolesDataTableProps) {
 
   // User count filter options
   const userCountOptions: FacetedFilterOption[] = [
-    { label: "0 users", value: "0" },
-    { label: "1-5 users", value: "1-5" },
-    { label: "6-10 users", value: "6-10" },
-    { label: "10+ users", value: "10+" },
+    { label: "0 pengguna", value: "0" },
+    { label: "1-5 pengguna", value: "1-5" },
+    { label: "6-10 pengguna", value: "6-10" },
+    { label: "10+ pengguna", value: "10+" },
   ];
 
   // Column definitions
@@ -101,12 +101,12 @@ export function RolesDataTable({ roles, onRefresh }: RolesDataTableProps) {
     },
     {
       accessorKey: "name",
-      header: ({ column }) => <DataTableColumnHeader column={column} title="Role Name" />,
+      header: ({ column }) => <DataTableColumnHeader column={column} title="Nama Peran" />,
       cell: ({ row }) => <Badge variant="outline">{row.getValue("name")}</Badge>,
     },
     {
       accessorKey: "permissions",
-      header: ({ column }) => <DataTableColumnHeader column={column} title="Permissions" />,
+      header: ({ column }) => <DataTableColumnHeader column={column} title="Izin" />,
       cell: ({ row }) => {
         const permissions = row.original.permissions || [];
         return (
@@ -118,7 +118,7 @@ export function RolesDataTable({ roles, onRefresh }: RolesDataTableProps) {
             ))}
             {permissions.length > 3 && (
               <Badge variant="secondary" className="text-xs">
-                +{permissions.length - 3} more
+                +{permissions.length - 3} lainnya
               </Badge>
             )}
           </div>
@@ -127,7 +127,7 @@ export function RolesDataTable({ roles, onRefresh }: RolesDataTableProps) {
     },
     {
       accessorKey: "userCount",
-      header: ({ column }) => <DataTableColumnHeader column={column} title="Users" />,
+      header: ({ column }) => <DataTableColumnHeader column={column} title="Pengguna" />,
       cell: ({ row }) => {
         const userCount = row.original._count.users || 0;
         return (
@@ -151,14 +151,14 @@ export function RolesDataTable({ roles, onRefresh }: RolesDataTableProps) {
     },
     {
       id: "actions",
-      header: "Actions",
+      header: "Aksi",
       cell: ({ row }) => {
         const role = row.original;
 
         return (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="icon" aria-label="Actions">
+              <Button variant="ghost" size="icon" aria-label="Aksi">
                 <HugeiconsIcon icon={MoreVerticalIcon} className="h-4 w-4" />
               </Button>
             </DropdownMenuTrigger>
@@ -167,11 +167,11 @@ export function RolesDataTable({ roles, onRefresh }: RolesDataTableProps) {
                 <>
                   <DropdownMenuItem onClick={() => setEditDialog({ open: true, roleId: role.id })}>
                     <HugeiconsIcon icon={Edit01Icon} className="mr-2 h-4 w-4" />
-                    Edit
+                    Ubah
                   </DropdownMenuItem>
                   <DropdownMenuItem onClick={() => setCloneDialog({ open: true, roleId: role.id })}>
                     <HugeiconsIcon icon={Copy01Icon} className="mr-2 h-4 w-4" />
-                    Clone
+                    Salin
                   </DropdownMenuItem>
                   <DropdownMenuItem
                     onClick={() => setDeleteDialog({ open: true, roleId: role.id })}
@@ -179,7 +179,7 @@ export function RolesDataTable({ roles, onRefresh }: RolesDataTableProps) {
                     disabled={role._count.users > 0}
                   >
                     <HugeiconsIcon icon={Delete01Icon} className="mr-2 h-4 w-4" />
-                    Delete
+                    Hapus
                   </DropdownMenuItem>
                 </>
               )}
@@ -200,13 +200,13 @@ export function RolesDataTable({ roles, onRefresh }: RolesDataTableProps) {
           <div className="flex items-center justify-between gap-4 flex-1">
             <div className="flex items-center gap-2">
               <Input
-                placeholder="Filter roles..."
+                placeholder="Cari peran..."
                 value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
                 onChange={(event) => table.getColumn("name")?.setFilterValue(event.target.value)}
                 className="max-w-sm"
               />
               <DataTableFacetedFilter
-                title="User Count"
+                title="Jumlah Pengguna"
                 options={userCountOptions}
                 column={table.getColumn("userCount")}
               />
@@ -215,7 +215,7 @@ export function RolesDataTable({ roles, onRefresh }: RolesDataTableProps) {
               {canManageRoles && (
                 <Button size="sm" onClick={() => setCreateDialogOpen(true)}>
                   <HugeiconsIcon icon={AddCircleIcon} className="mr-2 h-4 w-4" />
-                  Add Role
+                  Tambah Peran
                 </Button>
               )}
               <DataTableViewOptions table={table} />

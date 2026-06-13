@@ -101,14 +101,14 @@ export function NewsForm({ initialData, categories }: NewsFormProps) {
 
             if (!response.ok) {
                 const error = await response.json();
-                throw new Error(error.error || 'Failed to save news');
+                throw new Error(error.error || 'Gagal menyimpan berita');
             }
 
-            toast.success(initialData ? 'News updated' : 'News created');
+            toast.success(initialData ? 'Berita berhasil diupdate' : 'Berita berhasil dibuat');
             router.push('/manage/news');
             router.refresh();
         } catch (error) {
-            toast.error(error instanceof Error ? error.message : 'Failed to save');
+            toast.error(error instanceof Error ? error.message : 'Gagal menyimpan');
         } finally {
             setIsSubmitting(false);
         }
@@ -132,19 +132,19 @@ export function NewsForm({ initialData, categories }: NewsFormProps) {
             <div className="flex items-center justify-between">
                 <Link href="/manage/news" className="flex items-center text-sm text-muted-foreground hover:text-primary">
                     <ArrowLeft className="mr-2 h-4 w-4" />
-                    Back to news list
+                    Kembali ke daftar berita
                 </Link>
                 <Button type="submit" disabled={isSubmitting}>
                     {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                    {initialData ? 'Update News' : 'Create News'}
+                    {initialData ? 'Update Berita' : 'Buat Berita'}
                 </Button>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div className="space-y-6">
                     <div className="space-y-2">
-                        <Label htmlFor="title">Title</Label>
-                        <Input id="title" {...form.register('title')} placeholder="Enter news title" />
+                        <Label htmlFor="title">Judul</Label>
+                        <Input id="title" {...form.register('title')} placeholder="Masukkan judul berita" />
                         {form.formState.errors.title && (
                             <p className="text-sm text-destructive">{form.formState.errors.title.message}</p>
                         )}
@@ -152,18 +152,18 @@ export function NewsForm({ initialData, categories }: NewsFormProps) {
 
                     <div className="space-y-2">
                         <Label htmlFor="slug">Slug</Label>
-                        <Input id="slug" {...form.register('slug')} placeholder="news-url-slug" />
+                        <Input id="slug" {...form.register('slug')} placeholder="url-berita" />
                         {form.formState.errors.slug && (
                             <p className="text-sm text-destructive">{form.formState.errors.slug.message}</p>
                         )}
                     </div>
 
                     <div className="space-y-2">
-                        <Label htmlFor="excerpt">Excerpt</Label>
+                        <Label htmlFor="excerpt">Ringkasan</Label>
                         <Textarea
                             id="excerpt"
                             {...form.register('excerpt')}
-                            placeholder="Brief summary for the news card"
+                            placeholder="Ringkasan singkat untuk kartu berita"
                             rows={3}
                         />
                         {form.formState.errors.excerpt && (
@@ -172,13 +172,13 @@ export function NewsForm({ initialData, categories }: NewsFormProps) {
                     </div>
 
                     <div className="space-y-2">
-                        <Label htmlFor="categoryId">Category</Label>
+                        <Label htmlFor="categoryId">Kategori</Label>
                         <Select
                             value={form.watch('categoryId')}
                             onValueChange={(value) => form.setValue('categoryId', value)}
                         >
                             <SelectTrigger>
-                                <SelectValue placeholder="Select category" />
+                                <SelectValue placeholder="Pilih kategori" />
                             </SelectTrigger>
                             <SelectContent>
                                 {categories.map((category) => (
@@ -195,13 +195,13 @@ export function NewsForm({ initialData, categories }: NewsFormProps) {
 
                     <div className="grid grid-cols-2 gap-4">
                         <div className="space-y-2">
-                            <Label htmlFor="author">Author</Label>
-                            <Input id="author" {...form.register('author')} placeholder="Author name" />
+                            <Label htmlFor="author">Penulis</Label>
+                            <Input id="author" {...form.register('author')} placeholder="Nama penulis" />
                         </div>
 
                         <div className="space-y-2">
-                            <Label htmlFor="readTime">Read Time</Label>
-                            <Input id="readTime" {...form.register('readTime')} placeholder="5 min read" />
+                            <Label htmlFor="readTime">Waktu Baca</Label>
+                            <Input id="readTime" {...form.register('readTime')} placeholder="5 menit baca" />
                         </div>
                     </div>
                 </div>
@@ -212,7 +212,7 @@ export function NewsForm({ initialData, categories }: NewsFormProps) {
                         name="featuredImageId"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel>Featured Image</FormLabel>
+                                <FormLabel>Gambar Unggulan</FormLabel>
                                 <FormControl>
                                     <EnhancedImageUploader
                                         value={field.value ? [field.value] : []}
@@ -236,15 +236,15 @@ export function NewsForm({ initialData, categories }: NewsFormProps) {
                                     <SelectValue />
                                 </SelectTrigger>
                                 <SelectContent>
-                                    <SelectItem value="DRAFT">Draft</SelectItem>
-                                    <SelectItem value="PUBLISHED">Published</SelectItem>
-                                    <SelectItem value="ARCHIVED">Archived</SelectItem>
+                                    <SelectItem value="DRAFT">DRAFT</SelectItem>
+                                    <SelectItem value="PUBLISHED">DITERBITKAN</SelectItem>
+                                    <SelectItem value="ARCHIVED">DIARSIPKAN</SelectItem>
                                 </SelectContent>
                             </Select>
                         </div>
 
                         <div className="space-y-2">
-                            <Label htmlFor="order">Order</Label>
+                            <Label htmlFor="order">Urutan</Label>
                             <Input
                                 id="order"
                                 type="number"
@@ -255,14 +255,14 @@ export function NewsForm({ initialData, categories }: NewsFormProps) {
 
                     <div className="flex gap-4">
                         <div className="flex-1 flex items-center justify-between rounded-lg border p-4">
-                            <Label>Featured</Label>
+                            <Label>Unggulan</Label>
                             <Switch
                                 checked={form.watch('featured')}
                                 onCheckedChange={(checked) => form.setValue('featured', checked)}
                             />
                         </div>
                         <div className="flex-1 flex items-center justify-between rounded-lg border p-4">
-                            <Label>Visible</Label>
+                            <Label>Terlihat</Label>
                             <Switch
                                 checked={form.watch('showInMenu')}
                                 onCheckedChange={(checked) => form.setValue('showInMenu', checked)}
@@ -271,10 +271,10 @@ export function NewsForm({ initialData, categories }: NewsFormProps) {
                     </div>
 
                     <div className="space-y-2">
-                        <Label>Tags</Label>
+                        <Label>Tag</Label>
                         <div className="flex gap-2">
                             <Input
-                                placeholder="Add a tag"
+                                placeholder="Tambahkan tag"
                                 value={tagInput}
                                 onChange={(e) => setTagInput(e.target.value)}
                                 onKeyDown={(e) => {
@@ -285,7 +285,7 @@ export function NewsForm({ initialData, categories }: NewsFormProps) {
                                 }}
                             />
                             <Button type="button" variant="outline" onClick={addTag}>
-                                Add
+                                Tambah
                             </Button>
                         </div>
                         {tags.length > 0 && (
@@ -309,11 +309,11 @@ export function NewsForm({ initialData, categories }: NewsFormProps) {
             </div>
 
             <div className="space-y-2">
-                <Label htmlFor="content">Content</Label>
+                <Label htmlFor="content">Konten</Label>
                 <RichTextEditor
                     value={form.watch('content') || ''}
                     onChange={(val: string) => form.setValue('content', val)}
-                    placeholder="Full article content..."
+                    placeholder="Konten artikel lengkap..."
                 />
             </div>
         </form>

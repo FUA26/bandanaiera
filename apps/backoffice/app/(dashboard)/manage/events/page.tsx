@@ -47,11 +47,13 @@ function EventsContent() {
       eventsPromise={events}
       categoriesPromise={categories}
       header={
-        <div>
-          <h1 className="text-3xl font-bold">Events</h1>
-          <p className="text-muted-foreground">
-            Manage events for the website
-          </p>
+        <div className="flex items-center justify-between">
+          <div className="space-y-1">
+            <h1 className="text-3xl font-bold tracking-tight">Agenda</h1>
+            <p className="text-muted-foreground text-sm">
+              Kelola agenda dan acara untuk website
+            </p>
+          </div>
         </div>
       }
     />

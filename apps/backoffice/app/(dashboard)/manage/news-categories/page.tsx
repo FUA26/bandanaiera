@@ -22,12 +22,13 @@ function NewsCategoriesContent() {
   const categories = getNewsCategories();
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
+      {/* Header Section */}
       <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold">News Categories</h1>
-          <p className="text-muted-foreground">
-            Manage news categories for the website
+        <div className="space-y-1">
+          <h1 className="text-3xl font-bold tracking-tight">Kategori Berita</h1>
+          <p className="text-muted-foreground text-sm">
+            Kelola kategori berita untuk website
           </p>
         </div>
       </div>

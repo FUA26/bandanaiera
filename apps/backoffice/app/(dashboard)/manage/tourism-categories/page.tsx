@@ -17,15 +17,17 @@ function TourismCategoriesContent() {
     const categories = getCategories();
 
     return (
-        <div className="flex-1 space-y-4">
-            <div className="flex items-center justify-between">
-                <div>
+        <div className="space-y-8 p-8 pt-6">
+            {/* Enhanced Header */}
+            <div className="flex items-center justify-between border-b pb-6">
+                <div className="space-y-1">
                     <h2 className="text-3xl font-bold tracking-tight">Kategori Destinasi</h2>
-                    <p className="text-muted-foreground">
+                    <p className="text-muted-foreground text-sm">
                         Kelola kategori untuk destinasi wisata
                     </p>
                 </div>
             </div>
+
             <CategoriesClient categoriesPromise={categories} />
         </div>
     );

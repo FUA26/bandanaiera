@@ -25,7 +25,11 @@ async function seedSystemSettings() {
       console.log(`  - Allow Registration: ${existingSettings.allowRegistration}`);
       console.log(`  - Require Email Verification: ${existingSettings.requireEmailVerification}`);
       console.log(`  - Default Role ID: ${existingSettings.defaultUserRoleId}`);
-      console.log(`  - Site Name: ${existingSettings.siteName}\n`);
+      console.log(`  - Site Name: ${existingSettings.siteName}`);
+      console.log(`  - Site Description: ${existingSettings.siteDescription}`);
+      console.log(`  - Site Subtitle: ${existingSettings.siteSubtitle}`);
+      console.log(`  - Citizen Name: ${existingSettings.citizenName}`);
+      console.log(`  - Version Number: ${existingSettings.versionNumber}\n`);
       return;
     }
 
@@ -47,9 +51,20 @@ async function seedSystemSettings() {
         defaultUserRoleId: userRole.id,
         emailVerificationExpiryHours: 24,
         siteName: "Naiera",
-        siteDescription: "A powerful platform for managing your content",
+        siteDescription: "Platform terpadu untuk layanan publik dan informasi daerah",
+        siteSubtitle: "Melayani dengan Sepenuh Hati",
         minPasswordLength: 8,
         requireStrongPassword: false,
+        citizenName: "Warga",
+        contactAddress: "Jl. Merdeka No. 1, Kota Naiera",
+        contactEmails: ["info@naiera.go.id", "layanan@naiera.go.id"],
+        contactPhones: ["(0341) 123456", "(0341) 123457"],
+        copyrightText: `© ${new Date().getFullYear()} Pemerintah Kota Naiera. Hak Cipta Dilindungi.`,
+        socialFacebook: "https://facebook.com/naiera",
+        socialInstagram: "https://instagram.com/naiera",
+        socialTwitter: "https://twitter.com/naiera",
+        socialYouTube: "https://youtube.com/@naiera",
+        versionNumber: "1.0.0",
       },
     });
 
@@ -61,6 +76,18 @@ async function seedSystemSettings() {
       `  - Email Verification Expiry: ${systemSettings.emailVerificationExpiryHours} hours`
     );
     console.log(`  - Site Name: ${systemSettings.siteName}`);
+    console.log(`  - Site Description: ${systemSettings.siteDescription}`);
+    console.log(`  - Site Subtitle: ${systemSettings.siteSubtitle}`);
+    console.log(`  - Citizen Name: ${systemSettings.citizenName}`);
+    console.log(`  - Contact Address: ${systemSettings.contactAddress}`);
+    console.log(`  - Contact Emails: ${JSON.stringify(systemSettings.contactEmails)}`);
+    console.log(`  - Contact Phones: ${JSON.stringify(systemSettings.contactPhones)}`);
+    console.log(`  - Copyright Text: ${systemSettings.copyrightText}`);
+    console.log(`  - Social Facebook: ${systemSettings.socialFacebook}`);
+    console.log(`  - Social Instagram: ${systemSettings.socialInstagram}`);
+    console.log(`  - Social Twitter: ${systemSettings.socialTwitter}`);
+    console.log(`  - Social YouTube: ${systemSettings.socialYouTube}`);
+    console.log(`  - Version Number: ${systemSettings.versionNumber}`);
     console.log(`  - Minimum Password Length: ${systemSettings.minPasswordLength}`);
     console.log(`  - Require Strong Password: ${systemSettings.requireStrongPassword}\n`);
 

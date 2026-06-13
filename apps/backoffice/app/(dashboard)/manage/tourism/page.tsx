@@ -51,9 +51,9 @@ async function TourismContent() {
             initialCategories={categories}
             header={
                 <div className="flex items-center justify-between">
-                    <div>
-                        <h1 className="text-3xl font-bold">Destinasi Wisata</h1>
-                        <p className="text-muted-foreground">
+                    <div className="space-y-1">
+                        <h1 className="text-3xl font-bold tracking-tight">Destinasi Wisata</h1>
+                        <p className="text-muted-foreground text-sm">
                             Kelola destinasi wisata Kabupaten Naiera
                         </p>
                     </div>

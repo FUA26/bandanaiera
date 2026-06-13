@@ -55,10 +55,10 @@ export const GET = protectApiRoute({
             email: true,
           },
         },
-        agency: true,
-        relatedAgencies: {
+        opd: true,
+        relatedOpds: {
           include: {
-            agency: true,
+            opd: true,
           },
         },
         serviceImages: {
@@ -67,6 +67,8 @@ export const GET = protectApiRoute({
           },
           orderBy: [{ type: 'asc' }, { order: 'asc' }],
         },
+        logoImage: true,
+        bannerImage: true,
       },
     });
 
@@ -192,6 +194,9 @@ export const PUT = protectApiRoute({
         "duration",
         "cost",
         "status",
+        "operatingHours",
+        "serviceLink",
+        "downloadAppLinks",
       ] as const;
 
       for (const field of optionalFields) {
@@ -219,9 +224,18 @@ export const PUT = protectApiRoute({
       if (validatedData.relatedServices !== undefined) {
         updateData.relatedServices = validatedData.relatedServices;
       }
+      if (validatedData.socialMedia !== undefined) {
+        updateData.socialMedia = validatedData.socialMedia;
+      }
 
       // Extract agency relations and images
-      const { agencyId, relatedAgencyIds, serviceImages } = validatedData as any;
+      const {
+        opdId,
+        relatedOpdIds,
+        serviceImages,
+        logoImageId,
+        bannerImageId
+      } = validatedData as any;
 
       // Validate banner constraint
       if (serviceImages) {
@@ -234,8 +248,8 @@ export const PUT = protectApiRoute({
         }
       }
 
-      // Delete existing related agencies and service images
-      await prisma.serviceRelatedAgency.deleteMany({
+      // Delete existing related OPDs and service images
+      await prisma.serviceRelatedOpd.deleteMany({
         where: { serviceId: serviceId },
       });
 
@@ -243,15 +257,15 @@ export const PUT = protectApiRoute({
         where: { serviceId: serviceId },
       });
 
-      // Add agency and image data to update
-      if (agencyId !== undefined) {
-        updateData.agencyId = agencyId;
+      // Add OPD and image data to update
+      if (opdId !== undefined) {
+        updateData.opdId = opdId;
       }
 
-      if (relatedAgencyIds && relatedAgencyIds.length > 0) {
-        updateData.relatedAgencies = {
-          create: relatedAgencyIds.map((agencyId: string) => ({
-            agencyId,
+      if (relatedOpdIds && relatedOpdIds.length > 0) {
+        updateData.relatedOpds = {
+          create: relatedOpdIds.map((opdId: string) => ({
+            opdId,
           })),
         };
       }
@@ -264,6 +278,14 @@ export const PUT = protectApiRoute({
             order: img.order || 0,
           })),
         };
+      }
+
+      if (logoImageId !== undefined) {
+        updateData.logoImageId = logoImageId || null;
+      }
+
+      if (bannerImageId !== undefined) {
+        updateData.bannerImageId = bannerImageId || null;
       }
 
       // Update service
@@ -295,10 +317,10 @@ export const PUT = protectApiRoute({
               email: true,
             },
           },
-          agency: true,
-          relatedAgencies: {
+          opd: true,
+          relatedOpds: {
             include: {
-              agency: true,
+              opd: true,
             },
           },
           serviceImages: {
@@ -307,6 +329,8 @@ export const PUT = protectApiRoute({
             },
             orderBy: [{ type: 'asc' }, { order: 'asc' }],
           },
+          logoImage: true,
+          bannerImage: true,
         },
       });
 

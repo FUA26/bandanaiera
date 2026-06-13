@@ -120,7 +120,7 @@ export function CategoriesClient({ categoriesPromise }: { categoriesPromise: Pro
 
             if (!response.ok) {
                 const error = await response.json();
-                throw new Error(error.error || 'Failed to save category');
+                throw new Error(error.error || 'Gagal menyimpan kategori');
             }
 
             toast.success(editingCategory ? 'Kategori diperbarui' : 'Kategori ditambahkan');
@@ -152,7 +152,7 @@ export function CategoriesClient({ categoriesPromise }: { categoriesPromise: Pro
 
             if (!response.ok) {
                 const error = await response.json();
-                throw new Error(error.error || 'Failed to delete category');
+                throw new Error(error.error || 'Gagal menghapus kategori');
             }
 
             toast.success('Kategori dihapus');
@@ -270,6 +270,62 @@ export function CategoriesClient({ categoriesPromise }: { categoriesPromise: Pro
                     </DialogContent>
                 </Dialog>
             </div>
+
+            {/* Stats Overview */}
+            {categories.length > 0 && (
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+                    <div className="rounded-lg border bg-card p-4">
+                        <div className="flex items-center justify-between">
+                            <div>
+                                <p className="text-sm text-muted-foreground">Total Kategori</p>
+                                <p className="text-2xl font-bold">{categories.length}</p>
+                            </div>
+                            <div className="h-8 w-8 rounded-lg bg-blue-100 dark:bg-blue-900/20 flex items-center justify-center">
+                                <span className="text-blue-600 dark:text-blue-400">📁</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="rounded-lg border bg-card p-4">
+                        <div className="flex items-center justify-between">
+                            <div>
+                                <p className="text-sm text-muted-foreground">Visible in Menu</p>
+                                <p className="text-2xl font-bold">
+                                    {categories.filter((c) => c.showInMenu).length}
+                                </p>
+                            </div>
+                            <div className="h-8 w-8 rounded-lg bg-green-100 dark:bg-green-900/20 flex items-center justify-center">
+                                <span className="text-green-600 dark:text-green-400">✓</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="rounded-lg border bg-card p-4">
+                        <div className="flex items-center justify-between">
+                            <div>
+                                <p className="text-sm text-muted-foreground">Total Destinasi</p>
+                                <p className="text-2xl font-bold">
+                                    {categories.reduce((sum, c) => sum + (c._count?.destinations || 0), 0)}
+                                </p>
+                            </div>
+                            <div className="h-8 w-8 rounded-lg bg-purple-100 dark:bg-purple-900/20 flex items-center justify-center">
+                                <span className="text-purple-600 dark:text-purple-400">🏖️</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="rounded-lg border bg-card p-4">
+                        <div className="flex items-center justify-between">
+                            <div>
+                                <p className="text-sm text-muted-foreground">Hidden</p>
+                                <p className="text-2xl font-bold">
+                                    {categories.filter((c) => !c.showInMenu).length}
+                                </p>
+                            </div>
+                            <div className="h-8 w-8 rounded-lg bg-gray-100 dark:bg-gray-900/20 flex items-center justify-center">
+                                <span className="text-gray-600 dark:text-gray-400">👁️</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
 
             <DataTable
                 columns={tourismCategoriesColumns}

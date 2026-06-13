@@ -29,41 +29,46 @@ import {
   Key,
   Settings,
   Map,
+  Building,
 } from "lucide-react";
 
 const navItems = [
   // Overview Group
-  { heading: "Overview" },
-  { href: "/", label: "Dashboard", icon: LayoutDashboard, permission: null },
-  { href: "/analytics", label: "Analytics", icon: BarChart3, permission: null },
+  { heading: "Ringkasan" },
+  { href: "/", label: "Dasbor", icon: LayoutDashboard, permission: null },
+  { href: "/analytics", label: "Analitik", icon: BarChart3, permission: null },
 
-  // Content Management Group
-  { heading: "Content" },
-  { href: "/services", label: "Services", icon: FolderOpen, permission: "CONTENT_READ_ANY" },
-  { href: "/services/categories", label: "Categories", icon: Folders, permission: "CONTENT_READ_ANY" },
-  { href: "/manage/news", label: "News", icon: Newspaper, permission: "NEWS_VIEW" },
-  { href: "/manage/news-categories", label: "News Categories", icon: FolderKanban, permission: "NEWS_CATEGORIES_MANAGE" },
-  { href: "/manage/events", label: "Events", icon: Calendar, permission: "EVENTS_VIEW" },
-  { href: "/manage/event-categories", label: "Event Categories", icon: FolderKanban, permission: "EVENT_CATEGORIES_MANAGE" },
-  { href: "/manage/tourism", label: "Tourism", icon: Map, permission: "TOURISM_VIEW" },
-  { href: "/manage/tourism-categories", label: "Tourism Categories", icon: FolderKanban, permission: "TOURISM_CATEGORIES_MANAGE" },
+  // Layanan Publik Group
+  { heading: "Layanan Publik" },
+  { href: "/services", label: "Layanan", icon: FolderOpen, permission: "CONTENT_READ_ANY" },
+  { href: "/services/categories", label: "Kategori Layanan", icon: Folders, permission: "CONTENT_READ_ANY" },
 
-  // User & Access Management Group
-  { heading: "Users & Access" },
-  { href: "/manage/users", label: "Users", icon: Users, permission: "ADMIN_USERS_MANAGE" },
-  { href: "/manage/roles", label: "Roles", icon: Shield, permission: "ADMIN_ROLES_MANAGE" },
+  // Perangkat Daerah Group
+  { heading: "Perangkat Daerah" },
+  { href: "/manage/opd", label: "Daftar OPD", icon: Building, permission: "OPD_VIEW" },
+
+  // Informasi Publik Group
+  { heading: "Informasi Publik" },
+  { href: "/manage/news", label: "Berita", icon: Newspaper, permission: "NEWS_VIEW" },
+  { href: "/manage/news-categories", label: "Kategori Berita", icon: FolderKanban, permission: "NEWS_CATEGORIES_MANAGE" },
+  { href: "/manage/events", label: "Agenda Kegiatan", icon: Calendar, permission: "EVENTS_VIEW" },
+  { href: "/manage/event-categories", label: "Kategori Agenda", icon: FolderKanban, permission: "EVENT_CATEGORIES_MANAGE" },
+  { href: "/manage/tourism", label: "Destinasi Wisata", icon: Map, permission: "TOURISM_VIEW" },
+  { href: "/manage/tourism-categories", label: "Kategori Wisata", icon: FolderKanban, permission: "TOURISM_CATEGORIES_MANAGE" },
+
+  // Admin Group
+  { heading: "Administrasi" },
+  { href: "/manage/users", label: "Pengguna", icon: Users, permission: "ADMIN_USERS_MANAGE" },
+  { href: "/manage/roles", label: "Peran", icon: Shield, permission: "ADMIN_ROLES_MANAGE" },
   {
     href: "/manage/permissions",
-    label: "Permissions",
+    label: "Izin Akses",
     icon: Key,
     permission: "ADMIN_PERMISSIONS_MANAGE",
   },
-
-  // Settings Group
-  { heading: "Settings" },
   {
     href: "/manage/system-settings",
-    label: "System Settings",
+    label: "Pengaturan Sistem",
     icon: Settings,
     permission: "ADMIN_SYSTEM_SETTINGS_MANAGE",
   },
@@ -72,6 +77,7 @@ const navItems = [
 export function AppSidebar() {
   const pathname = usePathname();
   const userPermissions = usePermissions();
+  const cityName = process.env.NEXT_PUBLIC_CITY_NAME || "Naiera";
 
   // Filter nav items based on user permissions
   const filteredNavItems = navItems.filter((item) => {
@@ -129,8 +135,8 @@ export function AppSidebar() {
                   />
                 </div>
                 <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-semibold">Naiera</span>
-                  <span className="truncate text-xs text-muted-foreground">Admin Dashboard</span>
+                  <span className="truncate font-semibold">Kota {cityName}</span>
+                  <span className="truncate text-xs text-muted-foreground">Portal Admin</span>
                 </div>
               </Link>
             </SidebarMenuButton>

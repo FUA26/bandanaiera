@@ -146,41 +146,75 @@ export function NewServiceClient({ categories }: NewServiceClientProps) {
   };
 
   return (
-    <div className="space-y-6 w-full max-w-5xl mx-auto">
-      <div className="flex items-center justify-between">
+    <div className="space-y-8 w-full max-w-5xl mx-auto">
+      {/* Enhanced Header */}
+      <div className="flex items-center justify-between border-b pb-6">
         <div className="flex items-center gap-4">
           <Button
             variant="ghost"
             size="icon"
             onClick={() => router.back()}
-            className="rounded-full"
+            className="rounded-full hover:bg-muted"
+            aria-label="Go back"
           >
             <ArrowLeft className="h-5 w-5" />
           </Button>
-          <div>
-            <h1 className="text-3xl font-bold tracking-tight">Create New Service</h1>
-            <p className="text-muted-foreground">Add a new public service to the system</p>
+          <div className="space-y-1">
+            <div className="flex items-center gap-2">
+              <h1 className="text-3xl font-bold tracking-tight">Create New Service</h1>
+              <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300">
+                Draft
+              </span>
+            </div>
+            <p className="text-muted-foreground text-sm">
+              Fill in the information below to create a new public service
+            </p>
           </div>
         </div>
       </div>
 
       <form onSubmit={form.handleSubmit(handleSubmit as any, onError)} className="space-y-6">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid w-full grid-cols-5">
-            <TabsTrigger value="basic" className="data-[state=active]:bg-background">
-              Basic
+          <TabsList className="grid w-full grid-cols-5 h-auto p-1 bg-muted/50">
+            <TabsTrigger
+              value="basic"
+              className="data-[state=active]:bg-background data-[state=active]:shadow-sm"
+            >
+              <span className="flex items-center gap-2">
+                <span className="hidden sm:inline">1.</span> Basic
+              </span>
             </TabsTrigger>
-            <TabsTrigger value="details" className="data-[state=active]:bg-background">
-              Details
+            <TabsTrigger
+              value="details"
+              className="data-[state=active]:bg-background data-[state=active]:shadow-sm"
+            >
+              <span className="flex items-center gap-2">
+                <span className="hidden sm:inline">2.</span> Details
+              </span>
             </TabsTrigger>
-            <TabsTrigger value="agency" className="data-[state=active]:bg-background">
-              Agency
+            <TabsTrigger
+              value="agency"
+              className="data-[state=active]:bg-background data-[state=active]:shadow-sm"
+            >
+              <span className="flex items-center gap-2">
+                <span className="hidden sm:inline">3.</span> Agency
+              </span>
             </TabsTrigger>
-            <TabsTrigger value="contact" className="data-[state=active]:bg-background">
-              Contact
+            <TabsTrigger
+              value="contact"
+              className="data-[state=active]:bg-background data-[state=active]:shadow-sm"
+            >
+              <span className="flex items-center gap-2">
+                <span className="hidden sm:inline">4.</span> Contact
+              </span>
             </TabsTrigger>
-            <TabsTrigger value="advanced" className="data-[state=active]:bg-background">
-              Advanced
+            <TabsTrigger
+              value="advanced"
+              className="data-[state=active]:bg-background data-[state=active]:shadow-sm"
+            >
+              <span className="flex items-center gap-2">
+                <span className="hidden sm:inline">5.</span> Advanced
+              </span>
             </TabsTrigger>
           </TabsList>
 

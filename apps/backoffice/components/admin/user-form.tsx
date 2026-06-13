@@ -65,7 +65,7 @@ export function UserForm({
   return (
     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
       <Field>
-        <FieldLabel htmlFor="name">Name</FieldLabel>
+        <FieldLabel htmlFor="name">Nama</FieldLabel>
         <FieldContent>
           <Input id="name" placeholder="John Doe" {...form.register("name")} disabled={isLoading} />
         </FieldContent>
@@ -92,7 +92,7 @@ export function UserForm({
 
       {mode === "create" && (
         <Field>
-          <FieldLabel htmlFor="password">Password</FieldLabel>
+          <FieldLabel htmlFor="password">Kata Sandi</FieldLabel>
           <FieldContent>
             <Input
               id="password"
@@ -113,7 +113,7 @@ export function UserForm({
       )}
 
       <Field>
-        <FieldLabel htmlFor="roleId">Role</FieldLabel>
+        <FieldLabel htmlFor="roleId">Peran</FieldLabel>
         <FieldContent>
           <Select
             onValueChange={(value) => form.setValue("roleId", value)}
@@ -121,7 +121,7 @@ export function UserForm({
             disabled={isLoading}
           >
             <SelectTrigger>
-              <SelectValue placeholder="Select a role" />
+              <SelectValue placeholder="Pilih peran" />
             </SelectTrigger>
             <SelectContent>
               {roles.map((role) => (
@@ -139,10 +139,10 @@ export function UserForm({
 
       <div className="flex justify-end gap-2 pt-4">
         <Button type="button" variant="outline" onClick={onCancel} disabled={isLoading}>
-          Cancel
+          Batal
         </Button>
         <Button type="submit" disabled={isLoading}>
-          {isLoading ? "Saving..." : mode === "create" ? "Create User" : "Update User"}
+          {isLoading ? "Menyimpan..." : mode === "create" ? "Buat Pengguna" : "Update Pengguna"}
         </Button>
       </div>
     </form>

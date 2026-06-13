@@ -137,6 +137,19 @@ const roles = [
       "EVENTS_DELETE",
       "EVENTS_REORDER",
       "EVENT_CATEGORIES_MANAGE",
+      // All tourism permissions
+      "TOURISM_VIEW",
+      "TOURISM_CREATE",
+      "TOURISM_EDIT",
+      "TOURISM_PUBLISH",
+      "TOURISM_DELETE",
+      "TOURISM_CATEGORIES_MANAGE",
+      // All OPD permissions
+      "OPD_VIEW",
+      "OPD_CREATE",
+      "OPD_EDIT",
+      "OPD_DELETE",
+      "OPD_REORDER",
     ],
   },
 ];

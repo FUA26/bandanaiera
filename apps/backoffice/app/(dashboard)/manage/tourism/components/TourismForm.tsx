@@ -97,7 +97,7 @@ export function TourismForm({ initialData, categories }: TourismFormProps) {
 
             if (!response.ok) {
                 const error = await response.json();
-                throw new Error(error.error || 'Failed to save tourism destination');
+                throw new Error(error.error || 'Gagal menyimpan destinasi wisata');
             }
 
             toast.success(initialData ? 'Destinasi diperbarui' : 'Destinasi ditambahkan');
@@ -221,7 +221,7 @@ export function TourismForm({ initialData, categories }: TourismFormProps) {
                         name="imageId"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel>Destination Image</FormLabel>
+                                <FormLabel>Gambar Destinasi</FormLabel>
                                 <FormControl>
                                     <EnhancedImageUploader
                                         value={field.value ? [field.value] : []}
@@ -245,9 +245,9 @@ export function TourismForm({ initialData, categories }: TourismFormProps) {
                                     <SelectValue />
                                 </SelectTrigger>
                                 <SelectContent>
-                                    <SelectItem value="DRAFT">Draft</SelectItem>
-                                    <SelectItem value="PUBLISHED">Published</SelectItem>
-                                    <SelectItem value="ARCHIVED">Archived</SelectItem>
+                                    <SelectItem value="DRAFT">Draf</SelectItem>
+                                    <SelectItem value="PUBLISHED">Diterbitkan</SelectItem>
+                                    <SelectItem value="ARCHIVED">Diarsipkan</SelectItem>
                                 </SelectContent>
                             </Select>
                         </div>

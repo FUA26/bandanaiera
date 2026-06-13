@@ -46,7 +46,7 @@ const AGENCY_INCLUDE = {
 export async function getAgencyList(options: AgencyListOptions = {}): Promise<PaginatedAgency<any>> {
   const { page = 1, pageSize = 20, category, status, showInMenu, search } = options;
 
-  const where: Prisma.AgencyWhereInput = {};
+  const where: Prisma.OpdWhereInput = {};
 
   if (category) {
     where.category = category;
@@ -69,14 +69,14 @@ export async function getAgencyList(options: AgencyListOptions = {}): Promise<Pa
   }
 
   const [items, total] = await Promise.all([
-    prisma.agency.findMany({
+    prisma.opd.findMany({
       where,
       include: AGENCY_INCLUDE,
       orderBy: [{ order: 'asc' }, { createdAt: 'desc' }],
       skip: (page - 1) * pageSize,
       take: pageSize,
     }),
-    prisma.agency.count({ where }),
+    prisma.opd.count({ where }),
   ]);
 
   return {
@@ -89,7 +89,7 @@ export async function getAgencyList(options: AgencyListOptions = {}): Promise<Pa
 }
 
 export async function getAgencyById(id: string) {
-  return prisma.agency.findUnique({
+  return prisma.opd.findUnique({
     where: { id },
     include: {
       ...AGENCY_INCLUDE,
@@ -115,7 +115,7 @@ export async function getAgencyById(id: string) {
 }
 
 export async function getAgencyBySlug(slug: string) {
-  return prisma.agency.findUnique({
+  return prisma.opd.findUnique({
     where: { slug },
     include: {
       ...AGENCY_INCLUDE,
@@ -141,7 +141,7 @@ export async function getAgencyBySlug(slug: string) {
 }
 
 export async function createAgency(data: AgencyInput, userId: string) {
-  const agency = await prisma.agency.create({
+  const agency = await prisma.opd.create({
     data: {
       ...data,
       createdById: userId,
@@ -150,7 +150,7 @@ export async function createAgency(data: AgencyInput, userId: string) {
   });
 
   // Log activity
-  await prisma.agencyActivityLog.create({
+  await prisma.opdActivityLog.create({
     data: {
       agencyId: agency.id,
       userId,
@@ -163,7 +163,7 @@ export async function createAgency(data: AgencyInput, userId: string) {
 }
 
 export async function updateAgency(id: string, data: AgencyUpdateInput, userId: string) {
-  const existing = await prisma.agency.findUnique({
+  const existing = await prisma.opd.findUnique({
     where: { id },
   });
 
@@ -173,7 +173,7 @@ export async function updateAgency(id: string, data: AgencyUpdateInput, userId: 
 
   const { id: _id, ...updateData } = data as any;
 
-  const agency = await prisma.agency.update({
+  const agency = await prisma.opd.update({
     where: { id },
     data: {
       ...updateData,
@@ -183,7 +183,7 @@ export async function updateAgency(id: string, data: AgencyUpdateInput, userId: 
   });
 
   // Log activity
-  await prisma.agencyActivityLog.create({
+  await prisma.opdActivityLog.create({
     data: {
       agencyId: agency.id,
       userId,
@@ -199,7 +199,7 @@ export async function updateAgency(id: string, data: AgencyUpdateInput, userId: 
 }
 
 export async function deleteAgency(id: string, userId: string) {
-  const existing = await prisma.agency.findUnique({
+  const existing = await prisma.opd.findUnique({
     where: { id },
     include: {
       _count: {
@@ -219,12 +219,12 @@ export async function deleteAgency(id: string, userId: string) {
     throw new Error('Cannot delete agency with associated services');
   }
 
-  await prisma.agency.delete({
+  await prisma.opd.delete({
     where: { id },
   });
 
   // Log activity
-  await prisma.agencyActivityLog.create({
+  await prisma.opdActivityLog.create({
     data: {
       agencyId: id,
       userId,
@@ -238,7 +238,7 @@ export async function deleteAgency(id: string, userId: string) {
 
 export async function reorderAgencies(agencies: Array<{ id: string; order: number }>, userId: string) {
   const updates = agencies.map(({ id, order }) =>
-    prisma.agency.update({
+    prisma.opd.update({
       where: { id },
       data: { order },
     })
@@ -247,7 +247,7 @@ export async function reorderAgencies(agencies: Array<{ id: string; order: numbe
   await prisma.$transaction(updates);
 
   // Log activity
-  await prisma.agencyActivityLog.create({
+  await prisma.opdActivityLog.create({
     data: {
       agencyId: agencies[0].id, // Log first agency as representative
       userId,
@@ -259,7 +259,7 @@ export async function reorderAgencies(agencies: Array<{ id: string; order: numbe
 
 export async function getAgencyActivityLogs(agencyId: string, page = 1, pageSize = 20) {
   const [logs, total] = await Promise.all([
-    prisma.agencyActivityLog.findMany({
+    prisma.opdActivityLog.findMany({
       where: { agencyId },
       include: {
         user: {
@@ -274,7 +274,7 @@ export async function getAgencyActivityLogs(agencyId: string, page = 1, pageSize
       skip: (page - 1) * pageSize,
       take: pageSize,
     }),
-    prisma.agencyActivityLog.count({ where: { agencyId } }),
+    prisma.opdActivityLog.count({ where: { agencyId } }),
   ]);
 
   return {

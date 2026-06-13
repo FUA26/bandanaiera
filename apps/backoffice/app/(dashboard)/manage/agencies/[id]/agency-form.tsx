@@ -105,14 +105,14 @@ export function AgencyForm({ agencyId }: AgencyFormProps) {
 
       if (!response.ok) {
         const error = await response.json();
-        throw new Error(error.message || 'Failed to update agency');
+        throw new Error(error.message || 'Gagal mengupdate Perangkat Daerah');
       }
 
-      toast.success('Agency updated successfully');
+      toast.success('Perangkat Daerah berhasil diupdate');
       router.push('/manage/agencies');
     } catch (error) {
       console.error('Error updating agency:', error);
-      toast.error(error instanceof Error ? error.message : 'Failed to update agency');
+      toast.error(error instanceof Error ? error.message : 'Gagal mengupdate Perangkat Daerah');
     } finally {
       setIsSubmitting(false);
     }
@@ -131,14 +131,14 @@ export function AgencyForm({ agencyId }: AgencyFormProps) {
       <div className="mb-6">
         <Button variant="ghost" onClick={() => router.back()} className="gap-2">
           <ArrowLeft className="h-4 w-4" />
-          Back
+          Kembali
         </Button>
       </div>
 
       <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">
         <Card>
           <CardHeader>
-            <CardTitle>Basic Information</CardTitle>
+            <CardTitle>Informasi Dasar</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="space-y-2">
@@ -190,8 +190,8 @@ export function AgencyForm({ agencyId }: AgencyFormProps) {
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="ACTIVE">Active</SelectItem>
-                  <SelectItem value="INACTIVE">Inactive</SelectItem>
+                  <SelectItem value="ACTIVE">Aktif</SelectItem>
+                  <SelectItem value="INACTIVE">Tidak Aktif</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -205,10 +205,10 @@ export function AgencyForm({ agencyId }: AgencyFormProps) {
 
         <div className="flex justify-end gap-3">
           <Button type="button" variant="outline" onClick={() => router.back()} disabled={isSubmitting}>
-            Cancel
+            Batal
           </Button>
           <Button type="submit" disabled={isSubmitting}>
-            {isSubmitting ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Saving...</> : <><Save className="mr-2 h-4 w-4" />Update Agency</>}
+            {isSubmitting ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Menyimpan...</> : <><Save className="mr-2 h-4 w-4" />Update Perangkat Daerah</>}
           </Button>
         </div>
       </form>

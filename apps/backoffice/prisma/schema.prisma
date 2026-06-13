@@ -52,9 +52,9 @@ model User {
   avatarId             String?              @unique
   avatarUrl            String?
   accounts             Account[]
-  createdAgencies      Agency[]             @relation("AgencyCreator")
-  updatedAgencies      Agency[]             @relation("AgencyUpdater")
-  agencyActivityLogs   AgencyActivityLog[]  @relation("AgencyActivityLogs")
+  createdOpds          Opd[]                @relation("OpdCreator")
+  updatedOpds          Opd[]                @relation("OpdUpdater")
+  opdActivityLogs      OpdActivityLog[]     @relation("OpdActivityLogs")
   createdEvents        Event[]              @relation("EventCreator")
   updatedEvents        Event[]              @relation("EventUpdater")
   eventActivityLogs    EventActivityLog[]   @relation("EventActivityLogs")
@@ -166,11 +166,13 @@ model File {
   width               Int?
   height              Int?
   category            FileCategory         @default(OTHER)
-  agencyLogos         Agency[]             @relation("AgencyLogo")
+  opdLogos            Opd[]                @relation("OpdLogo")
   eventsAsImage       Event[]              @relation("EventImage")
   uploadedBy          User                 @relation(fields: [uploadedById], references: [id], onDelete: Cascade)
   newsAsFeaturedImage News[]               @relation("NewsFeaturedImage")
   serviceImages       ServiceImage[]       @relation("ServiceImageFiles")
+  serviceLogo         Service?             @relation("ServiceLogo")
+  serviceBanner       Service?             @relation("ServiceBanner")
   heroBackgrounds     SystemSettings?      @relation("HeroBackground")
   siteLogos           SystemSettings?      @relation("SiteLogo")
   tourismAsImage      TourismDestination[] @relation("TourismImage")
@@ -199,52 +201,55 @@ model ServiceCategory {
   @@index([order])
 }
 
-model Agency {
-  id                     String                 @id @default(cuid())
-  slug                   String                 @unique
-  name                   String
-  nickname               String
-  description            String
-  logoId                 String?
-  category               AgencyCategory
-  address                String?
-  contactInfo            Json?
-  operatingHours         String?
-  location               Json?
-  socialMedia            Json?
-  status                 AgencyStatus           @default(ACTIVE)
-  showInMenu             Boolean                @default(true)
-  order                  Int                    @default(0)
-  createdById            String
-  updatedById            String?
-  createdAt              DateTime               @default(now())
-  updatedAt              DateTime               @updatedAt
-  createdBy              User                   @relation("AgencyCreator", fields: [createdById], references: [id])
-  logo                   File?                  @relation("AgencyLogo", fields: [logoId], references: [id])
-  updatedBy              User?                  @relation("AgencyUpdater", fields: [updatedById], references: [id])
-  activityLogs           AgencyActivityLog[]
-  servicesAsOwner        Service[]              @relation("ServiceAgencyOwner")
-  serviceRelatedAgencies ServiceRelatedAgency[] @relation("AgencyRelatedServices")
+model Opd {
+  id                  String                @id @default(cuid())
+  slug                String                @unique
+  name                String
+  nickname            String
+  description         String
+  logoId              String?
+  category            OpdCategory
+  address             String?
+  contactInfo         Json?
+  operatingHours      String?
+  location            Json?
+  socialMedia         Json?
+  status              OpdStatus             @default(AKTIF)
+  showInMenu          Boolean               @default(true)
+  order               Int                   @default(0)
+  createdById         String
+  updatedById         String?
+  createdAt           DateTime              @default(now())
+  updatedAt           DateTime              @updatedAt
+  createdBy           User                  @relation("OpdCreator", fields: [createdById], references: [id])
+  logo                File?                 @relation("OpdLogo", fields: [logoId], references: [id])
+  updatedBy           User?                 @relation("OpdUpdater", fields: [updatedById], references: [id])
+  activityLogs        OpdActivityLog[]
+  servicesAsOwner     Service[]             @relation("ServiceOpdOwner")
+  serviceRelatedOpds  ServiceRelatedOpd[]   @relation("OpdRelatedServices")
+  eventsAsOrganizer   Event[]               @relation("EventOrganizer")
+  newsAsPublisher     News[]                @relation("NewsPublisher")
 
   @@index([category])
   @@index([status])
   @@index([showInMenu])
   @@index([order])
   @@index([slug])
+  @@map("Opd")
 }
 
 model Service {
-  id                  String                 @id @default(cuid())
-  slug                String                 @unique
+  id                  String                @id @default(cuid())
+  slug                String                @unique
   icon                String
   name                String
   description         String
   categoryId          String
   badge               String?
   stats               String?
-  showInMenu          Boolean                @default(true)
-  order               Int                    @default(0)
-  isIntegrated        Boolean                @default(false)
+  showInMenu          Boolean               @default(true)
+  order               Int                   @default(0)
+  isIntegrated        Boolean               @default(false)
   detailedDescription String?
   requirements        Json?
   process             Json?
@@ -254,24 +259,33 @@ model Service {
   faqs                Json?
   downloadForms       Json?
   relatedServices     Json?
-  status              ServiceStatus          @default(DRAFT)
+  status              ServiceStatus         @default(DRAFT)
+  operatingHours      Json?
+  serviceLink         String?
+  downloadAppLinks    Json?
+  socialMedia         Json?
+  logoImageId         String?               @unique
+  bannerImageId       String?               @unique
   createdById         String
   updatedById         String?
-  createdAt           DateTime               @default(now())
-  updatedAt           DateTime               @updatedAt
-  agencyId            String?
-  agency              Agency?                @relation("ServiceAgencyOwner", fields: [agencyId], references: [id])
-  category            ServiceCategory        @relation(fields: [categoryId], references: [id])
-  createdBy           User                   @relation("ServiceCreator", fields: [createdById], references: [id])
-  updatedBy           User?                  @relation("ServiceUpdater", fields: [updatedById], references: [id])
+  createdAt           DateTime              @default(now())
+  updatedAt           DateTime              @updatedAt
+  opdId               String?
+  opd                 Opd?                  @relation("ServiceOpdOwner", fields: [opdId], references: [id])
+  category            ServiceCategory       @relation(fields: [categoryId], references: [id])
+  logoImage           File?                 @relation("ServiceLogo", fields: [logoImageId], references: [id])
+  bannerImage         File?                 @relation("ServiceBanner", fields: [bannerImageId], references: [id])
+  createdBy           User                  @relation("ServiceCreator", fields: [createdById], references: [id])
+  updatedBy           User?                 @relation("ServiceUpdater", fields: [updatedById], references: [id])
   activityLogs        ServiceActivityLog[]
-  serviceImages       ServiceImage[]         @relation("ServiceImages")
-  relatedAgencies     ServiceRelatedAgency[] @relation("ServiceRelatedAgencies")
+  serviceImages       ServiceImage[]        @relation("ServiceImages")
+  relatedOpds         ServiceRelatedOpd[]    @relation("ServiceRelatedOpds")
 
   @@index([categoryId])
   @@index([status])
   @@index([order])
   @@index([slug])
+  @@index([opdId])
 }
 
 model ServiceActivityLog {
@@ -289,32 +303,34 @@ model ServiceActivityLog {
   @@index([createdAt])
 }
 
-model AgencyActivityLog {
+model OpdActivityLog {
   id        String   @id @default(cuid())
-  agencyId  String
+  opdId     String
   userId    String
   action    String
   changes   Json?
   createdAt DateTime @default(now())
-  agency    Agency   @relation(fields: [agencyId], references: [id], onDelete: Cascade)
-  user      User     @relation("AgencyActivityLogs", fields: [userId], references: [id])
+  opd       Opd      @relation(fields: [opdId], references: [id], onDelete: Cascade)
+  user      User     @relation("OpdActivityLogs", fields: [userId], references: [id])
 
-  @@index([agencyId])
+  @@index([opdId])
   @@index([userId])
   @@index([createdAt])
+  @@map("OpdActivityLog")
 }
 
-model ServiceRelatedAgency {
+model ServiceRelatedOpd {
   id        String   @id @default(cuid())
   serviceId String
-  agencyId  String
+  opdId     String
   createdAt DateTime @default(now())
-  agency    Agency   @relation("AgencyRelatedServices", fields: [agencyId], references: [id], onDelete: Cascade)
-  service   Service  @relation("ServiceRelatedAgencies", fields: [serviceId], references: [id], onDelete: Cascade)
+  opd       Opd      @relation("OpdRelatedServices", fields: [opdId], references: [id], onDelete: Cascade)
+  service   Service  @relation("ServiceRelatedOpds", fields: [serviceId], references: [id], onDelete: Cascade)
 
-  @@unique([serviceId, agencyId])
+  @@unique([serviceId, opdId])
   @@index([serviceId])
-  @@index([agencyId])
+  @@index([opdId])
+  @@map("ServiceRelatedOpd")
 }
 
 model ServiceImage {
@@ -366,6 +382,7 @@ model News {
   status          NewsStatus        @default(DRAFT)
   createdById     String
   updatedById     String?
+  opdId           String?
   createdAt       DateTime          @default(now())
   updatedAt       DateTime          @updatedAt
   category        NewsCategory      @relation(fields: [categoryId], references: [id])
@@ -373,6 +390,7 @@ model News {
   featuredImage   File?             @relation("NewsFeaturedImage", fields: [featuredImageId], references: [id])
   updatedBy       User?             @relation("NewsUpdater", fields: [updatedById], references: [id])
   activityLogs    NewsActivityLog[]
+  opd             Opd?              @relation("NewsPublisher", fields: [opdId], references: [id])
 
   @@index([categoryId])
   @@index([status])
@@ -380,6 +398,7 @@ model News {
   @@index([order])
   @@index([slug])
   @@index([publishedAt])
+  @@index([opdId])
 }
 
 model NewsActivityLog {
@@ -436,6 +455,7 @@ model Event {
   status               EventStatus        @default(DRAFT)
   createdById          String
   updatedById          String?
+  opdId                String?
   createdAt            DateTime           @default(now())
   updatedAt            DateTime           @updatedAt
   category             EventCategory      @relation(fields: [categoryId], references: [id])
@@ -443,6 +463,7 @@ model Event {
   image                File?              @relation("EventImage", fields: [imageId], references: [id])
   updatedBy            User?              @relation("EventUpdater", fields: [updatedById], references: [id])
   activityLogs         EventActivityLog[]
+  opd                  Opd?               @relation("EventOrganizer", fields: [opdId], references: [id])
 
   @@index([categoryId])
   @@index([status])
@@ -451,6 +472,7 @@ model Event {
   @@index([date])
   @@index([order])
   @@index([slug])
+  @@index([opdId])
 }
 
 model EventActivityLog {
@@ -569,16 +591,19 @@ enum EventStatus {
   COMPLETED
 }
 
-enum AgencyCategory {
-  BADAN
+enum OpdCategory {
   DINAS
+  BADAN
   KECAMATAN
+  KELURAHAN
   DESA
+  BAGIAN
+  ORGANISASI_LAINNYA
 }
 
-enum AgencyStatus {
-  ACTIVE
-  INACTIVE
+enum OpdStatus {
+  AKTIF
+  NONAKTIF
 }
 
 enum ServiceImageType {

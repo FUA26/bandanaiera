@@ -37,13 +37,22 @@ export default async function EditNewsPage({ params }: EditNewsPageProps) {
 
     return (
         <ProtectedRoute permissions={["NEWS_EDIT"]}>
-            <div className="flex-1 space-y-4 p-8 pt-6">
-                <div>
-                    <h1 className="text-3xl font-bold">Edit News</h1>
-                    <p className="text-muted-foreground">
-                        Make changes to the news article
-                    </p>
+            <div className="space-y-8 p-8 pt-6">
+                {/* Enhanced Header */}
+                <div className="flex items-center justify-between border-b pb-6">
+                    <div className="space-y-1">
+                        <div className="flex items-center gap-2">
+                            <h1 className="text-3xl font-bold tracking-tight">Edit Berita</h1>
+                            <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300">
+                                Editing
+                            </span>
+                        </div>
+                        <p className="text-muted-foreground text-sm">
+                            Mengedit: <span className="font-medium text-foreground">{newsItem.title}</span>
+                        </p>
+                    </div>
                 </div>
+
                 <NewsForm initialData={newsItem} categories={categories} />
             </div>
         </ProtectedRoute>

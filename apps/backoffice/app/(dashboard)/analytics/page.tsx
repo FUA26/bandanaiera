@@ -28,8 +28,8 @@ export default function AnalyticsPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-3xl font-bold">Analytics Dashboard</h2>
-        <p className="text-muted-foreground">Monitor your system performance</p>
+        <h2 className="text-3xl font-bold">Dasbor Analitik</h2>
+        <p className="text-muted-foreground">Monitor performa sistem Anda</p>
       </div>
 
       <SummaryCards />

@@ -64,11 +64,11 @@ export function PermissionsDataTable({ data, onRefresh }: PermissionsDataTablePr
 
   // Category filter options based on seed-permissions.ts
   const categoryOptions: FacetedFilterOption[] = [
-    { label: "User", value: "USER" },
-    { label: "File", value: "FILE" },
+    { label: "Pengguna", value: "USER" },
+    { label: "Berkas", value: "FILE" },
     { label: "Admin", value: "ADMIN" },
-    { label: "Role", value: "ROLE" },
-    { label: "Permission", value: "PERMISSION" },
+    { label: "Peran", value: "ROLE" },
+    { label: "Izin", value: "PERMISSION" },
   ];
 
   // Column definitions
@@ -98,26 +98,26 @@ export function PermissionsDataTable({ data, onRefresh }: PermissionsDataTablePr
     },
     {
       accessorKey: "name",
-      header: ({ column }) => <DataTableColumnHeader column={column} title="Name" />,
+      header: ({ column }) => <DataTableColumnHeader column={column} title="Nama" />,
       cell: ({ row }) => (
         <code className="text-sm bg-muted px-2 py-1 rounded font-mono">{row.getValue("name")}</code>
       ),
     },
     {
       accessorKey: "category",
-      header: ({ column }) => <DataTableColumnHeader column={column} title="Category" />,
+      header: ({ column }) => <DataTableColumnHeader column={column} title="Kategori" />,
       cell: ({ row }) => <Badge variant="outline">{row.getValue("category")}</Badge>,
     },
     {
       accessorKey: "description",
-      header: ({ column }) => <DataTableColumnHeader column={column} title="Description" />,
+      header: ({ column }) => <DataTableColumnHeader column={column} title="Deskripsi" />,
       cell: ({ row }) => (
         <span className="text-sm text-muted-foreground">{row.getValue("description") || "-"}</span>
       ),
     },
     {
       accessorKey: "usage",
-      header: ({ column }) => <DataTableColumnHeader column={column} title="Usage" />,
+      header: ({ column }) => <DataTableColumnHeader column={column} title="Penggunaan" />,
       cell: ({ row }) => {
         const usageCount = row.original._count?.rolePermissions || 0;
         return (
@@ -131,7 +131,7 @@ export function PermissionsDataTable({ data, onRefresh }: PermissionsDataTablePr
     },
     {
       id: "actions",
-      header: "Actions",
+      header: "Aksi",
       cell: ({ row }) => {
         const permission = row.original;
         const usageCount = permission._count?.rolePermissions || 0;
@@ -139,7 +139,7 @@ export function PermissionsDataTable({ data, onRefresh }: PermissionsDataTablePr
         return (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="icon" aria-label="Actions">
+              <Button variant="ghost" size="icon" aria-label="Aksi">
                 <HugeiconsIcon icon={MoreVerticalIcon} className="h-4 w-4" />
               </Button>
             </DropdownMenuTrigger>
@@ -151,7 +151,7 @@ export function PermissionsDataTable({ data, onRefresh }: PermissionsDataTablePr
                 }}
               >
                 <HugeiconsIcon icon={Edit01Icon} className="mr-2 h-4 w-4" />
-                Edit
+                Ubah
               </DropdownMenuItem>
               <DropdownMenuItem
                 onClick={() => {
@@ -162,7 +162,7 @@ export function PermissionsDataTable({ data, onRefresh }: PermissionsDataTablePr
                 disabled={usageCount > 0}
               >
                 <HugeiconsIcon icon={Delete01Icon} className="mr-2 h-4 w-4" />
-                Delete
+                Hapus
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
@@ -188,17 +188,17 @@ export function PermissionsDataTable({ data, onRefresh }: PermissionsDataTablePr
 
       if (!response.ok) {
         const error = await response.json();
-        throw new Error(error.message || "Failed to save permission");
+        throw new Error(error.message || "Gagal menyimpan izin");
       }
 
       toast.success(
-        editingPermission ? "Permission updated successfully" : "Permission created successfully"
+        editingPermission ? "Izin berhasil diupdate" : "Izin berhasil dibuat"
       );
       setDialogOpen(false);
       setEditingPermission(null);
       onRefresh();
     } catch (error) {
-      const message = error instanceof Error ? error.message : "Failed to save permission";
+      const message = error instanceof Error ? error.message : "Gagal menyimpan izin";
       toast.error(message);
     }
   };
@@ -214,15 +214,15 @@ export function PermissionsDataTable({ data, onRefresh }: PermissionsDataTablePr
 
       if (!response.ok) {
         const error = await response.json();
-        throw new Error(error.message || "Failed to delete permission");
+        throw new Error(error.message || "Gagal menghapus izin");
       }
 
-      toast.success("Permission deleted successfully");
+      toast.success("Izin berhasil dihapus");
       setDeleteDialogOpen(false);
       setPermissionToDelete(null);
       onRefresh();
     } catch (error) {
-      const message = error instanceof Error ? error.message : "Failed to delete permission";
+      const message = error instanceof Error ? error.message : "Gagal menghapus izin";
       toast.error(message);
     }
   };
@@ -236,13 +236,13 @@ export function PermissionsDataTable({ data, onRefresh }: PermissionsDataTablePr
           <div className="flex items-center justify-between gap-4 flex-1">
             <div className="flex items-center gap-2">
               <Input
-                placeholder="Filter permissions..."
+                placeholder="Cari izin..."
                 value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
                 onChange={(event) => table.getColumn("name")?.setFilterValue(event.target.value)}
                 className="max-w-sm"
               />
               <DataTableFacetedFilter
-                title="Category"
+                title="Kategori"
                 options={categoryOptions}
                 column={table.getColumn("category")}
               />
@@ -250,7 +250,7 @@ export function PermissionsDataTable({ data, onRefresh }: PermissionsDataTablePr
             <div className="flex items-center gap-2">
               <Button onClick={() => setCreateDialogOpen(true)}>
                 <HugeiconsIcon icon={Add01Icon} className="mr-2 h-4 w-4" />
-                Create Permission
+                Tambah Izin
               </Button>
               <DataTableViewOptions table={table} />
             </div>
@@ -274,21 +274,21 @@ export function PermissionsDataTable({ data, onRefresh }: PermissionsDataTablePr
       <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Delete Permission</AlertDialogTitle>
+            <AlertDialogTitle>Hapus Izin</AlertDialogTitle>
             <AlertDialogDescription>
-              Are you sure you want to delete the permission{" "}
+              Apakah Anda yakin ingin menghapus izin{" "}
               <code className="bg-muted px-1.5 py-0.5 rounded">{permissionToDelete?.name}</code>?
-              This action cannot be undone.
+              Tindakan ini tidak dapat dibatalkan.
               {permissionToDelete && (permissionToDelete._count?.rolePermissions || 0) > 0 && (
                 <span className="block mt-2 text-destructive">
-                  This permission is assigned to {permissionToDelete._count?.rolePermissions}{" "}
-                  role(s) and cannot be deleted. Remove it from roles first.
+                  Izin ini ditugaskan ke {permissionToDelete._count?.rolePermissions}{" "}
+                  peran dan tidak dapat dihapus. Hapus dari peran terlebih dahulu.
                 </span>
               )}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>Batal</AlertDialogCancel>
             <AlertDialogAction
               onClick={handleDelete}
               disabled={
@@ -296,7 +296,7 @@ export function PermissionsDataTable({ data, onRefresh }: PermissionsDataTablePr
               }
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
             >
-              Delete
+              Hapus
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

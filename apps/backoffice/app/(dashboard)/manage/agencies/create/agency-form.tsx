@@ -47,7 +47,7 @@ export function AgencyForm() {
 
   const handleSubmit = async (data: z.infer<typeof agencyCreateSchema>) => {
     if (!logoId) {
-      toast.error('Logo is required');
+      toast.error('Logo wajib diisi');
       return;
     }
 
@@ -61,14 +61,14 @@ export function AgencyForm() {
 
       if (!response.ok) {
         const error = await response.json();
-        throw new Error(error.message || 'Failed to create agency');
+        throw new Error(error.message || 'Gagal membuat Perangkat Daerah');
       }
 
-      toast.success('Agency created successfully');
+      toast.success('Perangkat Daerah berhasil dibuat');
       router.push('/manage/agencies');
     } catch (error) {
       console.error('Error creating agency:', error);
-      toast.error(error instanceof Error ? error.message : 'Failed to create agency');
+      toast.error(error instanceof Error ? error.message : 'Gagal membuat Perangkat Daerah');
     } finally {
       setIsSubmitting(false);
     }
@@ -79,14 +79,14 @@ export function AgencyForm() {
       <div className="mb-6">
         <Button variant="ghost" onClick={() => router.back()} className="gap-2">
           <ArrowLeft className="h-4 w-4" />
-          Back
+          Kembali
         </Button>
       </div>
 
       <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">
         <Card>
           <CardHeader>
-            <CardTitle>Basic Information</CardTitle>
+            <CardTitle>Informasi Dasar</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="space-y-2">
@@ -138,8 +138,8 @@ export function AgencyForm() {
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="ACTIVE">Active</SelectItem>
-                  <SelectItem value="INACTIVE">Inactive</SelectItem>
+                  <SelectItem value="ACTIVE">Aktif</SelectItem>
+                  <SelectItem value="INACTIVE">Tidak Aktif</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -153,10 +153,10 @@ export function AgencyForm() {
 
         <div className="flex justify-end gap-3">
           <Button type="button" variant="outline" onClick={() => router.back()} disabled={isSubmitting}>
-            Cancel
+            Batal
           </Button>
           <Button type="submit" disabled={isSubmitting || !logoId}>
-            {isSubmitting ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Saving...</> : <><Save className="mr-2 h-4 w-4" />Create Agency</>}
+            {isSubmitting ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Menyimpan...</> : <><Save className="mr-2 h-4 w-4" />Buat Perangkat Daerah</>}
           </Button>
         </div>
       </form>

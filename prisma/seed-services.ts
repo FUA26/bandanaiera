@@ -613,9 +613,21 @@ async function main() {
 
   console.log(`👤 Using admin user: ${admin.email} (${admin.id})\n`);
 
+  // Get sample OPD for services with owner
+  const dinkes = await prisma.opd.findFirst({
+    where: { slug: "dinas-kesehatan" },
+  });
+  const disdukcapil = await prisma.opd.findFirst({
+    where: { slug: "dinas-kependudukan-dan-pencatatan-sipil" },
+  });
+  const dpmd = await prisma.opd.findFirst({
+    where: { slug: "dinas-pemberdayaan-masyarakat-desa" },
+  });
+
   // Clean existing data
   console.log("🧹 Cleaning existing data...");
   await prisma.serviceActivityLog.deleteMany({});
+  await prisma.serviceRelatedOpd.deleteMany({});
   await prisma.service.deleteMany({});
   await prisma.serviceCategory.deleteMany({});
   console.log("✅ Cleaned existing data\n");
@@ -634,10 +646,25 @@ async function main() {
   console.log("📋 Seeding services...");
   let created = 0;
   for (const service of services) {
+    // Determine OPD based on service category/slug
+    let opdId = null;
+    if (service.slug.includes("ktp") || service.slug.includes("kk") || service.categoryId === "cat-001") {
+      // Kependudukan services -> Disdukcapil
+      opdId = disdukcapil?.id || null;
+    } else if (service.slug.includes("izin") || service.categoryId === "cat-002") {
+      // Perizinan services -> DPMD (Dinas Pemberdayaan Masyarakat dan Desa)
+      opdId = dpmd?.id || null;
+    } else if (service.slug.includes("puskesmas") || service.slug.includes("rumah-sakit") || service.categoryId === "cat-003") {
+      // Kesehatan services -> Dinkes
+      opdId = dinkes?.id || null;
+    }
+
     await prisma.service.create({
       data: {
         ...service,
+        opdId,
         createdById: admin.id,
+        updatedById: admin.id,
       },
     });
     created++;

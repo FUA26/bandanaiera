@@ -41,7 +41,7 @@ export function RegisterForm() {
 
   // Password strength calculator
   const getPasswordStrength = (password: string) => {
-    if (!password) return { score: 0, label: "Weak", color: "bg-red-500" };
+    if (!password) return { score: 0, label: "Lemah", color: "bg-red-500" };
 
     let score = 0;
     if (password.length >= 8) score++;
@@ -50,10 +50,10 @@ export function RegisterForm() {
     if (/\d/.test(password)) score++;
     if (/[^a-zA-Z0-9]/.test(password)) score++;
 
-    if (score <= 1) return { score: 25, label: "Weak", color: "bg-red-500" };
-    if (score <= 2) return { score: 50, label: "Fair", color: "bg-yellow-500" };
-    if (score <= 3) return { score: 75, label: "Good", color: "bg-blue-500" };
-    return { score: 100, label: "Strong", color: "bg-green-500" };
+    if (score <= 1) return { score: 25, label: "Lemah", color: "bg-red-500" };
+    if (score <= 2) return { score: 50, label: "Cukup", color: "bg-yellow-500" };
+    if (score <= 3) return { score: 75, label: "Baik", color: "bg-blue-500" };
+    return { score: 100, label: "Kuat", color: "bg-green-500" };
   };
 
   const passwordStrength = getPasswordStrength(passwordValue || "");
@@ -72,7 +72,7 @@ export function RegisterForm() {
       const result = await response.json();
 
       if (!response.ok) {
-        throw new Error(result.message || "Registration failed");
+        throw new Error(result.message || "Registrasi gagal");
       }
 
       // Check if email verification is required
@@ -80,12 +80,12 @@ export function RegisterForm() {
         setRequireEmailVerification(true);
         setRegistrationSuccess(true);
       } else {
-        toast.success("Registration successful! You can now log in.");
+        toast.success("Registrasi berhasil! Anda sekarang dapat masuk.");
         router.push("/login");
       }
     } catch (error) {
       console.error("Registration failed:", error);
-      toast.error(error instanceof Error ? error.message : "Registration failed");
+      toast.error(error instanceof Error ? error.message : "Registrasi gagal");
     } finally {
       setIsLoading(false);
     }

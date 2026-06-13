@@ -117,14 +117,14 @@ export function EventForm({ initialData, categories }: EventFormProps) {
 
             if (!response.ok) {
                 const error = await response.json();
-                throw new Error(error.error || 'Failed to save event');
+                throw new Error(error.error || 'Gagal menyimpan acara');
             }
 
-            toast.success(initialData ? 'Event updated' : 'Event created');
+            toast.success(initialData ? 'Acara berhasil diupdate' : 'Acara berhasil dibuat');
             router.push('/manage/events');
             router.refresh();
         } catch (error) {
-            toast.error(error instanceof Error ? error.message : 'Failed to save');
+            toast.error(error instanceof Error ? error.message : 'Gagal menyimpan');
         } finally {
             setIsSubmitting(false);
         }
@@ -136,19 +136,19 @@ export function EventForm({ initialData, categories }: EventFormProps) {
             <div className="flex items-center justify-between">
                 <Link href="/manage/events" className="flex items-center text-sm text-muted-foreground hover:text-primary">
                     <ArrowLeft className="mr-2 h-4 w-4" />
-                    Back to event list
+                    Kembali ke daftar acara
                 </Link>
                 <Button type="submit" disabled={isSubmitting}>
                     {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                    {initialData ? 'Update Event' : 'Create Event'}
+                    {initialData ? 'Update Acara' : 'Buat Acara'}
                 </Button>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div className="space-y-6">
                     <div className="space-y-2">
-                        <Label htmlFor="title">Title</Label>
-                        <Input id="title" {...form.register('title')} placeholder="Enter event title" />
+                        <Label htmlFor="title">Judul</Label>
+                        <Input id="title" {...form.register('title')} placeholder="Masukkan judul acara" />
                         {form.formState.errors.title && (
                             <p className="text-sm text-destructive">{form.formState.errors.title.message as string}</p>
                         )}
@@ -156,20 +156,20 @@ export function EventForm({ initialData, categories }: EventFormProps) {
 
                     <div className="space-y-2">
                         <Label htmlFor="slug">Slug</Label>
-                        <Input id="slug" {...form.register('slug')} placeholder="event-url-slug" />
+                        <Input id="slug" {...form.register('slug')} placeholder="url-acara" />
                         {form.formState.errors.slug && (
                             <p className="text-sm text-destructive">{form.formState.errors.slug.message as string}</p>
                         )}
                     </div>
 
                     <div className="space-y-2">
-                        <Label htmlFor="categoryId">Category</Label>
+                        <Label htmlFor="categoryId">Kategori</Label>
                         <Select
                             value={form.watch('categoryId')}
                             onValueChange={(value) => form.setValue('categoryId', value)}
                         >
                             <SelectTrigger>
-                                <SelectValue placeholder="Select category" />
+                                <SelectValue placeholder="Pilih kategori" />
                             </SelectTrigger>
                             <SelectContent>
                                 {categories.map((category) => (
@@ -186,7 +186,7 @@ export function EventForm({ initialData, categories }: EventFormProps) {
 
                     <div className="grid grid-cols-2 gap-4">
                         <div className="space-y-2">
-                            <Label>Date</Label>
+                            <Label>Tanggal</Label>
                             <Popover>
                                 <PopoverTrigger asChild>
                                     <Button
@@ -197,7 +197,7 @@ export function EventForm({ initialData, categories }: EventFormProps) {
                                         )}
                                     >
                                         <CalendarIcon className="mr-2 h-4 w-4" />
-                                        {form.watch('date') ? format(form.watch('date'), 'PPP') : 'Pick a date'}
+                                        {form.watch('date') ? format(form.watch('date'), 'PPP') : 'Pilih tanggal'}
                                     </Button>
                                 </PopoverTrigger>
                                 <PopoverContent className="w-auto p-0" align="start">
@@ -212,19 +212,19 @@ export function EventForm({ initialData, categories }: EventFormProps) {
                         </div>
 
                         <div className="space-y-2">
-                            <Label htmlFor="time">Time</Label>
+                            <Label htmlFor="time">Waktu</Label>
                             <Input id="time" {...form.register('time')} placeholder="09:00 - 17:00" />
                         </div>
                     </div>
 
                     <div className="space-y-2">
-                        <Label htmlFor="type">Type</Label>
+                        <Label htmlFor="type">Tipe</Label>
                         <Select
                             value={form.watch('type') as string}
                             onValueChange={(value) => form.setValue('type', value as EventType)}
                         >
                             <SelectTrigger>
-                                <SelectValue placeholder="Select type" />
+                                <SelectValue placeholder="Pilih tipe" />
                             </SelectTrigger>
                             <SelectContent>
                                 <SelectItem value="OFFLINE">Offline</SelectItem>
@@ -235,27 +235,27 @@ export function EventForm({ initialData, categories }: EventFormProps) {
                     </div>
 
                     <div className="space-y-2">
-                        <Label htmlFor="location">Location</Label>
-                        <Input id="location" {...form.register('location')} placeholder="Event location" />
+                        <Label htmlFor="location">Lokasi</Label>
+                        <Input id="location" {...form.register('location')} placeholder="Lokasi acara" />
                     </div>
 
                     <div className="space-y-2">
-                        <Label htmlFor="locationUrl">Location URL</Label>
+                        <Label htmlFor="locationUrl">URL Lokasi</Label>
                         <Input id="locationUrl" {...form.register('locationUrl')} placeholder="https://maps.google.com/..." />
                     </div>
 
                     <div className="grid grid-cols-2 gap-4">
                         <div className="space-y-2">
-                            <Label htmlFor="organizer">Organizer</Label>
-                            <Input id="organizer" {...form.register('organizer')} placeholder="Organization name" />
+                            <Label htmlFor="organizer">Penyelenggara</Label>
+                            <Input id="organizer" {...form.register('organizer')} placeholder="Nama organisasi" />
                             {form.formState.errors.organizer && (
                                 <p className="text-sm text-destructive">{form.formState.errors.organizer.message as string}</p>
                             )}
                         </div>
 
                         <div className="space-y-2">
-                            <Label htmlFor="organizerContact">Contact</Label>
-                            <Input id="organizerContact" {...form.register('organizerContact')} placeholder="Email or phone" />
+                            <Label htmlFor="organizerContact">Kontak</Label>
+                            <Input id="organizerContact" {...form.register('organizerContact')} placeholder="Email atau telepon" />
                         </div>
                     </div>
                 </div>
@@ -266,7 +266,7 @@ export function EventForm({ initialData, categories }: EventFormProps) {
                         name="imageId"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel>Event Cover Image</FormLabel>
+                                <FormLabel>Gambar Sampul Acara</FormLabel>
                                 <FormControl>
                                     <EnhancedImageUploader
                                         value={field.value ? [field.value] : []}
@@ -290,16 +290,16 @@ export function EventForm({ initialData, categories }: EventFormProps) {
                                     <SelectValue />
                                 </SelectTrigger>
                                 <SelectContent>
-                                    <SelectItem value="DRAFT">Draft</SelectItem>
-                                    <SelectItem value="PUBLISHED">Published</SelectItem>
-                                    <SelectItem value="CANCELLED">Cancelled</SelectItem>
-                                    <SelectItem value="COMPLETED">Completed</SelectItem>
+                                    <SelectItem value="DRAFT">DRAFT</SelectItem>
+                                    <SelectItem value="PUBLISHED">DITERBITKAN</SelectItem>
+                                    <SelectItem value="CANCELLED">DIBATALKAN</SelectItem>
+                                    <SelectItem value="COMPLETED">SELESAI</SelectItem>
                                 </SelectContent>
                             </Select>
                         </div>
 
                         <div className="space-y-2">
-                            <Label htmlFor="order">Order</Label>
+                            <Label htmlFor="order">Urutan</Label>
                             <Input
                                 id="order"
                                 type="number"
@@ -310,8 +310,8 @@ export function EventForm({ initialData, categories }: EventFormProps) {
 
                     <div className="flex items-center justify-between rounded-lg border p-4">
                         <div className="space-y-0.5">
-                            <Label>Registration Required</Label>
-                            <p className="text-xs text-muted-foreground">Require registration for this event</p>
+                            <Label>Perlu Registrasi</Label>
+                            <p className="text-xs text-muted-foreground">Mewajibkan registrasi untuk acara ini</p>
                         </div>
                         <Switch
                             checked={form.watch('registrationRequired')}
@@ -322,12 +322,12 @@ export function EventForm({ initialData, categories }: EventFormProps) {
                     {form.watch('registrationRequired') && (
                         <div className="grid grid-cols-1 gap-4 border p-4 rounded-lg bg-muted/50">
                             <div className="space-y-2">
-                                <Label htmlFor="registrationUrl">Registration URL</Label>
+                                <Label htmlFor="registrationUrl">URL Registrasi</Label>
                                 <Input id="registrationUrl" {...form.register('registrationUrl')} placeholder="https://..." />
                             </div>
 
                             <div className="space-y-2">
-                                <Label htmlFor="maxAttendees">Max Attendees</Label>
+                                <Label htmlFor="maxAttendees">Maksimal Peserta</Label>
                                 <Input
                                     id="maxAttendees"
                                     type="number"
@@ -340,14 +340,14 @@ export function EventForm({ initialData, categories }: EventFormProps) {
 
                     <div className="flex gap-4">
                         <div className="flex-1 flex items-center justify-between rounded-lg border p-4">
-                            <Label>Featured</Label>
+                            <Label>Unggulan</Label>
                             <Switch
                                 checked={form.watch('featured')}
                                 onCheckedChange={(checked) => form.setValue('featured', checked)}
                             />
                         </div>
                         <div className="flex-1 flex items-center justify-between rounded-lg border p-4">
-                            <Label>Visible</Label>
+                            <Label>Tampil</Label>
                             <Switch
                                 checked={form.watch('showInMenu')}
                                 onCheckedChange={(checked) => form.setValue('showInMenu', checked)}
@@ -358,11 +358,11 @@ export function EventForm({ initialData, categories }: EventFormProps) {
             </div>
 
             <div className="space-y-2">
-                <Label htmlFor="description">Event Description</Label>
+                <Label htmlFor="description">Deskripsi Acara</Label>
                 <RichTextEditor
                     value={form.watch('description') || ''}
                     onChange={(val: string) => form.setValue('description', val)}
-                    placeholder="Full event description..."
+                    placeholder="Deskripsi lengkap acara..."
                 />
             </div>
         </form>

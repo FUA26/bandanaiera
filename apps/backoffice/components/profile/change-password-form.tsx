@@ -69,10 +69,10 @@ export function ChangePasswordForm({ userId, onSuccess }: ChangePasswordFormProp
 
   const getStrengthLabel = (strength: number): string => {
     if (strength === 0) return "";
-    if (strength < 40) return "Weak";
-    if (strength < 70) return "Fair";
-    if (strength < 90) return "Good";
-    return "Strong";
+    if (strength < 40) return "Lemah";
+    if (strength < 70) return "Cukup";
+    if (strength < 90) return "Baik";
+    return "Kuat";
   };
 
   const getStrengthColor = (strength: number): string => {
@@ -97,10 +97,10 @@ export function ChangePasswordForm({ userId, onSuccess }: ChangePasswordFormProp
       const result = await response.json();
 
       if (!response.ok) {
-        throw new Error(result.message || "Failed to change password");
+        throw new Error(result.message || "Gagal mengubah password");
       }
 
-      toast.success("Password changed successfully");
+      toast.success("Password berhasil diubah");
 
       // Reset form
       form.reset();
@@ -114,7 +114,7 @@ export function ChangePasswordForm({ userId, onSuccess }: ChangePasswordFormProp
       onSuccess?.();
     } catch (error) {
       console.error("Failed to change password:", error);
-      toast.error(error instanceof Error ? error.message : "Failed to change password");
+      toast.error(error instanceof Error ? error.message : "Gagal mengubah password");
     } finally {
       setIsLoading(false);
     }
@@ -124,13 +124,13 @@ export function ChangePasswordForm({ userId, onSuccess }: ChangePasswordFormProp
     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
       {/* Current Password Field */}
       <Field>
-        <FieldLabel htmlFor="currentPassword">Current Password</FieldLabel>
+        <FieldLabel htmlFor="currentPassword">Password Saat Ini</FieldLabel>
         <FieldContent>
           <div className="relative">
             <Input
               id="currentPassword"
               type={showCurrentPassword ? "text" : "password"}
-              placeholder="Enter your current password"
+              placeholder="Masukkan password saat ini"
               {...form.register("currentPassword")}
               disabled={isLoading}
               className="pr-10"
@@ -148,7 +148,7 @@ export function ChangePasswordForm({ userId, onSuccess }: ChangePasswordFormProp
                 className="h-4 w-4 text-muted-foreground"
               />
               <span className="sr-only">
-                {showCurrentPassword ? "Hide password" : "Show password"}
+                {showCurrentPassword ? "Sembunyikan password" : "Tampilkan password"}
               </span>
             </Button>
           </div>
@@ -164,14 +164,14 @@ export function ChangePasswordForm({ userId, onSuccess }: ChangePasswordFormProp
 
       {/* New Password Field */}
       <Field>
-        <FieldLabel htmlFor="newPassword">New Password</FieldLabel>
+        <FieldLabel htmlFor="newPassword">Password Baru</FieldLabel>
         <FieldContent>
           <div className="space-y-2">
             <div className="relative">
               <Input
                 id="newPassword"
                 type={showNewPassword ? "text" : "password"}
-                placeholder="Enter new password"
+                placeholder="Masukkan password baru"
                 {...form.register("newPassword")}
                 disabled={isLoading}
                 className="pr-10"
@@ -189,7 +189,7 @@ export function ChangePasswordForm({ userId, onSuccess }: ChangePasswordFormProp
                   className="h-4 w-4 text-muted-foreground"
                 />
                 <span className="sr-only">
-                  {showNewPassword ? "Hide password" : "Show password"}
+                  {showNewPassword ? "Sembunyikan password" : "Tampilkan password"}
                 </span>
               </Button>
             </div>
@@ -198,7 +198,7 @@ export function ChangePasswordForm({ userId, onSuccess }: ChangePasswordFormProp
             {newPassword && (
               <div className="space-y-2">
                 <div className="flex items-center justify-between text-xs">
-                  <span className="text-muted-foreground">Password strength:</span>
+                  <span className="text-muted-foreground">Kekuatan password:</span>
                   <span
                     className={`font-medium ${
                       passwordStrength < 40
@@ -224,8 +224,8 @@ export function ChangePasswordForm({ userId, onSuccess }: ChangePasswordFormProp
           </div>
         </FieldContent>
         <FieldDescription>
-          Password must be 8-100 characters. Mix of uppercase, lowercase, numbers, and special
-          characters recommended.
+          Password harus 8-100 karakter. Kombinasi huruf kapital, huruf kecil, angka, dan karakter
+          spesial direkomendasikan.
         </FieldDescription>
         <FieldError
           errors={
@@ -236,13 +236,13 @@ export function ChangePasswordForm({ userId, onSuccess }: ChangePasswordFormProp
 
       {/* Confirm Password Field */}
       <Field>
-        <FieldLabel htmlFor="confirmPassword">Confirm New Password</FieldLabel>
+        <FieldLabel htmlFor="confirmPassword">Konfirmasi Password Baru</FieldLabel>
         <FieldContent>
           <div className="relative">
             <Input
               id="confirmPassword"
               type={showConfirmPassword ? "text" : "password"}
-              placeholder="Confirm new password"
+              placeholder="Konfirmasi password baru"
               {...form.register("confirmPassword")}
               disabled={isLoading}
               className="pr-10"
@@ -260,12 +260,12 @@ export function ChangePasswordForm({ userId, onSuccess }: ChangePasswordFormProp
                 className="h-4 w-4 text-muted-foreground"
               />
               <span className="sr-only">
-                {showConfirmPassword ? "Hide password" : "Show password"}
+                {showConfirmPassword ? "Sembunyikan password" : "Tampilkan password"}
               </span>
             </Button>
           </div>
         </FieldContent>
-        <FieldDescription>Re-enter your new password to confirm</FieldDescription>
+        <FieldDescription>Masukkan kembali password baru Anda untuk mengkonfirmasi</FieldDescription>
         <FieldError
           errors={
             form.formState.errors.confirmPassword
@@ -289,10 +289,10 @@ export function ChangePasswordForm({ userId, onSuccess }: ChangePasswordFormProp
           disabled={isLoading || !form.formState.isDirty}
         >
           <HugeiconsIcon icon={Cancel01Icon} className="mr-2 h-4 w-4" />
-          Cancel
+          Batal
         </Button>
         <Button type="submit" disabled={isLoading || !form.formState.isDirty}>
-          {isLoading ? "Changing Password..." : "Change Password"}
+          {isLoading ? "Mengubah Password..." : "Ubah Password"}
         </Button>
       </div>
     </form>

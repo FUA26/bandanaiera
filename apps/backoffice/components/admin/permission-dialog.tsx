@@ -44,7 +44,7 @@ interface PermissionDialogProps {
   onSave: (data: { name: string; category: string; description?: string }) => Promise<void>;
 }
 
-const DEFAULT_CATEGORIES = ["User", "Content", "Settings", "Analytics", "Admin"];
+const DEFAULT_CATEGORIES = ["Pengguna", "Konten", "Pengaturan", "Analitik", "Admin"];
 
 export function PermissionDialog({
   open,
@@ -109,19 +109,19 @@ export function PermissionDialog({
 
     // Validate
     if (!name.trim()) {
-      toast.error("Permission name is required");
+      toast.error("Nama izin diperlukan");
       return;
     }
 
     if (!category.trim() && !customCategory.trim()) {
-      toast.error("Category is required");
+      toast.error("Kategori diperlukan");
       return;
     }
 
     const finalCategory = isCustomCategory ? customCategory.trim() : category.trim();
 
     if (!finalCategory) {
-      toast.error("Category is required");
+      toast.error("Kategori diperlukan");
       return;
     }
 
@@ -133,7 +133,7 @@ export function PermissionDialog({
 
     if (formattedName !== name) {
       setName(formattedName);
-      toast.info("Permission name auto-formatted to uppercase with underscores");
+      toast.info("Nama izin otomatis diformat ke huruf kapital dengan garis bawah");
     }
 
     setSaving(true);
@@ -164,11 +164,11 @@ export function PermissionDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>
-          <DialogTitle>{isEditing ? "Edit Permission" : "Create New Permission"}</DialogTitle>
+          <DialogTitle>{isEditing ? "Ubah Izin" : "Buat Izin Baru"}</DialogTitle>
           <DialogDescription>
             {isEditing
-              ? "Update the permission details below."
-              : "Create a new permission for role-based access control."}
+              ? "Update detail izin di bawah ini."
+              : "Buat izin baru untuk kontrol akses berbasis peran."}
           </DialogDescription>
         </DialogHeader>
 
@@ -177,31 +177,31 @@ export function PermissionDialog({
             {/* Permission Name */}
             <div className="grid gap-2">
               <Label htmlFor="name">
-                Permission Name <span className="text-destructive">*</span>
+                Nama Izin <span className="text-destructive">*</span>
               </Label>
               <Input
                 id="name"
-                placeholder="e.g., USER_READ_OWN"
+                placeholder="contoh, USER_READ_OWN"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 disabled={saving}
                 className="font-mono"
               />
               <p className="text-xs text-muted-foreground">
-                Will be auto-formatted to UPPERCASE_WITH_UNDERSCORES
+                Akan otomatis diformat ke HURUF_KAPITAL_DENGAN_GARIS_BAWAH
               </p>
             </div>
 
             {/* Category */}
             <div className="grid gap-2">
               <Label>
-                Category <span className="text-destructive">*</span>
+                Kategori <span className="text-destructive">*</span>
               </Label>
 
               {!isCustomCategory ? (
                 <Select value={category} onValueChange={setCategory} disabled={saving}>
                   <SelectTrigger>
-                    <SelectValue placeholder="Select a category" />
+                    <SelectValue placeholder="Pilih kategori" />
                   </SelectTrigger>
                   <SelectContent>
                     {allCategories.map((cat) => (
@@ -209,13 +209,13 @@ export function PermissionDialog({
                         {cat}
                       </SelectItem>
                     ))}
-                    <SelectItem value="__custom__">+ Custom Category</SelectItem>
+                    <SelectItem value="__custom__">+ Kategori Kustom</SelectItem>
                   </SelectContent>
                 </Select>
               ) : (
                 <div className="flex gap-2">
                   <Input
-                    placeholder="Enter custom category"
+                    placeholder="Masukkan kategori kustom"
                     value={customCategory}
                     onChange={(e) => setCustomCategory(e.target.value)}
                     disabled={saving}
@@ -229,7 +229,7 @@ export function PermissionDialog({
                     }}
                     disabled={saving}
                   >
-                    Cancel
+                    Batal
                   </Button>
                 </div>
               )}
@@ -243,23 +243,23 @@ export function PermissionDialog({
                   onClick={() => setIsCustomCategory(true)}
                   disabled={saving}
                 >
-                  + Create custom category
+                  + Buat kategori kustom
                 </Button>
               )}
             </div>
 
             {/* Description */}
             <div className="grid gap-2">
-              <Label htmlFor="description">Description</Label>
+              <Label htmlFor="description">Deskripsi</Label>
               <Textarea
                 id="description"
-                placeholder="Briefly describe what this permission allows"
+                placeholder="Jelaskan singkat apa yang diizinkan oleh izin ini"
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
                 disabled={saving}
                 rows={3}
               />
-              <p className="text-xs text-muted-foreground">{description.length}/500 characters</p>
+              <p className="text-xs text-muted-foreground">{description.length}/500 karakter</p>
             </div>
           </div>
 
@@ -270,13 +270,13 @@ export function PermissionDialog({
               onClick={() => onOpenChange(false)}
               disabled={saving}
             >
-              Cancel
+              Batal
             </Button>
             <Button type="submit" disabled={saving}>
               {saving && (
                 <HugeiconsIcon icon={Loading01Icon} className="mr-2 h-4 w-4 animate-spin" />
               )}
-              {isEditing ? "Update Permission" : "Create Permission"}
+              {isEditing ? "Update Izin" : "Buat Izin"}
             </Button>
           </DialogFooter>
         </form>

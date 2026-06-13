@@ -29,21 +29,21 @@ export function SettingsClient({ user }: SettingsClientProps) {
     <div className="space-y-6">
       {/* Page Header */}
       <div>
-        <h1 className="text-3xl font-bold tracking-tight">Settings</h1>
+        <h1 className="text-3xl font-bold tracking-tight">Pengaturan</h1>
         <p className="text-muted-foreground">
-          Manage your application preferences and account settings
+          Kelola preferensi aplikasi dan pengaturan akun Anda
         </p>
       </div>
 
       {/* Quick Links */}
       <Card>
         <CardHeader>
-          <CardTitle>Quick Actions</CardTitle>
-          <CardDescription>Commonly used settings and actions</CardDescription>
+          <CardTitle>Aksi Cepat</CardTitle>
+          <CardDescription>Pengaturan dan aksi yang sering digunakan</CardDescription>
         </CardHeader>
         <CardContent className="flex flex-col gap-3">
           <p className="text-sm text-muted-foreground">
-            Quick actions and shortcuts will be added here soon.
+            Aksi cepat dan pintasan akan ditambahkan di sini segera.
           </p>
         </CardContent>
       </Card>
@@ -55,22 +55,22 @@ export function SettingsClient({ user }: SettingsClientProps) {
           <CardHeader>
             <div className="flex items-center gap-2">
               <HugeiconsIcon icon={Settings01Icon} className="h-5 w-5 text-muted-foreground" />
-              <CardTitle>Appearance</CardTitle>
+              <CardTitle>Tampilan</CardTitle>
             </div>
-            <CardDescription>Customize the look and feel of the application</CardDescription>
+            <CardDescription>Kustomisasi tampilan aplikasi</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="flex items-center justify-between">
               <div className="space-y-0.5">
-                <p className="text-sm font-medium">Theme</p>
-                <p className="text-xs text-muted-foreground">Choose your preferred theme</p>
+                <p className="text-sm font-medium">Tema</p>
+                <p className="text-xs text-muted-foreground">Pilih tema favorit Anda</p>
               </div>
               <Button variant="outline" size="sm" disabled>
-                System
+                Sistem
               </Button>
             </div>
             <div className="rounded-md bg-muted p-3">
-              <p className="text-xs text-muted-foreground">🚧 Theme customization coming soon</p>
+              <p className="text-xs text-muted-foreground">🚧 Kustomisasi tema segera hadir</p>
             </div>
           </CardContent>
         </Card>
@@ -80,23 +80,23 @@ export function SettingsClient({ user }: SettingsClientProps) {
           <CardHeader>
             <div className="flex items-center gap-2">
               <HugeiconsIcon icon={Settings02Icon} className="h-5 w-5 text-muted-foreground" />
-              <CardTitle>Notifications</CardTitle>
+              <CardTitle>Notifikasi</CardTitle>
             </div>
-            <CardDescription>Configure how you receive notifications</CardDescription>
+            <CardDescription>Konfigurasi cara Anda menerima notifikasi</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="flex items-center justify-between">
               <div className="space-y-0.5">
-                <p className="text-sm font-medium">Email Notifications</p>
-                <p className="text-xs text-muted-foreground">Receive updates via email</p>
+                <p className="text-sm font-medium">Notifikasi Email</p>
+                <p className="text-xs text-muted-foreground">Terima update melalui email</p>
               </div>
               <Button variant="outline" size="sm" disabled>
-                Enable
+                Aktifkan
               </Button>
             </div>
             <div className="rounded-md bg-muted p-3">
               <p className="text-xs text-muted-foreground">
-                🚧 Notification preferences coming soon
+                🚧 Preferensi notifikasi segera hadir
               </p>
             </div>
           </CardContent>
@@ -107,22 +107,22 @@ export function SettingsClient({ user }: SettingsClientProps) {
           <CardHeader>
             <div className="flex items-center gap-2">
               <HugeiconsIcon icon={Settings01Icon} className="h-5 w-5 text-muted-foreground" />
-              <CardTitle>Language & Region</CardTitle>
+              <CardTitle>Bahasa & Wilayah</CardTitle>
             </div>
-            <CardDescription>Set your language and regional preferences</CardDescription>
+            <CardDescription>Atur preferensi bahasa dan wilayah</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="flex items-center justify-between">
               <div className="space-y-0.5">
-                <p className="text-sm font-medium">Language</p>
-                <p className="text-xs text-muted-foreground">Select your preferred language</p>
+                <p className="text-sm font-medium">Bahasa</p>
+                <p className="text-xs text-muted-foreground">Pilih bahasa favorit Anda</p>
               </div>
               <Button variant="outline" size="sm" disabled>
-                English
+                Indonesia
               </Button>
             </div>
             <div className="rounded-md bg-muted p-3">
-              <p className="text-xs text-muted-foreground">🚧 Multi-language support coming soon</p>
+              <p className="text-xs text-muted-foreground">🚧 Dukungan multi-bahasa segera hadir</p>
             </div>
           </CardContent>
         </Card>
@@ -130,20 +130,20 @@ export function SettingsClient({ user }: SettingsClientProps) {
         {/* Account Info */}
         <Card>
           <CardHeader>
-            <CardTitle>Account Information</CardTitle>
-            <CardDescription>Your account details and role</CardDescription>
+            <CardTitle>Informasi Akun</CardTitle>
+            <CardDescription>Detail akun dan peran Anda</CardDescription>
           </CardHeader>
           <CardContent className="space-y-3">
             <div className="flex items-center justify-between">
-              <span className="text-sm font-medium text-muted-foreground">Name</span>
-              <span className="text-sm">{user.name || "Not set"}</span>
+              <span className="text-sm font-medium text-muted-foreground">Nama</span>
+              <span className="text-sm">{user.name || "Belum diatur"}</span>
             </div>
             <div className="flex items-center justify-between">
               <span className="text-sm font-medium text-muted-foreground">Email</span>
               <span className="text-sm">{user.email}</span>
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-sm font-medium text-muted-foreground">Role</span>
+              <span className="text-sm font-medium text-muted-foreground">Peran</span>
               <span className="text-sm font-medium">{user.role.name}</span>
             </div>
           </CardContent>

@@ -44,8 +44,8 @@ export function ProfileClient({ user }: ProfileClientProps) {
     <div className="space-y-6">
       {/* Page Header */}
       <div>
-        <h1 className="text-3xl font-bold tracking-tight">Profile Settings</h1>
-        <p className="text-muted-foreground">Manage your account settings and preferences</p>
+        <h1 className="text-3xl font-bold tracking-tight">Pengaturan Profil</h1>
+        <p className="text-muted-foreground">Kelola pengaturan akun dan preferensi Anda</p>
       </div>
 
       {/* Tabs for Profile and Password */}
@@ -55,11 +55,11 @@ export function ProfileClient({ user }: ProfileClientProps) {
           <TabsList className="w-full flex flex-row flex-wrap justify-start bg-muted/50 p-1 rounded-lg gap-1">
             <TabsTrigger value="profile" className="flex-1 min-w-max gap-2 data-active:bg-background data-active:text-foreground">
               <HugeiconsIcon icon={UserCircleIcon} className="h-4 w-4" />
-              Profile
+              Profil
             </TabsTrigger>
             <TabsTrigger value="password" className="flex-1 min-w-max gap-2 data-active:bg-background data-active:text-foreground">
               <HugeiconsIcon icon={LockPasswordIcon} className="h-4 w-4" />
-              Password
+              Kata Sandi
             </TabsTrigger>
           </TabsList>
 
@@ -68,9 +68,9 @@ export function ProfileClient({ user }: ProfileClientProps) {
             <TabsContent value="profile" className="mt-0">
               <Card>
                 <CardHeader>
-                  <CardTitle>Profile Information</CardTitle>
+                  <CardTitle>Informasi Profil</CardTitle>
                   <CardDescription>
-                    Update your profile information and manage your account
+                    Update informasi profil Anda dan kelola akun
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -92,10 +92,10 @@ export function ProfileClient({ user }: ProfileClientProps) {
             <TabsContent value="password" className="mt-0">
               <Card>
                 <CardHeader>
-                  <CardTitle>Change Password</CardTitle>
+                  <CardTitle>Ubah Kata Sandi</CardTitle>
                   <CardDescription>
-                    Update your password to keep your account secure. Make sure to use a strong
-                    password.
+                    Update kata sandi untuk menjaga keamanan akun. Pastikan menggunakan kata sandi
+                    yang kuat.
                   </CardDescription>
                 </CardHeader>
                 <CardContent>

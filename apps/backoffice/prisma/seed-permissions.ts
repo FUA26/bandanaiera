@@ -110,6 +110,13 @@ const permissions = [
     description: "Manage tourism categories",
   },
 
+  // OPD Management
+  { name: "OPD_VIEW", category: "OPD", description: "View OPD" },
+  { name: "OPD_CREATE", category: "OPD", description: "Create new OPD" },
+  { name: "OPD_EDIT", category: "OPD", description: "Edit OPD" },
+  { name: "OPD_DELETE", category: "OPD", description: "Delete OPD" },
+  { name: "OPD_REORDER", category: "OPD", description: "Reorder OPD" },
+
   // Admin
   { name: "ADMIN_PANEL_ACCESS", category: "ADMIN", description: "Access admin panel" },
   { name: "ADMIN_USERS_MANAGE", category: "ADMIN", description: "Manage users in admin panel" },

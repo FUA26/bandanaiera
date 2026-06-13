@@ -39,13 +39,13 @@ export function LoginForm() {
       });
 
       if (result?.error) {
-        setError("Invalid email or password");
+        setError("Email atau password salah");
       } else {
         // Use window.location for full page reload to ensure session is properly set
         window.location.href = "/";
       }
     } catch {
-      setError("Something went wrong. Please try again.");
+      setError("Terjadi kesalahan. Silakan coba lagi.");
     } finally {
       setIsLoading(false);
     }

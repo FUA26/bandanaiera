@@ -40,7 +40,7 @@ export function DeleteRoleConfirmDialog({
 
   async function handleDelete() {
     if (userCount > 0) {
-      toast.error("Cannot delete role with assigned users");
+      toast.error("Tidak dapat menghapus peran dengan pengguna yang ditugaskan");
       return;
     }
 
@@ -52,15 +52,15 @@ export function DeleteRoleConfirmDialog({
 
       if (!res.ok) {
         const error = await res.json();
-        throw new Error(error.message || "Failed to delete role");
+        throw new Error(error.message || "Gagal menghapus peran");
       }
 
-      toast.success("Role deleted successfully");
+      toast.success("Peran berhasil dihapus");
       onSuccess?.();
       onOpenChange(false);
     } catch (error) {
-      console.error("Failed to delete role:", error);
-      toast.error(error instanceof Error ? error.message : "Failed to delete role");
+      console.error("Gagal menghapus peran:", error);
+      toast.error(error instanceof Error ? error.message : "Gagal menghapus peran");
     } finally {
       setIsDeleting(false);
     }
@@ -70,23 +70,23 @@ export function DeleteRoleConfirmDialog({
     <AlertDialog open={open} onOpenChange={onOpenChange}>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Delete Role</AlertDialogTitle>
+          <AlertDialogTitle>Hapus Peran</AlertDialogTitle>
           <AlertDialogDescription>
             {userCount > 0 ? (
               <>
-                Cannot delete <strong>{roleName}</strong> because it has {userCount} assigned user
-                {userCount > 1 ? "s" : ""}. Please reassign users to another role first.
+                Tidak dapat menghapus <strong>{roleName}</strong> karena memiliki {userCount} pengguna
+                yang ditugaskan. Harap tugaskan pengguna ke peran lain terlebih dahulu.
               </>
             ) : (
               <>
-                Are you sure you want to delete the role <strong>{roleName}</strong>? This action
-                cannot be undone.
+                Apakah Anda yakin ingin menghapus peran <strong>{roleName}</strong>? Tindakan ini
+                tidak dapat dibatalkan.
               </>
             )}
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel disabled={isDeleting}>Cancel</AlertDialogCancel>
+          <AlertDialogCancel disabled={isDeleting}>Batal</AlertDialogCancel>
           <AlertDialogAction
             onClick={(e) => {
               e.preventDefault();
@@ -95,7 +95,7 @@ export function DeleteRoleConfirmDialog({
             disabled={isDeleting || userCount > 0}
             className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
           >
-            {isDeleting ? "Deleting..." : "Delete Role"}
+            {isDeleting ? "Menghapus..." : "Hapus Peran"}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

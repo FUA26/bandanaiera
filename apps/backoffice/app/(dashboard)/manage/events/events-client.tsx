@@ -136,14 +136,14 @@ export function EventsClient({ eventsPromise, categoriesPromise, header }: Event
 
       if (!response.ok) {
         const error = await response.json();
-        throw new Error(error.error || 'Failed to delete event');
+        throw new Error(error.error || 'Gagal menghapus acara');
       }
 
-      toast.success('Event deleted');
+      toast.success('Acara dihapus');
       setDeleteDialog({ open: false, id: null, title: '' });
       router.refresh();
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : 'Failed to delete event');
+      toast.error(error instanceof Error ? error.message : 'Gagal menghapus acara');
     }
   };
 
@@ -178,7 +178,7 @@ export function EventsClient({ eventsPromise, categoriesPromise, header }: Event
           <Button asChild>
             <Link href="/manage/events/create">
               <Plus className="mr-2 h-4 w-4" />
-              New Event
+              Acara Baru
             </Link>
           </Button>
         </div>
@@ -188,24 +188,24 @@ export function EventsClient({ eventsPromise, categoriesPromise, header }: Event
         columns={eventsColumns}
         data={filteredEvents}
         filterKey="title"
-        toolbarPlaceholder="Search events..."
+        toolbarPlaceholder="Cari acara..."
         facetedFilters={facetedFilters}
       />
 
       <Dialog open={deleteDialog.open} onOpenChange={(open) => setDeleteDialog({ ...deleteDialog, open })}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Delete Event</DialogTitle>
+            <DialogTitle>Hapus Acara</DialogTitle>
           </DialogHeader>
           <p className="text-sm text-muted-foreground">
-            Are you sure you want to delete &quot;{deleteDialog.title}&quot;? This action cannot be undone.
+            Apakah Anda yakin ingin menghapus &quot;{deleteDialog.title}&quot;? Tindakan ini tidak dapat dibatalkan.
           </p>
           <DialogFooter>
             <Button variant="outline" onClick={() => setDeleteDialog({ open: false, id: null, title: '' })}>
-              Cancel
+              Batal
             </Button>
             <Button variant="destructive" onClick={handleDelete}>
-              Delete
+              Hapus
             </Button>
           </DialogFooter>
         </DialogContent>

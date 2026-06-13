@@ -51,6 +51,38 @@ export const contactInfoSchema = z.object({
 });
 
 /**
+ * Operating hours schema for service schedules
+ */
+export const operatingHoursItemSchema = z.object({
+  days: z.string().min(1, "Days description is required").max(100, "Days must be less than 100 characters"),
+  hours: z.string().min(1, "Hours description is required").max(100, "Hours must be less than 100 characters"),
+});
+
+/**
+ * Operating hours array schema
+ */
+export const operatingHoursSchema = z.array(operatingHoursItemSchema).optional();
+
+/**
+ * ============================================================================
+ * Download App Links Schema (Nested Object)
+ * ============================================================================
+ */
+
+/**
+ * Download app link schema for multiple app stores
+ */
+export const downloadAppLinkSchema = z.object({
+  platform: z.string().min(1, "Platform is required").max(50, "Platform must be less than 50 characters"),
+  url: z.string().url("Invalid URL").optional().or(z.literal("")),
+});
+
+/**
+ * Download app links array schema
+ */
+export const downloadAppLinksSchema = z.array(downloadAppLinkSchema).optional();
+
+/**
  * ============================================================================
  * FAQ Schema (Nested Object)
  * ============================================================================
@@ -78,6 +110,25 @@ export const downloadFormSchema = z.object({
   name: z.string().min(1, "Name is required").max(200, "Name must be less than 200 characters"),
   value: z.string().min(1, "URL or file ID is required").max(500, "Value must be less than 500 characters"),
   fileId: z.string().min(1, "Invalid file ID format").optional(),
+});
+
+/**
+ * ============================================================================
+ * Social Media Schema (Nested Object)
+ * ============================================================================
+ */
+
+/**
+ * Social media links schema
+ */
+export const socialMediaSchema = z.object({
+  facebook: z.string().url("Invalid Facebook URL").optional().or(z.literal("")),
+  instagram: z.string().url("Invalid Instagram URL").optional().or(z.literal("")),
+  twitter: z.string().url("Invalid Twitter URL").optional().or(z.literal("")),
+  youtube: z.string().url("Invalid YouTube URL").optional().or(z.literal("")),
+  tiktok: z.string().url("Invalid TikTok URL").optional().or(z.literal("")),
+  linkedin: z.string().url("Invalid LinkedIn URL").optional().or(z.literal("")),
+  website: z.string().url("Invalid website URL").optional().or(z.literal("")),
 });
 
 /**
@@ -128,8 +179,12 @@ export const serviceSchema = z.object({
   downloadForms: z.array(downloadFormSchema).optional(),
   relatedServices: z.array(z.string().min(1, "Invalid related service ID format")).optional(),
   status: z.enum(["DRAFT", "PUBLISHED", "ARCHIVED"], { required_error: "Status is required" }).default("DRAFT"),
-  agencyId: z.string().min(1, "Invalid agency ID format").optional(),
-  relatedAgencyIds: z.array(z.string().min(1, "Invalid agency ID format")).optional(),
+  operatingHours: operatingHoursSchema,
+  serviceLink: z.string().url("Invalid service link").optional().or(z.literal("")),
+  downloadAppLinks: downloadAppLinksSchema,
+  socialMedia: socialMediaSchema.optional(),
+  opdId: z.string().min(1, "Invalid OPD ID format").optional(),
+  relatedOpdIds: z.array(z.string().min(1, "Invalid OPD ID format")).optional(),
   serviceImages: z.array(serviceImageSchema).optional(),
 });
 
@@ -158,11 +213,7 @@ export const serviceUpdateSchema = z.object({
   process: z.array(z.string()).optional(),
   duration: z.string().optional(),
   cost: z.string().optional(),
-  contactInfo: z.object({
-    office: z.string().optional(),
-    phone: z.string().optional(),
-    email: z.string().email().optional(),
-  }).optional(),
+  contactInfo: contactInfoSchema.optional(),
   faqs: z.array(z.object({
     question: z.string().optional(),
     answer: z.string().optional(),
@@ -175,8 +226,28 @@ export const serviceUpdateSchema = z.object({
   })).optional(),
   relatedServices: z.array(z.string()).optional(),
   status: z.enum(["DRAFT", "PUBLISHED", "ARCHIVED"]).optional(),
-  agencyId: z.string().min(1).optional(),
-  relatedAgencyIds: z.array(z.string()).optional(),
+  opdId: z.string().optional(),
+  relatedOpdIds: z.array(z.string()).optional(),
+  operatingHours: z.array(z.object({
+    days: z.string().optional(),
+    hours: z.string().optional(),
+  })).optional(),
+  serviceLink: z.string().optional(),
+  downloadAppLinks: z.array(z.object({
+    platform: z.string().optional(),
+    url: z.string().optional(),
+  })).optional(),
+  socialMedia: z.object({
+    facebook: z.string().optional(),
+    instagram: z.string().optional(),
+    twitter: z.string().optional(),
+    youtube: z.string().optional(),
+    tiktok: z.string().optional(),
+    linkedin: z.string().optional(),
+    website: z.string().optional(),
+  }).optional(),
+  logoImageId: z.string().optional(),
+  bannerImageId: z.string().optional(),
   serviceImages: z.array(z.object({
     fileId: z.string().min(1),
     type: z.enum(["BANNER", "DOKUMEN"]),
