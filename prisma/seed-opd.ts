@@ -17,121 +17,441 @@ const opds = [
   // DINAS
   {
     id: "opd-001",
-    slug: "dinas-kesehatan",
-    name: "Dinas Kesehatan",
-    nickname: "Dinkes",
-    description: "Dinas yang menangani bidang kesehatan masyarakat",
+    slug: "dinas-komunikasi-dan-informatika",
+    name: "Dinas Komunikasi Dan Informatika",
+    nickname: "Kominfo",
+    description: "Dinas Komunikasi dan Informatika Kabupaten Malang",
     category: "DINAS" as OpdCategory,
     status: "AKTIF" as OpdStatus,
     showInMenu: true,
     order: 1,
-    address: "Jl. Kesehatan No. 1",
+    address: "Jl. K.H. Agus Salim No. 7 Malang 65119",
     contactInfo: {
-      phone: "(0341) 123456",
-      email: "dinkes@kotamalang.go.id",
-      website: "dinkes.kotamalang.go.id",
-    },
-    operatingHours: "Senin - Jumat: 08.00 - 16.00 WIB",
-    location: {
-      latitude: -7.9797,
-      longitude: 112.6304,
-    },
-    socialMedia: {
-      facebook: "dinkes.kotamalang",
-      instagram: "@dinkes_kotamalang",
-      twitter: "@dinkes_malang",
+      phone: "(0341) 364776",
+      email: "kominfo@malangkab.go.id",
+      website: "https://kominfo.malangkab.go.id",
     },
   },
   {
     id: "opd-002",
-    slug: "dinas-pendidikan",
-    name: "Dinas Pendidikan",
-    nickname: "Disdik",
-    description: "Dinas yang menangani bidang pendidikan",
+    slug: "dinas-kesehatan",
+    name: "Dinas Kesehatan",
+    nickname: "Dinkes",
+    description: "Dinas Kesehatan Kabupaten Malang",
     category: "DINAS" as OpdCategory,
     status: "AKTIF" as OpdStatus,
     showInMenu: true,
     order: 2,
-    address: "Jl. Pendidikan No. 2",
+    address: "JL PANJI 120 KEPANJEN",
     contactInfo: {
-      phone: "(0341) 234567",
-      email: "disdik@kotamalang.go.id",
+      phone: "0341391621",
+      email: "dinkes@malangkab.go.id",
+      website: "https://dinkes.malangkab.go.id",
     },
-    operatingHours: "Senin - Jumat: 08.00 - 16.00 WIB",
   },
   {
     id: "opd-003",
-    slug: "dinas-pemberdayaan-masyarakat-desa",
-    name: "Dinas Pemberdayaan Masyarakat dan Desa",
-    nickname: "DPMD",
-    description: "Dinas yang menangani pemberdayaan masyarakat dan desa",
+    slug: "dinas-pendidikan",
+    name: "Dinas Pendidikan",
+    nickname: "Dispendik",
+    description: "Dinas Pendidikan Kabupaten Malang",
     category: "DINAS" as OpdCategory,
     status: "AKTIF" as OpdStatus,
     showInMenu: true,
     order: 3,
-    address: "Jl. Pemdes No. 3",
+    address: "Jl.Panarukan No. 1 Kepanjen",
     contactInfo: {
-      phone: "(0341) 345678",
-      email: "dpmd@kotamalang.go.id",
+      phone: "0341393935",
+      email: "dispendik@malangkab.go.id",
+      website: "https://dispendik.malangkab.go.id",
     },
   },
   {
     id: "opd-004",
-    slug: "dinas-pariwisata-dan-kebudayaan",
-    name: "Dinas Pariwisata dan Kebudayaan",
-    nickname: "Disparbud",
-    description: "Dinas yang menangani pariwisata dan kebudayaan",
+    slug: "dinas-pemuda-dan-olahraga",
+    name: "Dinas Pemuda Dan Olahraga",
+    nickname: "Dispora",
+    description: "Dinas Pemuda dan Olahraga Kabupaten Malang",
     category: "DINAS" as OpdCategory,
     status: "AKTIF" as OpdStatus,
     showInMenu: true,
     order: 4,
-    address: "Jl. Wisata No. 4",
+    address: "Jl. Trunojoyo Kompleks Stadion Kanjuruhan Kepanjen",
     contactInfo: {
-      phone: "(0341) 456789",
-      email: "disparbud@kotamalang.go.id",
-      website: "pariwisata.kotamalang.go.id",
-    },
-    socialMedia: {
-      instagram: "@wisata_kotamalang",
-      facebook: "disparbud.kotamalang",
+      phone: "0341399909",
+      email: "dispora@malangkab.go.id",
+      website: "https://dispora.malangkab.go.id",
     },
   },
   {
     id: "opd-005",
-    slug: "dinas-perhubungan",
-    name: "Dinas Perhubungan",
-    nickname: "Dishub",
-    description: "Dinas yang menangani bidang perhubungan",
+    slug: "dinas-sosial",
+    name: "Dinas Sosial",
+    nickname: "Dinsos",
+    description: "Dinas Sosial Kabupaten Malang",
     category: "DINAS" as OpdCategory,
     status: "AKTIF" as OpdStatus,
     showInMenu: true,
     order: 5,
-    address: "Jl. Transportasi No. 5",
+    address: "Jl. Majapahit No.5 Malang",
     contactInfo: {
-      phone: "(0341) 567890",
-      email: "dishub@kotamalang.go.id",
+      phone: "0341362601",
+      email: "newdinsos@gmail.com",
+      website: "https://dinsos.malangkab.go.id",
     },
   },
   {
     id: "opd-006",
-    slug: "dinas-pekerjaan-umum",
-    name: "Dinas Pekerjaan Umum",
-    nickname: "DPU",
-    description: "Dinas yang menangani bidang pekerjaan umum dan infrastruktur",
+    slug: "dinas-tenaga-kerja",
+    name: "Dinas Tenaga Kerja",
+    nickname: "Disnaker",
+    description: "Dinas Tenaga Kerja Kabupaten Malang",
     category: "DINAS" as OpdCategory,
     status: "AKTIF" as OpdStatus,
     showInMenu: true,
     order: 6,
-    address: "Jl. Infrastruktur No. 6",
+    address: "Jl.Trunojoyo Kav. 3 Kepanjen Telp. (0341) 393933-34, Fax. 393932",
     contactInfo: {
-      phone: "(0341) 678901",
-      email: "pu@kotamalang.go.id",
+      phone: "0341393933",
+      email: "disnaker@malangkab.go.id",
+      website: "https://disnaker.malangkab.go.id",
     },
   },
-
-  // BADAN
   {
     id: "opd-007",
+    slug: "dinas-perhubungan",
+    name: "Dinas Perhubungan Kabupaten Malang",
+    nickname: "Dishub",
+    description: "Dinas Perhubungan Kabupaten Malang",
+    category: "DINAS" as OpdCategory,
+    status: "AKTIF" as OpdStatus,
+    showInMenu: true,
+    order: 7,
+    address: "Jl. Raya Talangagung, Kepanjen Telp. / Fax (0341) 3901300",
+    contactInfo: {
+      phone: "03413901300",
+      email: "dishub@malangkab.go.id",
+      website: "https://dishub.malangkab.go.id",
+    },
+  },
+  {
+    id: "opd-008",
+    slug: "dinas-kependudukan-dan-pencatatan-sipil",
+    name: "Dinas Kependudukan Dan Pencatatan Sipil",
+    nickname: "Dispendukcapil",
+    description: "Dinas Kependudukan dan Pencatatan Sipil Kabupaten Malang",
+    category: "DINAS" as OpdCategory,
+    status: "AKTIF" as OpdStatus,
+    showInMenu: true,
+    order: 8,
+    address: "Jl. Trunojoyo Kepanjen",
+    contactInfo: {
+      phone: "Telp. 0341-399-744 / WA. 0858-9545-3153",
+      email: "dispendukcapil@malangkab.go.id",
+      website: "https://dispendukcapil.malangkab.go.id",
+    },
+  },
+  {
+    id: "opd-009",
+    slug: "dinas-pariwisata-dan-kebudayaan",
+    name: "Dinas Pariwisata Dan Kebudayaan",
+    nickname: "Disparbud",
+    description: "Dinas Pariwisata dan Kebudayaan Kabupaten Malang",
+    category: "DINAS" as OpdCategory,
+    status: "AKTIF" as OpdStatus,
+    showInMenu: true,
+    order: 9,
+    address: "Jl. KH. Agus Salim No. 7, Gedung J Lt.1 dan 2, Malang",
+    contactInfo: {
+      phone: "082132091428",
+      email: "disparkabmalang@gmail.com",
+      website: "https://disparbud.malangkab.go.id",
+    },
+  },
+  {
+    id: "opd-010",
+    slug: "dinas-pekerjaan-umum",
+    name: "Dinas Pekerjaan Umum Bina Marga",
+    nickname: "Bina Marga",
+    description: "Dinas Pekerjaan Umum Bina Marga Kabupaten Malang",
+    category: "DINAS" as OpdCategory,
+    status: "AKTIF" as OpdStatus,
+    showInMenu: true,
+    order: 10,
+    address:
+      "Jl. Jl. Trunojoyo Kavling 6 Kepanjen (Depan Stadion Kanjuruhan, ex Badan Diklat Kabupaten Malang dan Badan lingkungan hidup Kabupaten Malang)",
+    contactInfo: {
+      phone: "0341393930",
+      email: "binamarga.kabmalang@gmail.com",
+      website: "https://binamarga.malangkab.go.id",
+    },
+  },
+  {
+    id: "opd-011",
+    slug: "dinas-pekerjaan-umum-sumber-daya-air",
+    name: "Dinas Pekerjaan Umum Sumber Daya Air",
+    nickname: "SDA",
+    description: "Dinas Pekerjaan Umum Sumber Daya Air Kabupaten Malang",
+    category: "DINAS" as OpdCategory,
+    status: "AKTIF" as OpdStatus,
+    showInMenu: true,
+    order: 11,
+    address: "Jl. Kawi No. 1, Kepanjen Telp. (0341) 395025, 393944",
+    contactInfo: {
+      phone: "0341395025",
+      email: "sumberdayaair@malangkab.go.id",
+      website: "https://sumberdayaair.malangkab.go.id",
+    },
+  },
+  {
+    id: "opd-012",
+    slug: "dinas-perumahan-kawasan-permukiman-dan-cipta-karya",
+    name: "Dinas Perumahan, Kawasan Permukiman Dan Cipta Karya",
+    nickname: "PKPCK",
+    description:
+      "Dinas Perumahan, Kawasan Permukiman dan Cipta Karya Kabupaten Malang",
+    category: "DINAS" as OpdCategory,
+    status: "AKTIF" as OpdStatus,
+    showInMenu: true,
+    order: 12,
+    address:
+      "Jl. Trunojoyo kapling 6 Kepanjen Kabupaten Malang Telp. (0341) 391679 Fax: (0341) 391678",
+    contactInfo: {
+      phone: "0341391679",
+      email: "perumahan-ciptakarya@malangkab.go.id",
+      website: "https://perumahan-ciptakarya.malangkab.go.id",
+    },
+  },
+  {
+    id: "opd-013",
+    slug: "dinas-perindustrian-dan-perdagangan",
+    name: "Dinas Perindustrian Dan Perdagangan",
+    nickname: "Disperindag",
+    description: "Dinas Perindustrian dan Perdagangan Kabupaten Malang",
+    category: "DINAS" as OpdCategory,
+    status: "AKTIF" as OpdStatus,
+    showInMenu: true,
+    order: 13,
+    address: "Jl. PANJI No.119, Kepanjen Telp. (0341) 391676",
+    contactInfo: {
+      phone: "0341391676",
+      email: "disperindag@malangkab.go.id",
+      website: "https://disperindag.malangkab.go.id",
+    },
+  },
+  {
+    id: "opd-014",
+    slug: "dinas-koperasi-dan-usaha-mikro",
+    name: "Dinas Koperasi Dan Usaha Mikro",
+    nickname: "Dinkop UM",
+    description: "Dinas Koperasi dan Usaha Mikro Kabupaten Malang",
+    category: "DINAS" as OpdCategory,
+    status: "AKTIF" as OpdStatus,
+    showInMenu: true,
+    order: 14,
+    address: "Jl. Trunojoyo Kav. 1, Kepanjen Telp. (0341) 393921, Fax. 393922",
+    contactInfo: {
+      phone: "0341393921",
+      email: "dinkop@malangkab.go.id",
+      website: "https://dinkop.malangkab.go.id",
+    },
+  },
+  {
+    id: "opd-015",
+    slug: "dinas-tanaman-pangan-hortikultura-dan-perkebunan",
+    name: "Dinas Tanaman Pangan, Hortikultura Dan Perkebunan",
+    nickname: "Distan",
+    description:
+      "Dinas Tanaman Pangan, Hortikultura dan Perkebunan Kabupaten Malang",
+    category: "DINAS" as OpdCategory,
+    status: "AKTIF" as OpdStatus,
+    showInMenu: true,
+    order: 15,
+    address: "Jl.Sumedang No. 28 Kepanjen Telp. (0341) 396893, 395749",
+    contactInfo: {
+      phone: "0341396893",
+      email: "dinas.tanaman.pangan@malangkab.go.id",
+      website: "https://tanaman-pangan.malangkab.go.id",
+    },
+  },
+  {
+    id: "opd-016",
+    slug: "dinas-perikanan",
+    name: "Dinas Perikanan",
+    nickname: "Perikanan",
+    description: "Dinas Perikanan Kabupaten Malang",
+    category: "DINAS" as OpdCategory,
+    status: "AKTIF" as OpdStatus,
+    showInMenu: true,
+    order: 16,
+    address:
+      "Jl. Panji No.119 Kepanjen Malang. Belakang kantor DPRD Telp. (0341) 399755. FAX : (0341) 399755",
+    contactInfo: {
+      phone: "0341399755",
+      email: "perikanankabmalang@gmail.com",
+      website: "https://perikanan.malangkab.go.id/",
+    },
+  },
+  {
+    id: "opd-017",
+    slug: "dinas-ketahanan-pangan",
+    name: "Dinas Ketahanan Pangan",
+    nickname: "DKP",
+    description: "Dinas Ketahanan Pangan Kabupaten Malang",
+    category: "DINAS" as OpdCategory,
+    status: "AKTIF" as OpdStatus,
+    showInMenu: true,
+    order: 17,
+    address: "Jl. Raya Karangduren No. 1 Pakisaji - Malang",
+    contactInfo: {
+      phone: "0341804423",
+      email: "dkp.malangkab@gmail.com",
+      website: "https://ketahanan-pangan.malangkab.go.id",
+    },
+  },
+  {
+    id: "opd-018",
+    slug: "dinas-peternakan-dan-kesehatan-hewan",
+    name: "Dinas Peternakan Dan Kesehatan Hewan",
+    nickname: "Disnak Keswan",
+    description: "Dinas Peternakan dan Kesehatan Hewan Kabupaten Malang",
+    category: "DINAS" as OpdCategory,
+    status: "AKTIF" as OpdStatus,
+    showInMenu: true,
+    order: 18,
+    address: "Jl. Trunojoyo Kav. 4 Kepanjen",
+    contactInfo: {
+      phone: "0341393926",
+      email: "disnak-keswan@malangkab.go.id",
+      website: "https://disnak-keswan.malangkab.go.id",
+    },
+  },
+  {
+    id: "opd-019",
+    slug: "dinas-pemberdayaan-perempuan-dan-perlindungan-anak",
+    name: "Dinas Pemberdayaan Perempuan Dan Perlindungan Anak",
+    nickname: "DP3A",
+    description:
+      "Dinas Pemberdayaan Perempuan dan Perlindungan Anak Kabupaten Malang",
+    category: "DINAS" as OpdCategory,
+    status: "AKTIF" as OpdStatus,
+    showInMenu: true,
+    order: 19,
+    address:
+      "Jl. Jend. Ahmad Yani Utara No.384B, Arjosari, Kec. Blimbing, Kota Malang, Jawa Timur 65126",
+    contactInfo: {
+      phone: "0341346682",
+      email: "kpppamalang@gmail.com",
+      website: "https://dp3a.malangkab.go.id",
+    },
+  },
+  {
+    id: "opd-020",
+    slug: "dinas-pemberdayaan-masyarakat-dan-desa",
+    name: "Dinas Pemberdayaan Masyarakat Dan Desa",
+    nickname: "DPMD",
+    description: "Dinas Pemberdayaan Masyarakat dan Desa Kabupaten Malang",
+    category: "DINAS" as OpdCategory,
+    status: "AKTIF" as OpdStatus,
+    showInMenu: true,
+    order: 20,
+    address: "Jl. Merdeka Timur No. 3 Malang",
+    contactInfo: {
+      phone: "0341352454",
+      email: "dpmd@malangkab.go.id",
+      website: "https://pmd.malangkab.go.id",
+    },
+  },
+  {
+    id: "opd-021",
+    slug: "dinas-pengendalian-penduduk-dan-keluarga-berencana",
+    name: "Dinas Pengendalian Penduduk Dan Keluarga Berencana",
+    nickname: "DPPKB",
+    description:
+      "Dinas Pengendalian Penduduk dan Keluarga Berencana Kabupaten Malang",
+    category: "DINAS" as OpdCategory,
+    status: "AKTIF" as OpdStatus,
+    showInMenu: true,
+    order: 21,
+    address: "Jalan Raden Panji No. 158 Lantai 6 Kepanjen - Malang",
+    contactInfo: {
+      phone: "03413905313",
+      email: "dinas.kb@malangkab.go.id",
+      website: "https://kb.malangkab.go.id",
+    },
+  },
+  {
+    id: "opd-022",
+    slug: "dinas-perpustakaan-dan-kearsipan",
+    name: "Dinas Perpustakaan Dan Kearsipan",
+    nickname: "Pusip",
+    description: "Dinas Perpustakaan dan Kearsipan Kabupaten Malang",
+    category: "DINAS" as OpdCategory,
+    status: "AKTIF" as OpdStatus,
+    showInMenu: true,
+    order: 22,
+    address: "Jalan Panglima Sudirman No.19 Kepanjen",
+    contactInfo: {
+      phone: "0341397789",
+      email: "perpus-arsip@malangkab.go.id",
+      website: "https://perpus-arsip.malangkab.go.id",
+    },
+  },
+  {
+    id: "opd-023",
+    slug: "dinas-lingkungan-hidup",
+    name: "Dinas Lingkungan Hidup",
+    nickname: "DLH",
+    description: "Dinas Lingkungan Hidup Kabupaten Malang",
+    category: "DINAS" as OpdCategory,
+    status: "AKTIF" as OpdStatus,
+    showInMenu: true,
+    order: 23,
+    address: "Jl. Nusa Barong No. 13, Klojen, Malang",
+    contactInfo: {
+      phone: "0341392029",
+      email: "lh@malangkab.go.id",
+      website: "https://lh.malangkab.go.id/",
+    },
+  },
+  {
+    id: "opd-024",
+    slug: "dinas-pertanahan",
+    name: "Dinas Pertanahan",
+    nickname: "Pertanahan",
+    description: "Dinas Pertanahan Kabupaten Malang",
+    category: "DINAS" as OpdCategory,
+    status: "AKTIF" as OpdStatus,
+    showInMenu: true,
+    order: 24,
+    address: "Gedung C Lantai 1, Jalan Merdeka Timur Nomor 3 Kota Malang",
+    contactInfo: {
+      phone: "0341409001",
+      email: "pertanahan@malangkab.go.id",
+      website: "https://pertanahan.malangkab.go.id",
+    },
+  },
+  {
+    id: "opd-025",
+    slug: "dinas-penanaman-modal-dan-pelayanan-terpadu-satu-pintu",
+    name: "Dinas Penanaman Modal Dan Pelayanan Terpadu Satu Pintu",
+    nickname: "DPMPTSP",
+    description:
+      "Dinas Penanaman Modal dan Pelayanan Terpadu Satu Pintu Kabupaten Malang",
+    category: "DINAS" as OpdCategory,
+    status: "AKTIF" as OpdStatus,
+    showInMenu: true,
+    order: 25,
+    address: "Jl. Trunojoyo no. 4, Kedungpedaringan , Kepanjen",
+    contactInfo: {
+      phone: "0341396633",
+      email: "pm-ptsp@malangkab.go.id",
+      website: "https://pm-ptsp.malangkab.go.id",
+    },
+  },
+  // BADAN
+  {
+    id: "opd-026",
     slug: "bappeda",
     name: "Badan Perencanaan Pembangunan Daerah",
     nickname: "Bappeda",
@@ -147,7 +467,7 @@ const opds = [
     },
   },
   {
-    id: "opd-008",
+    id: "opd-027",
     slug: "badan-kepegawaian-dan-pengembangan-sdm",
     name: "Badan Kepegawaian dan Pengembangan SDM",
     nickname: "BKPSDM",
@@ -163,7 +483,7 @@ const opds = [
     },
   },
   {
-    id: "opd-009",
+    id: "opd-028",
     slug: "badan-pengelolaan-keuangan-dan-aset-daerah",
     name: "Badan Pengelolaan Keuangan dan Aset Daerah",
     nickname: "BPKAD",
@@ -181,7 +501,7 @@ const opds = [
 
   // KECAMATAN
   {
-    id: "opd-010",
+    id: "opd-029",
     slug: "kecamatan-sukun",
     name: "Kecamatan Sukun",
     nickname: "Kec. Sukun",
@@ -197,7 +517,7 @@ const opds = [
     },
   },
   {
-    id: "opd-011",
+    id: "opd-030",
     slug: "kecamatan-kedungkandang",
     name: "Kecamatan Kedungkandang",
     nickname: "Kec. Kedungkandang",
@@ -213,7 +533,7 @@ const opds = [
     },
   },
   {
-    id: "opd-012",
+    id: "opd-031",
     slug: "kecamatan-klojen",
     name: "Kecamatan Klojen",
     nickname: "Kec. Klojen",
@@ -231,7 +551,7 @@ const opds = [
 
   // KELURAHAN
   {
-    id: "opd-013",
+    id: "opd-032",
     slug: "kelurahan-bunulrejo",
     name: "Kelurahan Bunulrejo",
     nickname: "Kel. Bunulrejo",
@@ -246,7 +566,7 @@ const opds = [
     },
   },
   {
-    id: "opd-014",
+    id: "opd-033",
     slug: "kelurahan-polehan",
     name: "Kelurahan Polehan",
     nickname: "Kel. Polehan",
@@ -261,7 +581,7 @@ const opds = [
     },
   },
   {
-    id: "opd-015",
+    id: "opd-034",
     slug: "kelurahan-purwantoro",
     name: "Kelurahan Purwantoro",
     nickname: "Kel. Purwantoro",
@@ -276,7 +596,7 @@ const opds = [
     },
   },
   {
-    id: "opd-016",
+    id: "opd-035",
     slug: "kelurahan-blimbing",
     name: "Kelurahan Blimbing",
     nickname: "Kel. Blimbing",
@@ -293,7 +613,7 @@ const opds = [
 
   // DESA
   {
-    id: "opd-017",
+    id: "opd-036",
     slug: "desa-babakan",
     name: "Desa Babakan",
     nickname: "Desa Babakan",
@@ -308,7 +628,7 @@ const opds = [
     },
   },
   {
-    id: "opd-018",
+    id: "opd-037",
     slug: "desa-pujonkidul",
     name: "Desa Pujonkidul",
     nickname: "Desa Pujonkidul",
@@ -323,7 +643,7 @@ const opds = [
     },
   },
   {
-    id: "opd-019",
+    id: "opd-038",
     slug: "desa-madiredo",
     name: "Desa Madiredo",
     nickname: "Desa Madiredo",
@@ -340,7 +660,7 @@ const opds = [
 
   // BAGIAN
   {
-    id: "opd-020",
+    id: "opd-039",
     slug: "bagian-umum",
     name: "Bagian Umum",
     nickname: "Bag. Umum",
@@ -356,7 +676,7 @@ const opds = [
     },
   },
   {
-    id: "opd-021",
+    id: "opd-040",
     slug: "bagian-organisasi",
     name: "Bagian Organisasi",
     nickname: "Bag. Organisasi",
@@ -372,7 +692,7 @@ const opds = [
     },
   },
   {
-    id: "opd-022",
+    id: "opd-041",
     slug: "bagian-hukum",
     name: "Bagian Hukum",
     nickname: "Bag. Hukum",
@@ -388,7 +708,7 @@ const opds = [
     },
   },
   {
-    id: "opd-023",
+    id: "opd-042",
     slug: "bagian-protokol-dan-komunikasi-pimpinan",
     name: "Bagian Protokol dan Komunikasi Pimpinan",
     nickname: "Bag. Prokompim",
@@ -406,7 +726,7 @@ const opds = [
 
   // ORGANISASI LAINNYA
   {
-    id: "opd-024",
+    id: "opd-043",
     slug: "rsud-kota",
     name: "Rumah Sakit Umum Daerah Kota",
     nickname: "RSUD Kota",
@@ -424,7 +744,7 @@ const opds = [
     operatingHours: "24 Jam",
   },
   {
-    id: "opd-025",
+    id: "opd-044",
     slug: "pdam-kota",
     name: "Perusahaan Daerah Air Minum",
     nickname: "PDAM",
@@ -441,7 +761,7 @@ const opds = [
     operatingHours: "Senin - Jumat: 08.00 - 16.00 WIB",
   },
   {
-    id: "opd-026",
+    id: "opd-045",
     slug: "pasar-kota",
     name: "Pasar Daerah Kota",
     nickname: "Pasar Kota",
@@ -458,7 +778,7 @@ const opds = [
     operatingHours: "Senin - Sabtu: 06.00 - 18.00 WIB",
   },
   {
-    id: "opd-027",
+    id: "opd-046",
     slug: "parkir-terpadu",
     name: "Unit Pelaksana Teknis Parkir Terpadu",
     nickname: "UPT Parkir",
@@ -541,13 +861,25 @@ async function main() {
   console.log("✨ OPD seed completed successfully!\n");
   console.log("📊 Summary:");
   console.log(`  - Total OPDs: ${opds.length}`);
-  console.log(`  - DINAS: ${opds.filter((o) => o.category === "DINAS").length}`);
-  console.log(`  - BADAN: ${opds.filter((o) => o.category === "BADAN").length}`);
-  console.log(`  - KECAMATAN: ${opds.filter((o) => o.category === "KECAMATAN").length}`);
-  console.log(`  - KELURAHAN: ${opds.filter((o) => o.category === "KELURAHAN").length}`);
+  console.log(
+    `  - DINAS: ${opds.filter((o) => o.category === "DINAS").length}`,
+  );
+  console.log(
+    `  - BADAN: ${opds.filter((o) => o.category === "BADAN").length}`,
+  );
+  console.log(
+    `  - KECAMATAN: ${opds.filter((o) => o.category === "KECAMATAN").length}`,
+  );
+  console.log(
+    `  - KELURAHAN: ${opds.filter((o) => o.category === "KELURAHAN").length}`,
+  );
   console.log(`  - DESA: ${opds.filter((o) => o.category === "DESA").length}`);
-  console.log(`  - BAGIAN: ${opds.filter((o) => o.category === "BAGIAN").length}`);
-  console.log(`  - ORGANISASI_LAINNYA: ${opds.filter((o) => o.category === "ORGANISASI_LAINNYA").length}`);
+  console.log(
+    `  - BAGIAN: ${opds.filter((o) => o.category === "BAGIAN").length}`,
+  );
+  console.log(
+    `  - ORGANISASI_LAINNYA: ${opds.filter((o) => o.category === "ORGANISASI_LAINNYA").length}`,
+  );
   console.log(`  - Activity logs: ${sampleOpds.length}`);
 }
 
