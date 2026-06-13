@@ -28,9 +28,9 @@ import {
   Cloud,
   type LucideIcon,
 } from "lucide-react";
+import Image from "next/image";
 import { useState, useMemo } from "react";
 import { useTranslations } from "next-intl";
-import type { ServiceCategory as ServiceCategoryData } from "@/lib/services-data";
 
 // Icon mapping for string names from JSON
 const iconMap: Record<string, LucideIcon> = {
@@ -75,15 +75,6 @@ interface Service {
   stats?: string;
   category: string;
   images?: ServiceImage[] | null;
-}
-
-interface ServiceCategory {
-  id: string;
-  name: string;
-  icon: LucideIcon;
-  color: string;
-  bgColor: string;
-  services: Service[];
 }
 
 interface ServicesSectionClientProps {
@@ -242,21 +233,21 @@ export function ServicesSectionClient({
         <div className="border-border bg-card mt-16 rounded-2xl border p-8 shadow-sm">
           <div className="grid grid-cols-2 gap-6 md:grid-cols-4">
             <StatCard
-              number="100+"
+              number={`${allServices.length}`}
               label={t("stats.services")}
               icon={Building2}
               color="primary"
             />
             <StatCard
-              number="50K+"
+              number="1.2K+"
               label={t("stats.users")}
               icon={Users}
               color="blue"
             />
             <StatCard
-              number="15K+"
-              label={t("stats.transactions")}
-              icon={CreditCard}
+              number={`${serviceCategories.length}`}
+              label={t("stats.categories")}
+              icon={FileText}
               color="purple"
             />
             <StatCard
@@ -305,13 +296,16 @@ function ServiceCard({ service, index, tAccess }: ServiceCardProps) {
       {/* Service Image - Display at top of card */}
       {service.images && service.images.length > 0 && service.images[0] && (
         <div className="relative h-48 overflow-hidden rounded-t-xl">
-          <img
+          <Image
             src={service.images[0].cdnUrl || service.images[0].serveUrl || ''}
             alt={service.name}
-            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+            fill
+            sizes="(max-width: 768px) 100vw, 33vw"
+            className="object-cover transition-transform duration-500 group-hover:scale-105"
+            unoptimized
           />
           {/* Gradient overlay for better text readability */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
         </div>
       )}
 

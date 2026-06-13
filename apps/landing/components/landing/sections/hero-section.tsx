@@ -9,9 +9,6 @@ export function HeroSection() {
   const { settings } = useSettings();
   const t = useTranslations("Hero");
 
-  // Debug: log settings to see if heroBackgroundUrl is present
-  console.log("Hero settings:", settings);
-  console.log("heroBackgroundUrl:", settings?.heroBackgroundUrl);
   const tServices = useTranslations("Services");
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -68,11 +65,6 @@ export function HeroSection() {
           <span className="text-primary">{t("titlePart2")}</span>
         </h1>
 
-        {/* Hero Subtitle */}
-        <p className="animate-fade-in-up animation-delay-200 mx-auto max-w-2xl text-base leading-relaxed text-slate-200 md:text-lg lg:text-xl">
-          {t("subtitle")}
-        </p>
-
         {/* Search Bar */}
         <div className="animate-fade-in-up animation-delay-400 mx-auto w-full max-w-3xl">
           <form onSubmit={handleSearch} className="relative">
@@ -108,33 +100,6 @@ export function HeroSection() {
           </div>
         </div>
 
-        {/* Stats or Additional Info */}
-        <div className="animate-fade-in-up animation-delay-600 mx-auto mt-12 grid max-w-2xl grid-cols-3 gap-4 md:gap-8">
-          <div className="text-center">
-            <div className="text-primary text-2xl font-bold md:text-4xl">
-              100+
-            </div>
-            <div className="mt-1 text-xs text-slate-300 md:text-sm">
-              {t("stats.digitalServices")}
-            </div>
-          </div>
-          <div className="border-x border-white/20 text-center">
-            <div className="text-primary text-2xl font-bold md:text-4xl">
-              50K+
-            </div>
-            <div className="mt-1 text-xs text-slate-300 md:text-sm">
-              {t("stats.activeUsers")}
-            </div>
-          </div>
-          <div className="text-center">
-            <div className="text-primary text-2xl font-bold md:text-4xl">
-              24/7
-            </div>
-            <div className="mt-1 text-xs text-slate-300 md:text-sm">
-              {t("stats.onlineServices")}
-            </div>
-          </div>
-        </div>
       </div>
 
       {/* Scroll Indicator */}

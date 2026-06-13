@@ -140,6 +140,7 @@
     "stats": {
       "services": "Layanan Digital",
       "users": "Pengguna Aktif",
+      "categories": "Kategori Layanan",
       "transactions": "Transaksi/Bulan",
       "rating": "Rating Kepuasan"
     },
@@ -413,7 +414,7 @@
       }
     },
     "banner": {
-      "services": "100+ Layanan Digital",
+      "services": "Layanan Digital",
       "praise": "Siap melayani Anda 24/7"
     }
   },

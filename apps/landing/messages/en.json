@@ -139,6 +139,7 @@
     "stats": {
       "services": "Digital Services",
       "users": "Active Users",
+      "categories": "Service Categories",
       "transactions": "Trans/Month",
       "rating": "Satisfaction Rate"
     },
@@ -412,7 +413,7 @@
       }
     },
     "banner": {
-      "services": "100+ Digital Services",
+      "services": "Digital Services",
       "praise": "Ready to serve you 24/7"
     }
   },
