@@ -662,7 +662,7 @@
   "Government": {
     "profile": {
       "title": "Profil Daerah",
-      "subtitle": "Informasi lengkap tentang sejarah, visi misi, dan geografi Kabupaten Naiera",
+      "subtitle": "Informasi lengkap tentang sejarah, visi misi, dan geografi Kabupaten Malang",
       "history": "Sejarah Singkat",
       "vision": "Visi",
       "mission": "Misi",
@@ -676,7 +676,7 @@
     },
     "structure": {
       "title": "Struktur Organisasi",
-      "subtitle": "Bagan struktur organisasi Pemerintah Kabupaten Naiera",
+      "subtitle": "Bagan struktur organisasi Pemerintah Kabupaten Malang",
       "regent": "Bupati",
       "viceRegent": "Wakil Bupati",
       "secretary": "Sekretaris Daerah",
@@ -685,7 +685,7 @@
     },
     "agencies": {
       "title": "Perangkat Daerah",
-      "subtitle": "Daftar Dinas, Badan, dan Kantor di lingkungan Pemerintah Kabupaten Naiera",
+      "subtitle": "Daftar Dinas, Badan, dan Kantor di lingkungan Pemerintah Kabupaten Malang",
       "searchPlaceholder": "Cari perangkat daerah...",
       "types": {
         "all": "Semua",
@@ -707,7 +707,7 @@
     },
     "dpr": {
       "title": "DPRD",
-      "subtitle": "Dewan Perwakilan Rakyat Daerah Kabupaten Naiera",
+      "subtitle": "Dewan Perwakilan Rakyat Daerah Kabupaten Malang",
       "members": "Anggota Dewan",
       "commissions": "Komisi",
       "agenda": "Agenda Rapat",

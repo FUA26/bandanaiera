@@ -661,7 +661,7 @@
   "Government": {
     "profile": {
       "title": "Regional Profile",
-      "subtitle": "Complete information about history, vision mission, and geography of Naiera Regency",
+      "subtitle": "Complete information about history, vision mission, and geography of Malang Regency",
       "history": "Brief History",
       "vision": "Vision",
       "mission": "Mission",
@@ -675,7 +675,7 @@
     },
     "structure": {
       "title": "Organizational Structure",
-      "subtitle": "Organizational chart of Naiera Regency Government",
+      "subtitle": "Organizational chart of Malang Regency Government",
       "regent": "Regent",
       "viceRegent": "Vice Regent",
       "secretary": "Regional Secretary",
@@ -684,7 +684,7 @@
     },
     "agencies": {
       "title": "Regional Agencies",
-      "subtitle": "List of Agencies, Boards, and Offices in Naiera Regency Government",
+      "subtitle": "List of Agencies, Boards, and Offices in Malang Regency Government",
       "searchPlaceholder": "Search agencies...",
       "types": {
         "all": "All",
@@ -706,7 +706,7 @@
     },
     "dpr": {
       "title": "Regional Council",
-      "subtitle": "Regional People's Representative Council of Naiera Regency",
+      "subtitle": "Regional People's Representative Council of Malang Regency",
       "members": "Council Members",
       "commissions": "Commissions",
       "agenda": "Meeting Agenda",
