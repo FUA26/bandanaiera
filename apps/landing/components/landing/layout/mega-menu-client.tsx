@@ -30,10 +30,10 @@ import {
   Building2,
 } from "lucide-react";
 import { getServiceIcon } from "./service-icon-map";
-import type { ServiceCategory } from "@/lib/services-data";
+import type { Service, ServiceCategory } from "@/lib/services-data";
 
 interface MegaMenuClientProps {
-  servicesByCategory: Array<ServiceCategory & { services: any[] }>;
+  servicesByCategory: Array<ServiceCategory & { services: Service[] }>;
 }
 
 export function MegaMenuClient({ servicesByCategory }: MegaMenuClientProps) {
@@ -50,7 +50,7 @@ export function MegaMenuClient({ servicesByCategory }: MegaMenuClientProps) {
   );
 
   return (
-    <NavigationMenu>
+    <NavigationMenu delayDuration={120} skipDelayDuration={0}>
       <NavigationMenuList>
         {/* Home Link - Simple */}
         <NavigationMenuItem>
@@ -173,17 +173,7 @@ export function MegaMenuClient({ servicesByCategory }: MegaMenuClientProps) {
           </NavigationMenuContent>
         </NavigationMenuItem>
 
-        {/* Tourism Link - Top Level */}
-        <NavigationMenuItem>
-          <NavigationMenuLink asChild>
-            <Link
-              href="/informasi-publik/destinasi-wisata"
-              className={cn(navigationMenuTriggerStyle(), "bg-transparent")}
-            >
-              {tNav("tourism")}
-            </Link>
-          </NavigationMenuLink>
-        </NavigationMenuItem>
+
 
         {/* Government - Mega Menu */}
         <NavigationMenuItem>
