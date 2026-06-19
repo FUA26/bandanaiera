@@ -1,15 +1,15 @@
 import { ServicesSectionClient } from './services-section-client';
 import { getServicesGroupedByCategory } from '@/lib/services-data';
 
-/**
- * Server Component wrapper for ServicesSection
- * Fetches service data from directories and passes to client component
- */
+function toProxyPath(url?: string | null): string | null {
+  if (!url) return null;
+  if (url.startsWith('/api/public/')) return url.replace('/api/public/', '/api/proxy/public/');
+  return url;
+}
+
 export async function ServicesSection() {
-  // Fetch services data from directories
   const serviceCategories = await getServicesGroupedByCategory();
 
-  // Map categories and services to convert null to undefined for optional fields
   const mappedCategories = serviceCategories.map((category) => ({
     id: category.id,
     name: category.name,
@@ -25,9 +25,9 @@ export async function ServicesSection() {
       categoryId: service.categoryId,
       badge: service.badge ?? undefined,
       stats: service.stats ?? undefined,
-      images: service.images?.map(img => ({
-        cdnUrl: img.cdnUrl,
-        serveUrl: img.serveUrl,
+      images: service.images?.map((img) => ({
+        cdnUrl: toProxyPath(img.cdnUrl),
+        serveUrl: toProxyPath(img.serveUrl),
       })) ?? undefined,
     })),
   }));
