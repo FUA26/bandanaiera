@@ -4,7 +4,6 @@
  * GET /api/public/settings - Get public-facing settings (no auth, CORS enabled)
  */
 
-import { env } from "@/lib/env";
 import { prisma } from "@/lib/db/prisma";
 import { NextResponse } from "next/server";
 
@@ -41,25 +40,30 @@ export const GET = async (req: Request) => {
       );
     }
 
-    // Build response with logo URL (use public serve URL instead of direct CDN URL)
-    // Use full URL so landing app can access the file through backoffice
-    const backofficeUrl = env.NEXT_PUBLIC_APP_URL || `${req.headers.get("host") ? `${req.headers.get("x-forwarded-proto") || "http"}://${req.headers.get("host")}` : "http://localhost:3001"}`;
+    const backofficeUrl =
+      process.env.NEXT_PUBLIC_BACKOFFICE_URL ||
+      `${req.headers.get("host") ? `${req.headers.get("x-forwarded-proto") || "http"}://${req.headers.get("host")}` : "http://localhost:3001"}`;
+
     const response = {
       siteName: settings.siteName,
       siteSubtitle: settings.siteSubtitle || null,
       siteDescription: settings.siteDescription,
-      siteLogoUrl: settings.siteLogoId ? `${backofficeUrl}/api/public/files/${settings.siteLogoId}/serve` : null,
+      siteLogoUrl: settings.siteLogoId
+        ? `${backofficeUrl}/api/public/files/${settings.siteLogoId}/serve`
+        : null,
       citizenName: settings.citizenName || "Warga",
       contactAddress: settings.contactAddress || null,
-      contactPhones: settings.contactPhones as string[] || null,
-      contactEmails: settings.contactEmails as string[] || null,
+      contactPhones: (settings.contactPhones as string[]) || null,
+      contactEmails: (settings.contactEmails as string[]) || null,
       socialFacebook: settings.socialFacebook || null,
       socialTwitter: settings.socialTwitter || null,
       socialInstagram: settings.socialInstagram || null,
       socialYouTube: settings.socialYouTube || null,
       copyrightText: settings.copyrightText || null,
       versionNumber: settings.versionNumber || "1.0.0",
-      heroBackgroundUrl: settings.heroBackgroundId ? `${backofficeUrl}/api/public/files/${settings.heroBackgroundId}/serve` : null,
+      heroBackgroundUrl: settings.heroBackgroundId
+        ? `${backofficeUrl}/api/public/files/${settings.heroBackgroundId}/serve`
+        : null,
     };
 
     return NextResponse.json(response, { headers: corsHeaders });

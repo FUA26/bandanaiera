@@ -2,75 +2,21 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { Building2, MapPin, Phone, Mail, Globe, Clock, ArrowLeft, Users, Link as LinkIcon } from "lucide-react";
+import { getPublicOpdBySlug, type PublicOpdDetail } from "@/lib/opd-data";
+import { MapPin, Phone, Mail, Globe, Clock, ArrowLeft, Users, Link as LinkIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 
-interface Agency {
-  id: string;
-  slug: string;
-  name: string;
-  nickname: string;
-  description: string;
-  category: string;
-  logo: { cdnUrl: string } | null;
-  address: string | null;
-  contactInfo: {
-    phone?: string;
-    email?: string;
-    website?: string;
-  } | null;
-  operatingHours: string | null;
-  location: {
-    lat?: number;
-    lng?: number;
-  } | null;
-  socialMedia: {
-    facebook?: string;
-    twitter?: string;
-    instagram?: string;
-    youtube?: string;
-  } | null;
-  servicesAsOwner: Array<{
-    id: string;
-    slug: string;
-    name: string;
-    description: string;
-    icon: string;
-    category: {
-      name: string;
-      slug: string;
-    };
-  }>;
-  serviceRelatedAgencies: Array<{
-    service: {
-      id: string;
-      slug: string;
-      name: string;
-      description: string;
-      icon: string;
-      category: {
-        name: string;
-        slug: string;
-      };
-    };
-  }>;
-}
-
 export function AgencyDetailClient({ slug }: { slug: string }) {
   const router = useRouter();
-  const [agency, setAgency] = useState<Agency | null>(null);
+  const [agency, setAgency] = useState<PublicOpdDetail | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch(`/api/public/agencies/${slug}`)
-      .then((res) => {
-        if (!res.ok) throw new Error('Agency not found');
-        return res.json();
-      })
+    getPublicOpdBySlug(slug)
       .then((data) => {
         setAgency(data);
         setLoading(false);
@@ -106,7 +52,7 @@ export function AgencyDetailClient({ slug }: { slug: string }) {
   }
 
   const ownedServices = agency.servicesAsOwner || [];
-  const relatedServices = agency.serviceRelatedAgencies?.map((sra) => sra.service) || [];
+  const relatedServices = agency.serviceRelatedOpds?.map((sra) => sra.service) || [];
 
   return (
     <>

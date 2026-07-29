@@ -9,8 +9,8 @@ import { getVisibleServicesGroupedByCategory } from "@/lib/services-data";
 export const dynamic = 'force-dynamic';
 
 export const metadata: Metadata = {
-  title: "Informasi Publik - Super App Naiera",
-  description: "Akses informasi publik Kabupaten Naiera secara transparan dan akuntabel",
+  title: "Informasi Publik - Malang Digital Government",
+  description: "Akses informasi publik Kabupaten Malang secara transparan dan akuntabel",
 };
 
 export default async function InformasiPublikLayout({

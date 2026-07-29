@@ -485,7 +485,7 @@ export async function getPublicSettings(): Promise<PublicSettings> {
     // Return defaults
     return {
       siteName: 'Super App Naiera',
-      siteSubtitle: 'Kabupaten Naiera',
+      siteSubtitle: 'Kabupaten Malang',
       siteDescription: null,
       siteLogoUrl: null,
       citizenName: 'Warga Naiera',

@@ -8,8 +8,8 @@ import { RegisterForm } from "@/components/auth/register-form";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Daftar Akun Baru - Super App Naiera",
-  description: "Buat akun baru untuk menggunakan layanan digital Naiera",
+  title: "Daftar Akun Baru - Malang Digital Government",
+  description: "Buat akun baru untuk menggunakan layanan digital Kabupaten Malang",
 };
 
 export default function RegisterPage() {
@@ -18,14 +18,14 @@ export default function RegisterPage() {
       <div className="flex items-center gap-3 mb-10">
         <img
           src="/logo.svg"
-          alt="Logo Naiera"
+          alt="Logo Malang Digital Government"
           width={40}
           height={40}
           className="object-contain"
         />
         <div>
-          <h2 className="text-base font-bold leading-tight">Super App Naiera</h2>
-          <p className="text-xs text-muted-foreground leading-tight">Kabupaten Naiera</p>
+          <h2 className="text-base font-bold leading-tight">Malang Digital Government</h2>
+          <p className="text-xs text-muted-foreground leading-tight">Kabupaten Malang</p>
         </div>
       </div>
       <div className="space-y-2 mb-8">

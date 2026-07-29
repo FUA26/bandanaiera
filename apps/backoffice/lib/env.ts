@@ -10,7 +10,7 @@ const envSchema = z.object({
   // App
   NODE_ENV: z.enum(["development", "production", "test"]).default("development"),
   NEXT_PUBLIC_APP_URL: z.string().url().default("http://localhost:3000"),
-  NEXT_PUBLIC_APP_NAME: z.string().default("Naiera"),
+  NEXT_PUBLIC_APP_NAME: z.string().default("Malang Digital Government"),
 
   // Database
   DATABASE_URL: z.string().url(),

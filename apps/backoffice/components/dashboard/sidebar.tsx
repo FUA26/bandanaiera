@@ -77,7 +77,7 @@ const navItems = [
 export function AppSidebar() {
   const pathname = usePathname();
   const userPermissions = usePermissions();
-  const cityName = process.env.NEXT_PUBLIC_CITY_NAME || "Naiera";
+  const cityName = process.env.NEXT_PUBLIC_CITY_NAME || "Malang Digital Government";
 
   // Filter nav items based on user permissions
   const filteredNavItems = navItems.filter((item) => {
@@ -128,14 +128,14 @@ export function AppSidebar() {
                 <div className="flex aspect-square size-8 items-center justify-center overflow-hidden rounded-lg bg-primary">
                   <Image
                     src="/logo.svg"
-                    alt="Naiera Logo"
+                    alt="Malang Digital Government Logo"
                     width={32}
                     height={32}
                     className="size-6"
                   />
                 </div>
                 <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-semibold">Kota {cityName}</span>
+                  <span className="truncate font-semibold">{cityName}</span>
                   <span className="truncate text-xs text-muted-foreground">Portal Admin</span>
                 </div>
               </Link>

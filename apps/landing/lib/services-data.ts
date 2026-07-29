@@ -66,10 +66,13 @@ export async function getVisibleServiceCategories(): Promise<ServiceCategory[]> 
 export async function getVisibleServicesGroupedByCategory(): Promise<Array<ServiceCategory & { services: Service[] }>> {
   try { const categories = await getVisibleServiceCategories(); return await Promise.all(categories.map(async (category) => ({ ...category, services: await getServicesByCategory(category.id) }))); } catch { return []; }
 }
+export async function getAllServices(): Promise<Service[]> {
+  try { const response = await fetchAPI<ServicesResponse>('/services?sortBy=order&sortOrder=asc&pageSize=1000'); return response.services.map(normalizeService); } catch { return []; }
+}
 export async function getServicesGroupedByCategory(): Promise<Array<ServiceCategory & { services: Service[] }>> { return getVisibleServicesGroupedByCategory(); }
 export async function getServicesByCategory(categoryId: string): Promise<Service[]> {
   try { const response = await fetchAPI<ServicesResponse>(`/services?categoryId=${categoryId}&showInMenu=true&sortBy=order&sortOrder=asc`); return response.services.map(normalizeService); } catch { return []; }
 }
 export async function getServiceBySlug(slug: string): Promise<Service | null> {
-  try { const response = await fetchAPI<Service>(`/services/${slug}`); return normalizeService(response); } catch { return null; }
+  try { const response = await fetchAPI<{ service: Service }>("/services/" + slug); return normalizeService(response.service); } catch { return null; }
 }

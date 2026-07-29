@@ -26,6 +26,7 @@ interface RelatedService {
   name: string;
 }
 
+
 // Helper to map API DownloadForm to page DownloadForm
 function mapDownloadForms(forms: ApiDownloadForm[] | null | undefined): DownloadForm[] {
   if (!forms || forms.length === 0) return [];
@@ -64,6 +65,9 @@ export default async function ServiceDetailPage({
       .filter((s): s is RelatedService => s !== null);
   }
 
+  const primaryAgency = service.agency ?? service.opd ?? null;
+  const relatedAgencies = service.relatedAgencies ?? service.relatedOpds?.map((item) => ({ agency: item.opd })) ?? [];
+
   const serviceDetailData = {
     slug: service.slug,
     iconName: service.icon,
@@ -71,8 +75,8 @@ export default async function ServiceDetailPage({
     description: service.description,
     detailedDescription: service.detailedDescription || service.description,
     category: {
-      name: service.category.name,
-      slug: service.category.slug,
+      name: service.category?.name || "Layanan",
+      slug: service.category?.slug || "layanan",
     },
     badge: service.badge,
     stats: service.stats,
@@ -89,6 +93,21 @@ export default async function ServiceDetailPage({
     downloadForms: mapDownloadForms(service.downloadForms),
     relatedServices: relatedServicesData,
     faqs: service.faqs || [],
+    agency: primaryAgency
+      ? {
+          id: primaryAgency.id,
+          slug: primaryAgency.slug,
+          name: primaryAgency.name,
+          nickname: primaryAgency.nickname,
+          logo: primaryAgency.logo ?? undefined,
+        }
+      : undefined,
+    relatedAgencies,
+    serviceImages: service.serviceImages || undefined,
+    serviceLink: service.serviceLink || undefined,
+    downloadAppLinks: service.downloadAppLinks || undefined,
+    operatingHours: service.operatingHours || undefined,
+    socialMedia: service.socialMedia || undefined,
   };
 
   return <ServiceDetailClient service={serviceDetailData} />;

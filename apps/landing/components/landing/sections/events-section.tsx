@@ -82,7 +82,7 @@ export function EventsSection() {
       attendees: "500",
       status: "upcoming",
       type: "offline",
-      image: "/images/event-1.jpg",
+      image: "/images/event-1.svg",
       description: t("items.event1.desc"),
     },
     {
@@ -94,7 +94,7 @@ export function EventsSection() {
       category: t("items.event2.category"),
       status: "upcoming",
       type: "offline",
-      image: "/images/event-2.jpg",
+      image: "/images/event-2.svg",
     },
     {
       id: "3",
@@ -105,7 +105,7 @@ export function EventsSection() {
       category: t("items.event3.category"),
       status: "upcoming",
       type: "offline",
-      image: "/images/event-3.jpg",
+      image: "/images/event-3.svg",
     },
     {
       id: "4",
@@ -123,7 +123,7 @@ export function EventsSection() {
       title: t("items.event5.title"),
       dateStr: "2026-01-15",
       time: "08:00 - 17:00",
-      location: "Stadion Utama Naiera",
+      location: "Stadion Kanjuruhan Kepanjen",
       category: t("items.event5.category"),
       attendees: "2000+",
       status: "upcoming",

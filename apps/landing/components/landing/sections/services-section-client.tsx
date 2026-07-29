@@ -297,7 +297,7 @@ function ServiceCard({ service, index, tAccess }: ServiceCardProps) {
       {service.images && service.images.length > 0 && service.images[0] && (
         <div className="relative h-48 overflow-hidden rounded-t-xl">
           <Image
-            src={service.images[0].cdnUrl || service.images[0].serveUrl || ''}
+            src={service.images[0].serveUrl || service.images[0].cdnUrl || ''}
             alt={service.name}
             fill
             sizes="(max-width: 768px) 100vw, 33vw"

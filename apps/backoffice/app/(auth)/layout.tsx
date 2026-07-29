@@ -22,7 +22,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
             Akses Semua Layanan dalam Satu Aplikasi
           </h1>
           <p className="text-lg text-primary-foreground/90 leading-relaxed font-medium">
-            Lebih dari 100+ layanan pemerintahan Kabupaten Naiera siap melayani Anda 24/7 dengan cepat, mudah, dan aman.
+            Lebih dari 100+ layanan pemerintahan Kabupaten Malang siap melayani Anda 24/7 dengan cepat, mudah, dan aman.
           </p>
           <div className="space-y-4 pt-4">
             <div className="flex items-center gap-3">

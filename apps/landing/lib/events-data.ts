@@ -1,196 +1,26 @@
-// Types for events data structure
+const BACKOFFICE_API_URL = process.env.BACKOFFICE_API_URL || "http://localhost:3001";
+
 export interface Event {
-  id: string;
-  slug: string;
-  title: string;
-  date: string;
-  time?: string;
-  location?: string;
-  locationUrl?: string;
-  category: string;
-  categorySlug?: string;
-  categoryColor?: string;
-  attendees?: string;
-  status: "upcoming" | "ongoing" | "completed";
-  type: "ONLINE" | "OFFLINE" | "HYBRID";
-  image?: string | null;
-  description?: string;
-  organizer: string;
-  organizerContact?: string;
-  registrationRequired: boolean;
-  registrationUrl?: string;
-  maxAttendees?: number | null;
-  featured?: boolean;
+  id: string; slug: string; title: string; date: string; time?: string; location?: string; locationUrl?: string; category: string; categorySlug?: string; categoryColor?: string; attendees?: string; status: "upcoming" | "ongoing" | "completed"; type: "ONLINE" | "OFFLINE" | "HYBRID"; image?: string | null; description?: string; organizer: string; organizerContact?: string; registrationRequired: boolean; registrationUrl?: string; maxAttendees?: number | null; featured?: boolean;
 }
 
-const BACKOFFICE_API_URL = process.env.BACKOFFICE_API_URL || 'http://localhost:3001';
-
-/**
- * Calculate event status based on date
- */
 function calculateEventStatus(eventDate: Date | string): "upcoming" | "ongoing" | "completed" {
   const date = typeof eventDate === 'string' ? new Date(eventDate) : eventDate;
   const now = new Date();
   const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
   const eventDay = new Date(date.getFullYear(), date.getMonth(), date.getDate());
-
-  if (eventDay.getTime() < startOfToday.getTime()) {
-    return "completed";
-  } else if (eventDay.getTime() === startOfToday.getTime()) {
-    return "ongoing";
-  } else {
-    return "upcoming";
-  }
+  if (eventDay.getTime() < startOfToday.getTime()) return "completed";
+  if (eventDay.getTime() === startOfToday.getTime()) return "ongoing";
+  return "upcoming";
 }
 
-/**
- * Add status to events from API
- */
-function addStatusToEvents(events: any[]): Event[] {
-  return events.map(event => ({
-    ...event,
-    status: calculateEventStatus(event.date)
-  }));
-}
-
-/**
- * Fetch all events
- */
-export async function getAllEvents(): Promise<Event[]> {
-  try {
-    const res = await fetch(`${BACKOFFICE_API_URL}/api/public/events`, {
-      next: { revalidate: 3600 } // Cache 1 hour
-    });
-    if (!res.ok) return [];
-    const data = await res.json();
-    return addStatusToEvents(data.items || []);
-  } catch (error) {
-    console.error('Error loading events:', error);
-    return [];
-  }
-}
-
-/**
- * Fetch upcoming events
- */
-export async function getUpcomingEvents(limit?: number): Promise<Event[]> {
-  try {
-    const res = await fetch(`${BACKOFFICE_API_URL}/api/public/events/upcoming${limit ? `?limit=${limit}` : ''}`, {
-      next: { revalidate: 3600 }
-    });
-    if (!res.ok) return [];
-    const data = await res.json();
-    return addStatusToEvents(data || []);
-  } catch (error) {
-    console.error('Error loading upcoming events:', error);
-    return [];
-  }
-}
-
-/**
- * Fetch events by status
- */
-export async function getEventsByStatus(status: 'upcoming' | 'ongoing' | 'completed'): Promise<Event[]> {
-  try {
-    const res = await fetch(`${BACKOFFICE_API_URL}/api/public/events`, {
-      next: { revalidate: 3600 }
-    });
-    if (!res.ok) return [];
-    const data = await res.json();
-    const events = data.items || [];
-
-    const now = new Date();
-    return events.filter((event: Event) => {
-      const eventDate = new Date(event.date);
-      if (status === 'completed') {
-        return eventDate < now;
-      } else if (status === 'ongoing') {
-        return eventDate <= now && eventDate >= new Date(now.getTime() - 24 * 60 * 60 * 1000);
-      } else {
-        return eventDate >= now;
-      }
-    });
-  } catch (error) {
-    console.error(`Error loading events with status ${status}:`, error);
-    return [];
-  }
-}
-
-/**
- * Fetch events by category
- */
-export async function getEventsByCategory(category: string): Promise<Event[]> {
-  try {
-    const res = await fetch(`${BACKOFFICE_API_URL}/api/public/events?category=${category}`, {
-      next: { revalidate: 3600 }
-    });
-    if (!res.ok) return [];
-    const data = await res.json();
-    return data.items || [];
-  } catch (error) {
-    console.error(`Error loading events for category ${category}:`, error);
-    return [];
-  }
-}
-
-/**
- * Fetch a single event by slug
- */
-export async function getEventBySlug(slug: string): Promise<Event | null> {
-  try {
-    const res = await fetch(`${BACKOFFICE_API_URL}/api/public/events/${slug}`, {
-      next: { revalidate: 3600 }
-    });
-    if (!res.ok) return null;
-    return await res.json();
-  } catch (error) {
-    console.error(`Error loading event ${slug}:`, error);
-    return null;
-  }
-}
-
-/**
- * Fetch events for a specific month
- */
-export async function getEventsByMonth(year: number, month: number): Promise<Event[]> {
-  try {
-    const res = await fetch(`${BACKOFFICE_API_URL}/api/public/events/calendar?year=${year}&month=${month}`, {
-      next: { revalidate: 3600 }
-    });
-    if (!res.ok) return [];
-    return await res.json();
-  } catch (error) {
-    console.error(`Error loading events for ${year}-${month}:`, error);
-    return [];
-  }
-}
-
-/**
- * Get all unique event categories
- */
-export async function getEventCategories(): Promise<string[]> {
-  try {
-    const res = await fetch(`${BACKOFFICE_API_URL}/api/public/events/categories`, {
-      next: { revalidate: 3600 }
-    });
-    if (!res.ok) return [];
-    const categories = await res.json();
-    return categories.map((c: any) => c.name);
-  } catch (error) {
-    console.error('Error loading event categories:', error);
-    return [];
-  }
-}
-
-/**
- * Get event days for calendar widget
- */
-export async function getEventDays(year: number, month: number): Promise<number[]> {
-  try {
-    const events = await getEventsByMonth(year, month);
-    return events.map(event => new Date(event.date).getDate());
-  } catch (error) {
-    console.error(`Error loading event days for ${year}-${month}:`, error);
-    return [];
-  }
-}
+function addStatusToEvents(events: any[]): Event[] { return events.map((event) => ({ ...event, status: calculateEventStatus(event.date) })); }
+async function fetchEvents(path: string) { const res = await fetch(`${BACKOFFICE_API_URL}/api/public${path}`, { next: { revalidate: 3600 } }); if (!res.ok) return null; return res.json(); }
+export async function getAllEvents(): Promise<Event[]> { try { const data = await fetchEvents('/events'); return addStatusToEvents((data as any)?.items || []); } catch (error) { console.error('Error loading events:', error); return []; } }
+export async function getUpcomingEvents(limit?: number): Promise<Event[]> { try { const data = await fetchEvents(`/events/upcoming${limit ? `?limit=${limit}` : ''}`); return addStatusToEvents((data as any) || []); } catch (error) { console.error('Error loading upcoming events:', error); return []; } }
+export async function getEventsByStatus(status: 'upcoming' | 'ongoing' | 'completed'): Promise<Event[]> { try { const data = await fetchEvents('/events'); const events = (data as any)?.items || []; const now = new Date(); return events.filter((event: Event) => { const eventDate = new Date(event.date); if (status === 'completed') return eventDate < now; if (status === 'ongoing') return eventDate <= now && eventDate >= new Date(now.getTime() - 24 * 60 * 60 * 1000); return eventDate >= now; }); } catch (error) { console.error(`Error loading events with status ${status}:`, error); return []; } }
+export async function getEventsByCategory(category: string): Promise<Event[]> { try { const data = await fetchEvents(`/events?category=${category}`); return (data as any)?.items || []; } catch (error) { console.error(`Error loading events for category ${category}:`, error); return []; } }
+export async function getEventBySlug(slug: string): Promise<Event | null> { try { return await fetchEvents(`/events/${slug}`) as Event | null; } catch (error) { console.error(`Error loading event ${slug}:`, error); return null; } }
+export async function getEventsByMonth(year: number, month: number): Promise<Event[]> { try { const data = await fetchEvents(`/events/calendar?year=${year}&month=${month}`); return (data as any) || []; } catch (error) { console.error(`Error loading events for ${year}-${month}:`, error); return []; } }
+export async function getEventCategories(): Promise<string[]> { try { const data = await fetchEvents('/events/categories'); return ((data as any) || []).map((c: any) => c.name); } catch (error) { console.error('Error loading event categories:', error); return []; } }
+export async function getEventDays(year: number, month: number): Promise<number[]> { try { const events = await getEventsByMonth(year, month); return events.map((event) => new Date(event.date).getDate()); } catch (error) { console.error(`Error loading event days for ${year}-${month}:`, error); return []; } }

@@ -110,13 +110,31 @@ interface ServiceDetailClientProps {
       name: string;
     }>;
     faqs: FAQ[];
+    serviceLink?: string | null;
+    downloadAppLinks?: Array<{
+      platform: string;
+      url?: string | null;
+    }> | null;
+    operatingHours?: Array<{
+      days: string;
+      hours: string;
+    }> | null;
+    socialMedia?: {
+      facebook?: string | null;
+      instagram?: string | null;
+      twitter?: string | null;
+      youtube?: string | null;
+      tiktok?: string | null;
+      linkedin?: string | null;
+      website?: string | null;
+    } | null;
     agency?: {
       id: string;
       name: string;
       nickname: string;
       slug: string;
       logo?: {
-        cdnUrl: string;
+        cdnUrl?: string | null;
       } | null;
     } | null;
     relatedAgencies?: Array<{
@@ -131,7 +149,12 @@ interface ServiceDetailClientProps {
       id: string;
       type: string;
       file: {
-        cdnUrl: string;
+        id?: string;
+        cdnUrl?: string | null;
+        serveUrl?: string | null;
+        originalFilename?: string;
+        mimeType?: string;
+        size?: number;
       };
     }>;
   };
@@ -146,6 +169,7 @@ export function ServiceDetailClient({
 
   // Extract typed images
   const bannerImage = service.serviceImages?.find((img: any) => img.type === 'BANNER');
+  const bannerImageUrl = bannerImage?.file.cdnUrl || bannerImage?.file.serveUrl || '';
   const documentImages = service.serviceImages?.filter((img: any) => img.type === 'DOKUMEN') || [];
 
   return (
@@ -164,7 +188,7 @@ export function ServiceDetailClient({
             </Link>
             <span>/</span>
             <Link
-              href={`/layanan?category=${service.category.slug}`}
+              href={`/layanan?kategori=`}
               className="hover:text-white"
             >
               {service.category.name}
@@ -252,7 +276,7 @@ export function ServiceDetailClient({
           {bannerImage && (
             <div className="mb-6 rounded-lg overflow-hidden">
               <img
-                src={bannerImage.file.cdnUrl}
+                src={bannerImageUrl}
                 alt={service.name}
                 className="w-full h-auto"
               />
@@ -322,7 +346,7 @@ export function ServiceDetailClient({
                       {documentImages.map((img: any) => (
                         <div key={img.id} className="rounded-lg overflow-hidden border">
                           <img
-                            src={img.file.cdnUrl}
+                            src={img.file.cdnUrl || img.file.serveUrl || ''}
                             alt="Document"
                             className="w-full h-auto"
                           />
@@ -439,6 +463,98 @@ export function ServiceDetailClient({
                   )}
                 </div>
               </div>
+
+              {/* Service Link */}
+              {service.serviceLink && (
+                <div className="border-border bg-card rounded-2xl border p-6 shadow-sm">
+                  <h2 className="text-foreground mb-4 flex items-center gap-2 text-xl font-bold">
+                    <ExternalLink className="text-primary" size={24} />
+                    Tautan Layanan
+                  </h2>
+                  <a
+                    href={service.serviceLink}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="text-primary hover:text-primary-hover inline-flex items-center gap-2 font-medium underline-offset-4 hover:underline"
+                  >
+                    Buka layanan eksternal
+                    <ExternalLink size={16} />
+                  </a>
+                </div>
+              )}
+
+              {/* Download App Links */}
+              {service.downloadAppLinks && service.downloadAppLinks.length > 0 && (
+                <div className="border-border bg-card rounded-2xl border p-6 shadow-sm">
+                  <h2 className="text-foreground mb-4 flex items-center gap-2 text-xl font-bold">
+                    <FileDown className="text-primary" size={24} />
+                    Unduh Aplikasi
+                  </h2>
+                  <div className="space-y-3">
+                    {service.downloadAppLinks.map((link) => (
+                      <a
+                        key={link.platform}
+                        href={link.url || '#'}
+                        target={link.url ? '_blank' : undefined}
+                        rel={link.url ? 'noreferrer' : undefined}
+                        className="hover:border-primary-light hover:bg-primary-lighter border-border flex items-center justify-between rounded-lg border p-4 transition-all"
+                      >
+                        <div className="flex items-center gap-3">
+                          <FileDown className="text-primary" size={20} />
+                          <span className="text-foreground font-medium">{link.platform}</span>
+                        </div>
+                        <ArrowRight className="text-muted-foreground" size={20} />
+                      </a>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Operating Hours */}
+              {service.operatingHours && service.operatingHours.length > 0 && (
+                <div className="border-border bg-card rounded-2xl border p-6 shadow-sm">
+                  <h2 className="text-foreground mb-4 flex items-center gap-2 text-xl font-bold">
+                    <Clock className="text-primary" size={24} />
+                    Jam Operasional
+                  </h2>
+                  <div className="space-y-3">
+                    {service.operatingHours.map((item) => (
+                      <div key={item.days} className="flex items-start justify-between gap-4 rounded-lg border border-border p-4">
+                        <div>
+                          <p className="text-foreground font-medium">{item.days}</p>
+                        </div>
+                        <p className="text-muted-foreground text-right">{item.hours}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Social Media */}
+              {service.socialMedia && Object.values(service.socialMedia).some(Boolean) && (
+                <div className="border-border bg-card rounded-2xl border p-6 shadow-sm">
+                  <h2 className="text-foreground mb-4 flex items-center gap-2 text-xl font-bold">
+                    <MessageCircle className="text-primary" size={24} />
+                    Media Sosial
+                  </h2>
+                  <div className="flex flex-wrap gap-3">
+                    {Object.entries(service.socialMedia)
+                      .filter(([, value]) => Boolean(value))
+                      .map(([platform, value]) => (
+                        <a
+                          key={platform}
+                          href={value as string}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="border-border hover:border-primary hover:text-primary inline-flex items-center gap-2 rounded-full border px-4 py-2 text-sm font-medium transition-colors"
+                        >
+                          {platform}
+                          <ExternalLink size={14} />
+                        </a>
+                      ))}
+                  </div>
+                </div>
+              )}
 
               {/* FAQs */}
               {service.faqs && service.faqs.length > 0 && (

@@ -138,7 +138,7 @@ export function AppDownloadSection() {
                           <h3 className="font-bold text-slate-800">
                             Super App
                           </h3>
-                          <p className="text-xs text-slate-500">Kab. Naiera</p>
+                          <p className="text-xs text-slate-500">Kab. Malang</p>
                         </div>
                       </div>
                       <Smartphone size={24} className="text-primary" />

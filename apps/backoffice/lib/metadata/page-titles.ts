@@ -114,7 +114,7 @@ export function getPageTitle(pathname: string): PageTitleConfig {
   // Default fallback
   return {
     title: "Dashboard",
-    description: "Naiera Backoffice",
+    description: "Malang Digital Government Backoffice",
   };
 }
 
@@ -123,5 +123,5 @@ export function getPageTitle(pathname: string): PageTitleConfig {
  */
 export function getFullPageTitle(pathname: string): string {
   const config = getPageTitle(pathname);
-  return `${config.title} | Naiera Backoffice`;
+  return `${config.title} | Malang Digital Government Backoffice`;
 }

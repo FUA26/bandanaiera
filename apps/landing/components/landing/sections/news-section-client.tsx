@@ -50,7 +50,7 @@ export function NewsSectionClient({
     <section className="bg-background py-16 md:py-20" id="berita">
       <div className="container mx-auto max-w-7xl px-4">
         {/* Section Header */}
-        <div className="mb-12 flex items-center justify-between">
+        <div className="mb-12 flex flex-col gap-4 text-center lg:flex-row lg:items-end lg:justify-between lg:text-left">
           <div>
             <span className="bg-info-light text-info mb-4 inline-block rounded-full px-4 py-2 text-sm font-semibold">
               {t("label")}
@@ -146,7 +146,7 @@ function NewsCard({ article, tRead, formatDate }: NewsCardProps) {
         </div>
       </div>
 
-      <div className="p-6">
+      <div className="p-5 sm:p-6">
         <h3 className="group-hover:text-primary text-foreground mb-3 line-clamp-2 text-xl font-bold transition-colors">
           {article.title}
         </h3>

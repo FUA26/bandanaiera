@@ -38,7 +38,20 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import type { ServiceCategory, ServiceWithCategory } from "@/lib/services-data";
+interface PublicOpd {
+  id: string;
+  slug: string;
+  name: string;
+  nickname: string;
+  category: string;
+  address: string | null;
+  logo: { cdnUrl: string } | null;
+  description?: string;
+  contactInfo?: { phone?: string; email?: string; website?: string } | null;
+  operatingHours?: string | null;
+  location?: { lat?: number; lng?: number } | null;
+  socialMedia?: { facebook?: string; twitter?: string; instagram?: string; youtube?: string } | null;
+}
 
 // Icon mapping
 const iconMap: Record<string, LucideIcon> = {
@@ -111,8 +124,8 @@ export function LayananPageClient({
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string | null>(initialCategory || null);
   const [integrationFilter, setIntegrationFilter] = useState<'all' | 'integrated' | 'non-integrated'>('all');
-  const [agencies, setAgencies] = useState<any[]>([]);
-  const [selectedAgency, setSelectedAgency] = useState<string>('');
+  const [agencies, setAgencies] = useState<PublicOpd[]>([]);
+  const [selectedAgency, setSelectedAgency] = useState<string>("__all__");
 
   // Transform categories with icon components (needed for useEffect hooks)
   const categories = rawCategories.map((cat) => ({
@@ -137,10 +150,10 @@ export function LayananPageClient({
 
   // Load agencies for filter dropdown
   useEffect(() => {
-    fetch('/api/public/agencies?status=ACTIVE&showInMenu=true')
-      .then((res) => res.json())
-      .then((data) => setAgencies(data.items || []))
-      .catch((error) => console.error('Error loading agencies:', error));
+    fetch("/api/proxy/public/opd?pageSize=100", { cache: "no-store" })
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => setAgencies(data?.items || []))
+      .catch((error) => console.error("Error loading agencies:", error));
   }, []);
 
   // Handle invalid category slug - redirect to clean URL if slug doesn't exist
@@ -211,7 +224,7 @@ export function LayananPageClient({
       (integrationFilter === 'integrated' && service.isIntegrated === true) ||
       (integrationFilter === 'non-integrated' && service.isIntegrated === false);
     const matchesAgency =
-      !selectedAgency ||
+      selectedAgency === "__all__" ||
       service.agencyId === selectedAgency;
     return matchesSearch && matchesCategory && matchesIntegration && matchesAgency;
   });
@@ -364,7 +377,7 @@ export function LayananPageClient({
                       <SelectValue placeholder="All Agencies" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="">All Agencies</SelectItem>
+                      <SelectItem value="__all__">All Agencies</SelectItem>
                       {agencies.map((agency) => (
                         <SelectItem key={agency.id} value={agency.id}>
                           {agency.nickname}

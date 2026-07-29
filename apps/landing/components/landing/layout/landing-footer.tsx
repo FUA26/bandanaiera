@@ -40,7 +40,7 @@ export function Footer({ categories = [] }: FooterProps) {
               <div className="relative flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-white/10 shadow-sm ring-1 ring-white/20">
                 <Image
                   src={settings?.siteLogoUrl || "/naiera.png"}
-                  alt={settings?.siteName || "Naiera Logo"}
+                  alt={settings?.siteName || "Malang Digital Government Logo"}
                   fill
                   className="object-contain p-2"
                 />

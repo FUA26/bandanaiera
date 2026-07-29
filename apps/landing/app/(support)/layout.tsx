@@ -9,8 +9,8 @@ import { getVisibleServicesGroupedByCategory } from "@/lib/services-data";
 export const dynamic = 'force-dynamic';
 
 export const metadata: Metadata = {
-  title: "Support - Super App Naiera",
-  description: "Dapatkan bantuan dan dukungan untuk layanan digital Kabupaten Naiera",
+  title: "Support - Malang Digital Government",
+  description: "Dapatkan bantuan dan dukungan untuk layanan digital Kabupaten Malang",
 };
 
 export default async function SupportLayout({

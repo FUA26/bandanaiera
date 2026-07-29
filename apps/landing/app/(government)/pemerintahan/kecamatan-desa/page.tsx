@@ -12,7 +12,7 @@ import { Separator } from "@/components/ui/separator";
 const districtsData = [
   {
     id: "1",
-    name: "Naiera Utara",
+    name: "Kepanjen Utara",
     camat: "Budi Harsono, S.IP",
     address: "Jl. Raya Utara No. 1",
     villages: [
@@ -25,21 +25,21 @@ const districtsData = [
   },
   {
     id: "2",
-    name: "Naiera Selatan",
+    name: "Kepanjen Selatan",
     camat: "Siti Aminah, S.Sos",
     address: "Jl. Selatan Raya No. 10",
     villages: ["Desa Pantai", "Desa Laut", "Kelurahan Pesisir", "Desa Karang"],
   },
   {
     id: "3",
-    name: "Naiera Barat",
+    name: "Kepanjen Barat",
     camat: "Joko Susilo, M.Si",
     address: "Jl. Barat Utama No. 5",
     villages: ["Desa Bukit", "Desa Lembah", "Desa Sungai", "Kelurahan Gunung"],
   },
   {
     id: "4",
-    name: "Naiera Timur",
+    name: "Kepanjen Timur",
     camat: "Rina Wati, S.E",
     address: "Jl. Timur Indah No. 8",
     villages: [
@@ -52,7 +52,7 @@ const districtsData = [
   },
   {
     id: "5",
-    name: "Naiera Pusat",
+    name: "Kepanjen Pusat",
     camat: "Ahmad Yani, S.IP",
     address: "Jl. Protokol No. 1",
     villages: [

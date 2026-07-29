@@ -15,24 +15,8 @@ import {
 } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useRouter } from "next/navigation";
+import { getPublicOpdList, type PublicOpd } from "@/lib/opd-data";
 
-interface Agency {
-  id: string;
-  slug: string;
-  name: string;
-  nickname: string;
-  category: string;
-  address: string | null;
-  logo: { cdnUrl: string } | null;
-}
-
-interface AgenciesResponse {
-  items: Agency[];
-  total: number;
-  page: number;
-  pageSize: number;
-  totalPages: number;
-}
 
 const categories = [
   { value: "all", label: "Semua" },
@@ -46,29 +30,39 @@ export default function AgenciesPage() {
   const router = useRouter();
   const [searchQuery, setSearchQuery] = useState("");
   const [activeType, setActiveType] = useState<string>("all");
-  const [agencies, setAgencies] = useState<Agency[]>([]);
+  const [agencies, setAgencies] = useState<PublicOpd[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetchAgencies();
+    let cancelled = false;
+
+    const fetchAgencies = async () => {
+      setLoading(true);
+      try {
+        const data = await getPublicOpdList({
+          category: activeType !== "all" ? activeType : undefined,
+          search: searchQuery || undefined,
+          pageSize: 100,
+        });
+
+        if (!cancelled) {
+          setAgencies(data?.items || []);
+        }
+      } catch (error) {
+        console.error('Error fetching agencies:', error);
+      } finally {
+        if (!cancelled) {
+          setLoading(false);
+        }
+      }
+    };
+
+    void fetchAgencies();
+
+    return () => {
+      cancelled = true;
+    };
   }, [activeType, searchQuery]);
-
-  const fetchAgencies = async () => {
-    setLoading(true);
-    try {
-      const params = new URLSearchParams();
-      if (activeType !== 'all') params.append('category', activeType);
-      if (searchQuery) params.append('search', searchQuery);
-
-      const response = await fetch(`/api/public/agencies?${params.toString()}`);
-      const data: AgenciesResponse = await response.json();
-      setAgencies(data.items);
-    } catch (error) {
-      console.error('Error fetching agencies:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   return (
     <>

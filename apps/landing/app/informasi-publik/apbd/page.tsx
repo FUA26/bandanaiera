@@ -184,7 +184,7 @@ export default function APBDPage() {
               <div>
                 <h1 className="text-3xl font-bold">Transparansi APBD</h1>
                 <p className="text-primary-light">
-                  Anggaran Pendapatan dan Belanja Daerah Kabupaten Naiera
+                  Anggaran Pendapatan dan Belanja Daerah Kabupaten Malang
                 </p>
               </div>
             </div>

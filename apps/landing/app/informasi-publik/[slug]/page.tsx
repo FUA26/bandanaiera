@@ -83,7 +83,7 @@ const infoData: InfoDetail[] = [
     description:
       "Berita dan informasi terbaru seputar pemerintahan dan pembangunan daerah",
     fullDescription:
-      "Portal berita resmi Pemerintah Kabupaten Naiera yang menyajikan informasi terkini seputar kegiatan pemerintahan, pembangunan daerah, dan berbagai program untuk masyarakat.",
+      "Portal berita resmi Pemerintah Kabupaten Malang yang menyajikan informasi terkini seputar kegiatan pemerintahan, pembangunan daerah, dan berbagai program untuk masyarakat.",
     category: "Berita & Pengumuman",
     categorySlug: "news",
     badge: "Update",
@@ -93,7 +93,7 @@ const infoData: InfoDetail[] = [
       {
         type: "text",
         content:
-          "Temukan berbagai berita terkini seputar perkembangan Kabupaten Naiera. Kami berkomitmen menyajikan informasi yang akurat, terpercaya, dan up-to-date untuk masyarakat.",
+          "Temukan berbagai berita terkini seputar perkembangan Kabupaten Malang. Kami berkomitmen menyajikan informasi yang akurat, terpercaya, dan up-to-date untuk masyarakat.",
       },
       {
         type: "highlight",
@@ -135,7 +135,7 @@ const infoData: InfoDetail[] = [
     name: "Pengumuman Resmi",
     description: "Pengumuman resmi dari pemerintah kabupaten",
     fullDescription:
-      "Halaman pengumuman resmi yang memuat informasi penting dari seluruh perangkat daerah Kabupaten Naiera untuk diketahui masyarakat.",
+      "Halaman pengumuman resmi yang memuat informasi penting dari seluruh perangkat daerah Kabupaten Malang untuk diketahui masyarakat.",
     category: "Berita & Pengumuman",
     categorySlug: "news",
     stats: "48 pengumuman",
@@ -144,7 +144,7 @@ const infoData: InfoDetail[] = [
       {
         type: "text",
         content:
-          "Pengumuman resmi dari Pemerintah Kabupaten Naiera mencakup informasi tentang lowongan kerja, hasil seleksi, perubahan kebijakan, dan informasi penting lainnya.",
+          "Pengumuman resmi dari Pemerintah Kabupaten Malang mencakup informasi tentang lowongan kerja, hasil seleksi, perubahan kebijakan, dan informasi penting lainnya.",
       },
       {
         type: "list",
@@ -169,7 +169,7 @@ const infoData: InfoDetail[] = [
     name: "Siaran Pers",
     description: "Press release dan siaran pers resmi",
     fullDescription:
-      "Kumpulan siaran pers resmi yang dikeluarkan oleh Bagian Humas Sekretariat Daerah Kabupaten Naiera untuk media massa.",
+      "Kumpulan siaran pers resmi yang dikeluarkan oleh Bagian Humas Sekretariat Daerah Kabupaten Malang untuk media massa.",
     category: "Berita & Pengumuman",
     categorySlug: "news",
     stats: "32 siaran",
@@ -184,7 +184,7 @@ const infoData: InfoDetail[] = [
     relatedInfo: ["berita-terkini", "pengumuman"],
     contactInfo: {
       office: "Bagian Humas Sekretariat Daerah",
-      address: "Jl. Pemerintahan No. 1, Naiera",
+      address: "Jalan Raden Panji No 158 Kepanjen, Kabupaten Malang, Jawa Timur 65163",
       phone: "(021) 1234-5678",
       email: "humas@naiera.go.id",
       hours: "Senin-Jumat, 08:00-16:00 WIB",
@@ -198,7 +198,7 @@ const infoData: InfoDetail[] = [
     name: "Agenda Kegiatan",
     description: "Jadwal kegiatan dan acara pemerintah daerah",
     fullDescription:
-      "Informasi lengkap agenda kegiatan resmi Pemerintah Kabupaten Naiera termasuk kunjungan kerja, rapat koordinasi, dan acara seremonial.",
+      "Informasi lengkap agenda kegiatan resmi Pemerintah Kabupaten Malang termasuk kunjungan kerja, rapat koordinasi, dan acara seremonial.",
     category: "Agenda & Kegiatan",
     categorySlug: "agenda",
     badge: "Terbaru",
@@ -242,7 +242,7 @@ const infoData: InfoDetail[] = [
       {
         type: "text",
         content:
-          "Pemerintah Kabupaten Naiera berkomitmen mewujudkan transparansi pengelolaan keuangan daerah sebagai bentuk akuntabilitas kepada masyarakat.",
+          "Pemerintah Kabupaten Malang berkomitmen mewujudkan transparansi pengelolaan keuangan daerah sebagai bentuk akuntabilitas kepada masyarakat.",
       },
       {
         type: "highlight",
@@ -278,7 +278,7 @@ const infoData: InfoDetail[] = [
     name: "Peraturan Daerah",
     description: "Perda dan peraturan daerah yang berlaku",
     fullDescription:
-      "Database lengkap Peraturan Daerah (Perda) Kabupaten Naiera yang telah disahkan dan masih berlaku.",
+      "Database lengkap Peraturan Daerah (Perda) Kabupaten Malang yang telah disahkan dan masih berlaku.",
     category: "Regulasi & Peraturan",
     categorySlug: "regulations",
     badge: "Lengkap",
@@ -288,7 +288,7 @@ const infoData: InfoDetail[] = [
       {
         type: "text",
         content:
-          "Akses seluruh Peraturan Daerah Kabupaten Naiera yang telah disahkan oleh DPRD dan Bupati. Dokumen tersedia dalam format PDF yang dapat diunduh.",
+          "Akses seluruh Peraturan Daerah Kabupaten Malang yang telah disahkan oleh DPRD dan Bupati. Dokumen tersedia dalam format PDF yang dapat diunduh.",
       },
       {
         type: "list",
@@ -318,7 +318,7 @@ const infoData: InfoDetail[] = [
     name: "Destinasi Wisata",
     description: "Panduan lengkap tempat wisata di kabupaten",
     fullDescription:
-      "Jelajahi keindahan Kabupaten Naiera melalui berbagai destinasi wisata alam, budaya, dan kuliner yang menarik.",
+      "Jelajahi keindahan Kabupaten Malang melalui berbagai destinasi wisata alam, budaya, dan kuliner yang menarik.",
     category: "Pariwisata",
     categorySlug: "tourism",
     badge: "Populer",
@@ -328,13 +328,13 @@ const infoData: InfoDetail[] = [
       {
         type: "text",
         content:
-          "Kabupaten Naiera memiliki beragam destinasi wisata yang memukau, mulai dari wisata alam pegunungan, pantai, air terjun, hingga wisata budaya dan sejarah.",
+          "Kabupaten Malang memiliki beragam destinasi wisata yang memukau, mulai dari wisata alam pegunungan, pantai, air terjun, hingga wisata budaya dan sejarah.",
       },
       {
         type: "highlight",
         title: "Top Destinasi",
         content:
-          "Air Terjun Naiera, Pantai Pasir Putih, Gunung Harapan, Desa Wisata Budaya, Taman Nasional Lestari",
+          "Destinasi alam dan budaya Kabupaten Malang",
       },
       {
         type: "list",
@@ -370,7 +370,7 @@ const infoData: InfoDetail[] = [
     name: "Layanan PPID",
     description: "Pejabat Pengelola Informasi dan Dokumentasi",
     fullDescription:
-      "PPID (Pejabat Pengelola Informasi dan Dokumentasi) Kabupaten Naiera melayani permohonan informasi publik sesuai UU KIP No. 14 Tahun 2008.",
+      "PPID (Pejabat Pengelola Informasi dan Dokumentasi) Kabupaten Malang melayani permohonan informasi publik sesuai UU KIP No. 14 Tahun 2008.",
     category: "PPID",
     categorySlug: "ppid",
     stats: "24/7 Online",
@@ -379,7 +379,7 @@ const infoData: InfoDetail[] = [
       {
         type: "text",
         content:
-          "PPID Kabupaten Naiera berkomitmen memberikan pelayanan informasi publik yang cepat, tepat, dan berkualitas kepada seluruh pemohon informasi.",
+          "PPID Kabupaten Malang berkomitmen memberikan pelayanan informasi publik yang cepat, tepat, dan berkualitas kepada seluruh pemohon informasi.",
       },
       {
         type: "highlight",
@@ -415,7 +415,7 @@ const infoData: InfoDetail[] = [
       { name: "SOP Layanan PPID", format: "PDF", size: "800 KB" },
     ],
     contactInfo: {
-      office: "PPID Kabupaten Naiera",
+      office: "PPID Kabupaten Malang",
       address: "Gedung Sekretariat Daerah Lt. 2, Jl. Pemerintahan No. 1",
       phone: "(021) 1234-5679",
       email: "ppid@naiera.go.id",
@@ -475,7 +475,7 @@ const infoData: InfoDetail[] = [
     name: "Galeri Foto",
     description: "Dokumentasi foto kegiatan dan pembangunan",
     fullDescription:
-      "Koleksi foto dokumentasi kegiatan pemerintahan, pembangunan, dan berbagai event di Kabupaten Naiera.",
+      "Koleksi foto dokumentasi kegiatan pemerintahan, pembangunan, dan berbagai event di Kabupaten Malang.",
     category: "Galeri & Media",
     categorySlug: "gallery",
     stats: "2.5k foto",
@@ -484,7 +484,7 @@ const infoData: InfoDetail[] = [
       {
         type: "text",
         content:
-          "Jelajahi galeri foto yang mendokumentasikan berbagai kegiatan, pembangunan, dan momen penting di Kabupaten Naiera.",
+          "Jelajahi galeri foto yang mendokumentasikan berbagai kegiatan, pembangunan, dan momen penting di Kabupaten Malang.",
       },
       {
         type: "list",
@@ -509,7 +509,7 @@ const infoData: InfoDetail[] = [
     name: "Statistik Daerah",
     description: "Data statistik dan indikator pembangunan",
     fullDescription:
-      "Portal data statistik Kabupaten Naiera yang menyajikan berbagai indikator pembangunan dan data demografi.",
+      "Portal data statistik Kabupaten Malang yang menyajikan berbagai indikator pembangunan dan data demografi.",
     category: "Publikasi",
     categorySlug: "publication",
     stats: "Real-time",
@@ -518,7 +518,7 @@ const infoData: InfoDetail[] = [
       {
         type: "text",
         content:
-          "Akses data statistik terkini Kabupaten Naiera untuk mendukung perencanaan, penelitian, dan pengambilan keputusan berbasis data.",
+          "Akses data statistik terkini Kabupaten Malang untuk mendukung perencanaan, penelitian, dan pengambilan keputusan berbasis data.",
       },
       {
         type: "highlight",
@@ -542,13 +542,13 @@ const infoData: InfoDetail[] = [
     ],
     relatedInfo: ["apbd", "laporan-tahunan", "buku-profil"],
     downloads: [
-      { name: "Naiera Dalam Angka 2024", format: "PDF", size: "25 MB" },
+      { name: "Kabupaten Malang Dalam Angka 2024", format: "PDF", size: "25 MB" },
       { name: "Statistik Daerah 2024", format: "PDF", size: "15 MB" },
       { name: "Data Terbuka (Open Data)", format: "Excel", size: "5 MB" },
     ],
     externalLinks: [
       {
-        name: "BPS Kabupaten Naiera",
+        name: "BPS Kabupaten Malang",
         url: "#",
         description: "Portal BPS resmi",
       },
@@ -567,7 +567,7 @@ const infoData: InfoDetail[] = [
     name: "Kalender Event",
     description: "Kalender event dan kegiatan publik sepanjang tahun",
     fullDescription:
-      "Jadwal lengkap event, festival, dan kegiatan publik yang diselenggarakan di Kabupaten Naiera sepanjang tahun.",
+      "Jadwal lengkap event, festival, dan kegiatan publik yang diselenggarakan di Kabupaten Malang sepanjang tahun.",
     category: "Agenda & Kegiatan",
     categorySlug: "agenda",
     stats: "56 event",
@@ -576,7 +576,7 @@ const infoData: InfoDetail[] = [
       {
         type: "text",
         content:
-          "Temukan berbagai event menarik yang akan diselenggarakan di Kabupaten Naiera. Dari festival budaya hingga event olahraga dan kegiatan komunitas.",
+          "Temukan berbagai event menarik yang akan diselenggarakan di Kabupaten Malang. Dari festival budaya hingga event olahraga dan kegiatan komunitas.",
       },
     ],
     relatedInfo: ["agenda-kegiatan", "event-wisata"],
@@ -589,7 +589,7 @@ const infoData: InfoDetail[] = [
     name: "Jadwal Pelayanan",
     description: "Jadwal operasional kantor dan pelayanan publik",
     fullDescription:
-      "Informasi jadwal operasional seluruh kantor pelayanan publik di Kabupaten Naiera.",
+      "Informasi jadwal operasional seluruh kantor pelayanan publik di Kabupaten Malang.",
     category: "Agenda & Kegiatan",
     categorySlug: "agenda",
     stats: "15 lokasi",
@@ -657,7 +657,7 @@ const infoData: InfoDetail[] = [
       {
         type: "text",
         content:
-          "Pantau alokasi dan realisasi penggunaan dana desa di seluruh desa di Kabupaten Naiera secara transparan.",
+          "Pantau alokasi dan realisasi penggunaan dana desa di seluruh desa di Kabupaten Malang secara transparan.",
       },
     ],
     relatedInfo: ["apbd", "pengadaan-barang"],
@@ -685,7 +685,7 @@ const infoData: InfoDetail[] = [
     relatedInfo: ["apbd"],
     externalLinks: [
       {
-        name: "LPSE Kabupaten Naiera",
+        name: "LPSE Kabupaten Malang",
         url: "#",
         description: "Portal e-procurement",
       },
@@ -700,7 +700,7 @@ const infoData: InfoDetail[] = [
     name: "Peraturan Bupati",
     description: "Perbup dan keputusan bupati",
     fullDescription:
-      "Database Peraturan Bupati (Perbup) dan Keputusan Bupati Kabupaten Naiera.",
+      "Database Peraturan Bupati (Perbup) dan Keputusan Bupati Kabupaten Malang.",
     category: "Regulasi & Peraturan",
     categorySlug: "regulations",
     stats: "234 perbup",
@@ -709,7 +709,7 @@ const infoData: InfoDetail[] = [
       {
         type: "text",
         content:
-          "Akses koleksi lengkap Peraturan Bupati dan Keputusan Bupati Kabupaten Naiera.",
+          "Akses koleksi lengkap Peraturan Bupati dan Keputusan Bupati Kabupaten Malang.",
       },
     ],
     relatedInfo: ["peraturan-daerah", "standar-pelayanan"],
@@ -744,7 +744,7 @@ const infoData: InfoDetail[] = [
     name: "Event Wisata",
     description: "Festival dan event wisata sepanjang tahun",
     fullDescription:
-      "Kalender event wisata dan festival budaya yang diselenggarakan di Kabupaten Naiera.",
+      "Kalender event wisata dan festival budaya yang diselenggarakan di Kabupaten Malang.",
     category: "Pariwisata",
     categorySlug: "tourism",
     stats: "18 event",
@@ -753,7 +753,7 @@ const infoData: InfoDetail[] = [
       {
         type: "text",
         content:
-          "Jangan lewatkan berbagai festival dan event wisata menarik di Kabupaten Naiera!",
+          "Jangan lewatkan berbagai festival dan event wisata menarik di Kabupaten Malang!",
       },
     ],
     relatedInfo: ["destinasi-wisata", "kalender-event"],
@@ -766,7 +766,7 @@ const infoData: InfoDetail[] = [
     name: "Kuliner & Oleh-oleh",
     description: "Rekomendasi kuliner dan oleh-oleh khas daerah",
     fullDescription:
-      "Panduan kuliner dan oleh-oleh khas Kabupaten Naiera yang wajib dicoba.",
+      "Panduan kuliner dan oleh-oleh khas Kabupaten Malang yang wajib dicoba.",
     category: "Pariwisata",
     categorySlug: "tourism",
     stats: "75 tempat",
@@ -775,7 +775,7 @@ const infoData: InfoDetail[] = [
       {
         type: "text",
         content:
-          "Nikmati kekayaan kuliner dan bawa pulang oleh-oleh khas Kabupaten Naiera!",
+          "Nikmati kekayaan kuliner dan bawa pulang oleh-oleh khas Kabupaten Malang!",
       },
     ],
     relatedInfo: ["destinasi-wisata", "akomodasi"],
@@ -788,7 +788,7 @@ const infoData: InfoDetail[] = [
     name: "Akomodasi",
     description: "Daftar hotel, homestay, dan penginapan",
     fullDescription:
-      "Daftar lengkap hotel, homestay, dan penginapan di Kabupaten Naiera.",
+      "Daftar lengkap hotel, homestay, dan penginapan di Kabupaten Malang.",
     category: "Pariwisata",
     categorySlug: "tourism",
     stats: "120+ pilihan",
@@ -797,7 +797,7 @@ const infoData: InfoDetail[] = [
       {
         type: "text",
         content:
-          "Temukan akomodasi yang nyaman untuk menginap selama berkunjung ke Kabupaten Naiera.",
+          "Temukan akomodasi yang nyaman untuk menginap selama berkunjung ke Kabupaten Malang.",
       },
     ],
     relatedInfo: ["destinasi-wisata", "kuliner-oleh-oleh"],
@@ -819,7 +819,7 @@ const infoData: InfoDetail[] = [
       {
         type: "text",
         content:
-          "Tonton berbagai video dokumenter dan liputan kegiatan Pemerintah Kabupaten Naiera.",
+          "Tonton berbagai video dokumenter dan liputan kegiatan Pemerintah Kabupaten Malang.",
       },
     ],
     relatedInfo: ["galeri-foto", "berita-terkini"],
@@ -907,7 +907,7 @@ const infoData: InfoDetail[] = [
     name: "Buku Profil Daerah",
     description: "Profil lengkap kabupaten dalam bentuk buku digital",
     fullDescription:
-      "Buku profil daerah yang memuat informasi lengkap tentang Kabupaten Naiera.",
+      "Buku profil daerah yang memuat informasi lengkap tentang Kabupaten Malang.",
     category: "Publikasi",
     categorySlug: "publication",
     stats: "5 edisi",
@@ -916,7 +916,7 @@ const infoData: InfoDetail[] = [
       {
         type: "text",
         content:
-          "Kenali Kabupaten Naiera lebih dekat melalui buku profil daerah yang komprehensif.",
+          "Kenali Kabupaten Malang lebih dekat melalui buku profil daerah yang komprehensif.",
       },
     ],
     relatedInfo: ["statistik-daerah", "destinasi-wisata"],

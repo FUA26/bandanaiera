@@ -1,0 +1,10 @@
+<svg width="1200" height="800" viewBox="0 0 1200 800" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="800" rx="48" fill="#5A3A1E"/>
+  <circle cx="950" cy="210" r="240" fill="#D97706" fill-opacity="0.28"/>
+  <circle cx="280" cy="640" r="250" fill="#F59E0B" fill-opacity="0.14"/>
+  <path d="M150 570H1050" stroke="#FFF1E0" stroke-width="24" stroke-linecap="round" stroke-opacity="0.9"/>
+  <rect x="132" y="126" width="300" height="64" rx="32" fill="#FFF1E0" fill-opacity="0.14"/>
+  <text x="172" y="168" fill="#FFF7ED" font-family="Arial, sans-serif" font-size="30" font-weight="700">Infrastruktur</text>
+  <text x="132" y="270" fill="#FFFFFF" font-family="Arial, sans-serif" font-size="54" font-weight="700">Drainase & Jalan</text>
+  <text x="132" y="336" fill="#FFE6C7" font-family="Arial, sans-serif" font-size="28">Perbaikan titik rawan genangan dan akses lingkungan</text>
+</svg>

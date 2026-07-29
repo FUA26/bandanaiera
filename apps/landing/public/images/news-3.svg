@@ -1,0 +1,10 @@
+<svg width="1200" height="800" viewBox="0 0 1200 800" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="800" rx="48" fill="#7F1D1D"/>
+  <circle cx="950" cy="170" r="190" fill="#EF4444" fill-opacity="0.3"/>
+  <circle cx="260" cy="610" r="260" fill="#FB7185" fill-opacity="0.16"/>
+  <path d="M160 560C240 500 330 470 440 470C580 470 690 510 840 590" stroke="#FFE4E6" stroke-width="22" stroke-linecap="round" stroke-opacity="0.85"/>
+  <rect x="132" y="126" width="240" height="64" rx="32" fill="#FFE4E6" fill-opacity="0.14"/>
+  <text x="172" y="168" fill="#FFF1F2" font-family="Arial, sans-serif" font-size="30" font-weight="700">Kesehatan</text>
+  <text x="132" y="270" fill="#FFFFFF" font-family="Arial, sans-serif" font-size="54" font-weight="700">Posyandu Digital</text>
+  <text x="132" y="336" fill="#FFD6DB" font-family="Arial, sans-serif" font-size="28">Pemantauan balita dan lansia lebih cepat</text>
+</svg>

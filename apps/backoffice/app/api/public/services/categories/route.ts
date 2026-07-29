@@ -48,7 +48,7 @@ export const GET = async (request: Request) => {
     const sortOrder = (searchParams.get("sortOrder") || "asc") as "asc" | "desc";
 
     const params = { search, showInMenu: showInMenuParam, sortBy, sortOrder };
-    const cacheKey = generateCacheKey('service-categories:list', { params });
+    const cacheKey = generateCacheKey('service-categories:list', params);
 
     const result = await cachedQuery(
       cacheKey,

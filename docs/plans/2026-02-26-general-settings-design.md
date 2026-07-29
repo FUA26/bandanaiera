@@ -58,7 +58,7 @@ Response:
 ```json
 {
   "siteName": "Super App Naiera",
-  "siteSubtitle": "Kabupaten Naiera",
+  "siteSubtitle": "Kabupaten Malang",
   "siteDescription": "...",
   "siteLogoUrl": "https://cdn.example.com/logo.png",
   "citizenName": "Warga Naiera",

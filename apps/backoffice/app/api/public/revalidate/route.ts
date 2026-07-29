@@ -71,21 +71,21 @@ export const POST = async (request: Request) => {
 
     // Revalidate by tag if provided
     if (tag) {
-      revalidateTag(tag, type);
+      revalidateTag(tag, '');
     }
 
     // Default revalidation paths for services, news, and events
     if (!path && !tag) {
       // Revalidate all service-related paths
-      revalidatePath("/", type);
-      revalidatePath("/layanan", type);
-      revalidatePath("/informasi-publik", type);
-      revalidatePath("/informasi-publik/berita-terkini", type);
-      revalidatePath("/informasi-publik/agenda-kegiatan", type);
-      revalidateTag("services", type);
-      revalidateTag("categories", type);
-      revalidateTag("news", type);
-      revalidateTag("events", type);
+      revalidatePath('/', 'page');
+      revalidatePath('/layanan', 'page');
+      revalidatePath('/informasi-publik', 'page');
+      revalidatePath('/informasi-publik/berita-terkini', 'page');
+      revalidatePath('/informasi-publik/agenda-kegiatan', 'page');
+      revalidateTag('services', '');
+      revalidateTag('categories', '');
+      revalidateTag('news', '');
+      revalidateTag('events', '');
     }
 
     return NextResponse.json(

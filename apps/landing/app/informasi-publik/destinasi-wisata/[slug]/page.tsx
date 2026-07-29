@@ -21,7 +21,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
     if (!data?.destination) return { title: 'Not Found' };
 
     return {
-        title: `${data.destination.name} | Destinasi Wisata Naiera`,
+        title: `${data.destination.name} | Destinasi Wisata Kabupaten Malang`,
         description: data.destination.description,
     };
 }

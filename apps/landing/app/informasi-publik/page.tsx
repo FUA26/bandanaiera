@@ -389,7 +389,7 @@ export default function InformasiPublikPage() {
             </h1>
             <p className="mb-8 max-w-2xl text-lg text-blue-50">
               Akses berbagai informasi publik, berita terkini, regulasi, dan
-              data transparansi pemerintah Kabupaten Naiera.
+              data transparansi pemerintah Kabupaten Malang.
             </p>
 
             {/* Search Bar */}

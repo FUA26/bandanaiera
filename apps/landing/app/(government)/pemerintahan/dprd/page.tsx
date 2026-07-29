@@ -122,7 +122,7 @@ export default function DprdPage() {
                 <CardHeader>
                   <CardTitle>Agenda Rapat Bulan Ini</CardTitle>
                   <CardDescription>
-                    Jadwal kegiatan dan rapat DPRD Kabupaten Naiera
+                    Jadwal kegiatan dan rapat DPRD Kabupaten Malang
                   </CardDescription>
                 </CardHeader>
                 <CardContent>

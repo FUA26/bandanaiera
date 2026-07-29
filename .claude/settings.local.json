@@ -106,7 +106,16 @@
       "Bash(test:*)",
       "Bash(DATABASE_URL=\"postgresql://naiera:naiera_password@100.116.51.61:5432/backoffice_db?pgbouncer=true\" npx prisma@6 db push:*)",
       "Bash(DATABASE_URL=\"postgresql://naiera:naiera_password@100.116.51.61:5432/backoffice_db?pgbouncer=true\" npx prisma@6 generate:*)",
-      "Bash(docker run:*)"
+      "Bash(docker run:*)",
+      "Bash(sudo lsof:*)",
+      "Bash(docker start:*)",
+      "Bash(docker rm:*)",
+      "Bash(docker stop:*)",
+      "Bash(sudo:*)",
+      "Bash(docker:*)",
+      "Bash(docker network inspect:*)",
+      "Bash(npm run dev:*)",
+      "Bash(PGPASSWORD=bandanaiera psql:*)"
     ]
   },
   "enableAllProjectMcpServers": true,

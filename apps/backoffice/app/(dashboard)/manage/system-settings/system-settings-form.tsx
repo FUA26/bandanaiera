@@ -80,7 +80,7 @@ export function SystemSettingsForm() {
       emailVerificationExpiryHours: 24,
       minPasswordLength: 8,
       requireStrongPassword: false,
-      siteName: "Naiera",
+      siteName: "Malang Digital Government",
       siteDescription: "",
       siteLogoId: "",
       siteSubtitle: "",
@@ -401,7 +401,7 @@ export function SystemSettingsForm() {
 
                 <Field>
                   <FieldLabel htmlFor="citizenName">Citizen Name</FieldLabel>
-                  <FieldDescription>What to call citizens in greetings (e.g., "Warga Naiera")</FieldDescription>
+                  <FieldDescription>What to call citizens in greetings (e.g., "Warga Kabupaten Malang")</FieldDescription>
                   <FieldContent>
                     <Input id="citizenName" {...form.register("citizenName")} />
                   </FieldContent>
@@ -583,7 +583,7 @@ export function SystemSettingsForm() {
                   <FieldLabel htmlFor="copyrightText">Copyright Text</FieldLabel>
                   <FieldDescription>Custom copyright message (optional)</FieldDescription>
                   <FieldContent>
-                    <Input id="copyrightText" placeholder="© 2026 Pemerintah Kabupaten Naiera" {...form.register("copyrightText")} />
+                    <Input id="copyrightText" placeholder="© 2026 Pemerintah Kabupaten Malang" {...form.register("copyrightText")} />
                   </FieldContent>
                   <FieldError />
                 </Field>

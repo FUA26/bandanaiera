@@ -9,19 +9,19 @@ import { getVisibleServicesGroupedByCategory } from "@/lib/services-data";
 export const dynamic = 'force-dynamic';
 
 export const metadata: Metadata = {
-  title: "Super App Naiera - Layanan Digital Kabupaten Naiera",
+  title: "Malang Digital Government - Layanan Digital Kabupaten Malang",
   description:
-    "Akses ratusan layanan pemerintahan dengan mudah, cepat, dan aman dalam satu platform digital. Kabupaten Naiera menuju digitalisasi pelayanan publik.",
+    "Akses ratusan layanan pemerintahan dengan mudah, cepat, dan aman dalam satu platform digital. Kabupaten Malang menuju digitalisasi pelayanan publik.",
   keywords: [
     "super app",
     "naiera",
-    "kabupaten naiera",
+    "kabupaten malang",
     "layanan digital",
     "pemerintahan",
     "e-government",
   ],
   openGraph: {
-    title: "Super App Naiera - Layanan Digital Kabupaten Naiera",
+    title: "Malang Digital Government - Layanan Digital Kabupaten Malang",
     description:
       "Akses ratusan layanan pemerintahan dengan mudah, cepat, dan aman dalam satu platform digital.",
     type: "website",

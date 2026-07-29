@@ -7,7 +7,7 @@
 import { ForgotPasswordForm } from "@/components/auth/forgot-password-form";
 
 export const metadata = {
-  title: "Lupa Password - Super App Naiera",
+  title: "Lupa Password - Malang Digital Government",
   description: "Reset password akun Anda",
 };
 
@@ -17,14 +17,14 @@ export default function ForgotPasswordPage() {
       <div className="flex items-center gap-3 mb-10">
         <img
           src="/logo.svg"
-          alt="Logo Naiera"
+          alt="Logo Malang Digital Government"
           width={40}
           height={40}
           className="object-contain"
         />
         <div>
-          <h2 className="text-base font-bold leading-tight">Super App Naiera</h2>
-          <p className="text-xs text-muted-foreground leading-tight">Kabupaten Naiera</p>
+          <h2 className="text-base font-bold leading-tight">Malang Digital Government</h2>
+          <p className="text-xs text-muted-foreground leading-tight">Kabupaten Malang</p>
         </div>
       </div>
       <div className="space-y-2 mb-8">

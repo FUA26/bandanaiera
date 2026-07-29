@@ -6,9 +6,10 @@ export const dynamic = 'force-dynamic';
 export default async function LayananPage({
   searchParams,
 }: {
-  searchParams: Promise<{ kategori?: string }>;
+  searchParams: Promise<{ kategori?: string; category?: string }>;
 }) {
-  const { kategori } = await searchParams;
+  const { kategori, category } = await searchParams;
+  const activeCategory = kategori || category;
 
   // Fetch data from directories
   const categories = await getServiceCategories();
@@ -22,7 +23,7 @@ export default async function LayananPage({
   }));
 
   // Validate category slug - only use if valid
-  const initialCategory = categories.find(c => c.slug === kategori)?.slug || null;
+  const initialCategory = categories.find(c => c.slug === activeCategory)?.slug || null;
 
   return (
     <LayananPageClient

@@ -8,10 +8,10 @@
         - img "Logo Naiera" [ref=e7]
         - generic [ref=e8]:
           - heading "Super App Naiera" [level=2] [ref=e9]
-          - paragraph [ref=e10]: Kabupaten Naiera
+          - paragraph [ref=e10]: Kabupaten Malang
       - generic [ref=e11]:
         - heading "Selamat Datang Kembali" [level=1] [ref=e12]
-        - paragraph [ref=e13]: Masuk untuk mengakses layanan digital Kabupaten Naiera
+        - paragraph [ref=e13]: Masuk untuk mengakses layanan digital Kabupaten Malang
       - generic [ref=e14]:
         - generic [ref=e15]: Invalid email or password
         - generic [ref=e16]:
@@ -54,7 +54,7 @@
             - img [ref=e50]
     - generic [ref=e55]:
       - heading "Akses Semua Layanan dalam Satu Aplikasi" [level=1] [ref=e56]
-      - paragraph [ref=e57]: Lebih dari 100+ layanan pemerintahan Kabupaten Naiera siap melayani Anda 24/7 dengan cepat, mudah, dan aman.
+      - paragraph [ref=e57]: Lebih dari 100+ layanan pemerintahan Kabupaten Malang siap melayani Anda 24/7 dengan cepat, mudah, dan aman.
       - generic [ref=e58]:
         - generic [ref=e59]:
           - img [ref=e60]

@@ -61,10 +61,10 @@ export const GET = async (
                 bgColor: true,
               },
             },
-            agency: true,
-            relatedAgencies: {
+            opd: true,
+            relatedOpds: {
               include: {
-                agency: true,
+                opd: true,
               },
             },
             serviceImages: {

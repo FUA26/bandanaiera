@@ -1,0 +1,10 @@
+<svg width="1200" height="800" viewBox="0 0 1200 800" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="800" rx="48" fill="#123E68"/>
+  <circle cx="980" cy="160" r="210" fill="#2F7DBF" fill-opacity="0.35"/>
+  <circle cx="260" cy="620" r="280" fill="#4DA3D9" fill-opacity="0.18"/>
+  <path d="M160 560C260 470 380 430 520 430C666 430 792 470 944 570" stroke="#E8F4FF" stroke-width="22" stroke-linecap="round" stroke-opacity="0.9"/>
+  <rect x="132" y="126" width="228" height="64" rx="32" fill="#E8F4FF" fill-opacity="0.14"/>
+  <text x="172" y="168" fill="#EAF6FF" font-family="Arial, sans-serif" font-size="30" font-weight="700">Berita</text>
+  <text x="132" y="270" fill="#FFFFFF" font-family="Arial, sans-serif" font-size="54" font-weight="700">Kabupaten Malang</text>
+  <text x="132" y="336" fill="#CFE8FF" font-family="Arial, sans-serif" font-size="28">Layanan publik, pembangunan, dan informasi warga</text>
+</svg>

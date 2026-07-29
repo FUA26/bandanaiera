@@ -26,7 +26,7 @@ export function HeroSection() {
   ];
 
   return (
-    <section className="relative flex min-h-screen flex-col items-center justify-center px-4 text-center">
+    <section className="relative flex min-h-[100svh] flex-col items-center justify-center overflow-hidden px-4 py-20 text-center sm:py-24 lg:py-28">
       {/* Background Layers */}
       <div className="absolute inset-0 -z-10">
         {/* Background Image from Settings */}
@@ -57,9 +57,9 @@ export function HeroSection() {
       </div>
 
       {/* Content */}
-      <div className="mx-auto max-w-5xl space-y-8">
+      <div className="mx-auto flex w-full max-w-5xl flex-col items-center space-y-6 sm:space-y-8">
         {/* Hero Title */}
-        <h1 className="animate-fade-in-up text-4xl leading-tight font-bold text-white drop-shadow-md md:text-5xl lg:text-6xl">
+        <h1 className="animate-fade-in-up max-w-4xl text-balance text-4xl leading-tight font-bold text-white drop-shadow-md sm:text-5xl lg:text-6xl">
           {t("titlePart1")}
           <br />
           <span className="text-primary">{t("titlePart2")}</span>
@@ -73,12 +73,12 @@ export function HeroSection() {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder={t("searchPlaceholder")}
-              className="focus:ring-primary/30 h-14 w-full rounded-full bg-white/95 pr-14 pl-5 text-base text-slate-800 shadow-2xl backdrop-blur-sm transition-all duration-300 placeholder:text-slate-400 focus:ring-4 focus:outline-none md:h-16 md:pr-16 md:pl-6 md:text-lg"
+              className="focus:ring-primary/30 h-14 w-full rounded-full bg-white/95 pr-14 pl-5 text-base text-slate-800 shadow-2xl backdrop-blur-sm transition-all duration-300 placeholder:text-slate-400 focus:ring-4 focus:outline-none sm:h-15 md:h-16 md:pr-16 md:pl-6 md:text-lg"
               aria-label="Cari layanan pemerintahan"
             />
             <button
               type="submit"
-              className="bg-primary text-primary-foreground hover:bg-primary-hover absolute top-2 right-2 bottom-2 flex aspect-square items-center justify-center rounded-full shadow-lg transition-all duration-300 active:scale-95"
+              className="bg-primary text-primary-foreground hover:bg-primary-hover absolute top-2 right-2 bottom-2 flex aspect-square min-h-10 min-w-10 items-center justify-center rounded-full shadow-lg transition-all duration-300 active:scale-95"
               aria-label="Cari"
             >
               <Search size={24} />
@@ -92,7 +92,7 @@ export function HeroSection() {
               <button
                 key={item}
                 onClick={() => setSearchQuery(item)}
-                className="rounded-full border border-white/20 bg-white/10 px-3 py-1 text-white backdrop-blur-sm transition-all duration-200 hover:bg-white/20"
+                className="rounded-full border border-white/20 bg-white/10 px-3 py-2 text-white backdrop-blur-sm transition-all duration-200 hover:bg-white/20"
               >
                 {item}
               </button>
@@ -103,7 +103,7 @@ export function HeroSection() {
       </div>
 
       {/* Scroll Indicator */}
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce">
+      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 animate-bounce sm:bottom-8">
         <div className="flex h-10 w-6 items-start justify-center rounded-full border-2 border-white/30 p-2">
           <div className="h-2 w-1 rounded-full bg-white/50" />
         </div>

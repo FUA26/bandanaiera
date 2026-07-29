@@ -136,12 +136,12 @@ export function EventsSectionClient({ events }: EventsSectionClientProps) {
     <section className="bg-muted py-16 md:py-20" id="acara">
       <div className="container mx-auto max-w-7xl px-4">
         {/* Section Header */}
-        <div className="mb-12 text-center">
+        <div className="mb-12 text-center lg:text-left">
           <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-primary/10 px-4 py-1.5 text-sm font-semibold text-primary dark:bg-primary/20">
             <Sparkles size={16} />
             <span>{t("label")}</span>
           </div>
-          <h2 className="text-foreground mb-3 text-3xl font-extrabold md:text-5xl tracking-tight">
+          <h2 className="text-foreground mb-3 text-3xl font-extrabold tracking-tight md:text-5xl">
             {t("title")}
           </h2>
           <p className="text-muted-foreground mx-auto max-w-2xl text-base md:text-lg">
@@ -156,7 +156,7 @@ export function EventsSectionClient({ events }: EventsSectionClientProps) {
             {featuredEvent ? (
               <div className="border-border bg-card group overflow-hidden rounded-2xl border shadow-lg transition-all duration-300 hover:shadow-xl">
                 {/* Featured Event Image */}
-                <div className="relative h-64 bg-muted md:h-80 overflow-hidden">
+                <div className="relative h-52 overflow-hidden bg-muted sm:h-64 md:h-80">
                   {featuredEvent.image ? (
                     <img
                       src={featuredEvent.image}
@@ -173,14 +173,14 @@ export function EventsSectionClient({ events }: EventsSectionClientProps) {
 
                   {/* Event Badge */}
                   <div className="absolute top-4 left-4">
-                    <span className="bg-primary/90 text-primary-foreground backdrop-blur-sm rounded-lg px-4 py-2 text-sm font-semibold shadow-lg">
+                    <span className="rounded-lg bg-primary/90 px-4 py-2 text-sm font-semibold text-primary-foreground shadow-lg backdrop-blur-sm">
                       {featuredEvent.category}
                     </span>
                   </div>
 
                   {featuredEvent.featured && (
                     <div className="absolute top-4 right-4">
-                      <span className="bg-amber-500 text-white rounded-lg px-3 py-1.5 text-xs font-bold shadow-lg flex items-center gap-1">
+                      <span className="flex items-center gap-1 rounded-lg bg-amber-500 px-3 py-1.5 text-xs font-bold text-white shadow-lg">
                         <Sparkles size={14} />
                         FEATURED
                       </span>
@@ -189,8 +189,8 @@ export function EventsSectionClient({ events }: EventsSectionClientProps) {
                 </div>
 
                 {/* Featured Event Content */}
-                <div className="p-6">
-                  <h3 className="mb-4 text-2xl leading-tight font-bold text-foreground group-hover:text-primary transition-colors">
+                <div className="p-5 sm:p-6">
+                  <h3 className="mb-4 text-xl leading-tight font-bold text-foreground transition-colors group-hover:text-primary sm:text-2xl">
                     {featuredEvent.title}
                   </h3>
 
@@ -225,7 +225,7 @@ export function EventsSectionClient({ events }: EventsSectionClientProps) {
                     )}
                   </div>
 
-                  <div className="border-border flex items-center justify-between border-t pt-5">
+                  <div className="border-border flex flex-col gap-4 border-t pt-5 sm:flex-row sm:items-center sm:justify-between">
                     <Link
                       href={`/informasi-publik/agenda-kegiatan/${featuredEvent.slug}`}
                       className="group/link text-primary hover:text-primary-hover inline-flex items-center gap-2 font-bold"
@@ -236,7 +236,7 @@ export function EventsSectionClient({ events }: EventsSectionClientProps) {
                         className="transition-transform group-hover/link:translate-x-1"
                       />
                     </Link>
-                    <button className="bg-primary hover:bg-primary-hover text-primary-foreground rounded-xl px-6 py-2.5 font-semibold transition-all hover:shadow-md active:scale-95">
+                    <button className="inline-flex items-center justify-center rounded-xl bg-primary px-5 py-2.5 font-semibold text-primary-foreground transition-all hover:bg-primary-hover hover:shadow-md active:scale-95">
                       {t("representative")}
                     </button>
                   </div>

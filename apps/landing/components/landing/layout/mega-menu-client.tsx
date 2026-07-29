@@ -70,7 +70,7 @@ export function MegaMenuClient({ servicesByCategory }: MegaMenuClientProps) {
             {t("services.title")}
           </NavigationMenuTrigger>
           <NavigationMenuContent>
-            <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
+            <ul className="grid w-[min(92vw,640px)] gap-3 p-4 md:w-[min(90vw,720px)] md:grid-cols-2 lg:w-[min(88vw,800px)]">
               <li className="row-span-3">
                 <NavigationMenuLink asChild>
                   <Link
@@ -112,7 +112,7 @@ export function MegaMenuClient({ servicesByCategory }: MegaMenuClientProps) {
             {t("information.title")}
           </NavigationMenuTrigger>
           <NavigationMenuContent>
-            <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
+            <ul className="grid w-[min(92vw,640px)] gap-3 p-4 md:w-[min(90vw,720px)] md:grid-cols-2 lg:w-[min(88vw,800px)]">
               <ListItem
                 href="/informasi-publik/berita-terkini"
                 title={t("information.items.news.title")}
@@ -181,7 +181,7 @@ export function MegaMenuClient({ servicesByCategory }: MegaMenuClientProps) {
             {t("agency.title")}
           </NavigationMenuTrigger>
           <NavigationMenuContent>
-            <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
+            <ul className="grid w-[min(92vw,640px)] gap-3 p-4 md:w-[min(90vw,720px)] md:grid-cols-2 lg:w-[min(88vw,800px)]">
               <ListItem
                 href="/pemerintahan/profil"
                 title={t("agency.items.profile.title")}

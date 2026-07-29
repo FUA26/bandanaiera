@@ -106,9 +106,9 @@ export function DestinasiWisataClient({
                                 <Map size={32} />
                             </div>
                             <div>
-                                <h1 className="text-3xl font-bold">Destinasi Wisata Naiera</h1>
+                                <h1 className="text-3xl font-bold">Destinasi Wisata Kabupaten Malang</h1>
                                 <p className="text-primary-lighter">
-                                    Jelajahi keindahan alam dan budaya Kabupaten Naiera
+                                    Jelajahi keindahan alam dan budaya Kabupaten Malang
                                 </p>
                             </div>
                         </div>

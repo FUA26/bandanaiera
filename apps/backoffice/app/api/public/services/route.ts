@@ -50,7 +50,7 @@ export const GET = async (request: Request) => {
     const sortOrder = (searchParams.get("sortOrder") || "asc") as "asc" | "desc";
 
     const params = { categoryId, search, showInMenu, page, pageSize, sortBy, sortOrder };
-    const cacheKey = generateCacheKey('services:list', { params });
+    const cacheKey = generateCacheKey('services:list', params);
 
     const result = await cachedQuery(
       cacheKey,

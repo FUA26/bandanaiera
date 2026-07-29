@@ -2,8 +2,8 @@ import { getTourismDestinations, getTourismCategories } from '@/lib/tourism-data
 import { DestinasiWisataClient } from './destinasi-wisata-client';
 
 export const metadata = {
-  title: 'Destinasi Wisata | Kabupaten Naiera',
-  description: 'Jelajahi keindahan alam dan budaya Kabupaten Naiera',
+  title: 'Destinasi Wisata | Kabupaten Malang',
+  description: 'Jelajahi keindahan alam dan budaya Kabupaten Malang',
 };
 
 export default async function DestinasiWisataPage() {

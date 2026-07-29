@@ -45,11 +45,11 @@ export function Providers({
 
 function getDefaultSettings(): PublicSettings {
   return {
-    siteName: "Super App Naiera",
-    siteSubtitle: "Kabupaten Naiera",
+    siteName: "Malang Digital Government",
+    siteSubtitle: "Portal Resmi Kabupaten Malang",
     siteDescription: null,
     siteLogoUrl: null,
-    citizenName: "Warga Naiera",
+    citizenName: "Warga Kabupaten Malang",
     contactAddress: null,
     contactPhones: null,
     contactEmails: null,

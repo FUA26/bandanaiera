@@ -219,7 +219,7 @@ export default function RegisterPage() {
 
         <div className="relative z-10 max-w-lg text-white">
           <h2 className="mb-6 text-4xl font-bold">
-            Bergabung dengan Super App Naiera
+            Bergabung dengan Malang Digital Government
           </h2>
           <p className="mb-8 text-xl leading-relaxed text-primary-lighter">
             Daftar sekarang dan nikmati kemudahan akses ke semua layanan
@@ -287,16 +287,16 @@ export default function RegisterPage() {
               <div className="relative flex h-12 w-12 items-center justify-center rounded-xl bg-white shadow-sm ring-1 ring-slate-200">
                 <Image
                   src="/naiera.png"
-                  alt="Naiera Logo"
+                  alt="Malang Digital Government Logo"
                   fill
                   className="object-contain p-2"
                 />
               </div>
               <div>
                 <h1 className="text-xl font-bold text-slate-800 transition-colors group-hover:text-primary">
-                  Super App Naiera
+                  Malang Digital Government
                 </h1>
-                <p className="text-sm text-slate-500">Kabupaten Naiera</p>
+                <p className="text-sm text-slate-500">Kabupaten Malang</p>
               </div>
             </Link>
 
@@ -540,7 +540,7 @@ export default function RegisterPage() {
                               className="absolute top-1/2 left-3 -translate-y-1/2 text-slate-400"
                             />
                             <Input
-                              placeholder="Contoh: Kabupaten Naiera"
+                              placeholder="Contoh: Kabupaten Malang"
                               className="pl-11"
                               {...field}
                             />

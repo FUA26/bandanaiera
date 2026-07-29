@@ -19,10 +19,10 @@ export async function generateMetadata(): Promise<Metadata> {
 
   return {
     title: {
-      default: settings?.siteName || "Super App Naiera",
-      template: `%s | ${settings?.siteName || "Super App Naiera"}`,
+      default: settings?.siteName || "Malang Digital Government",
+      template: `%s | ${settings?.siteName || "Malang Digital Government"}`,
     },
-    description: settings?.siteDescription || "Layanan Digital Pemerintahan Kabupaten Naiera",
+    description: settings?.siteDescription || "Layanan Digital Pemerintahan Kabupaten Malang",
     icons: {
       icon: settings?.siteLogoUrl || "/icon.png",
       apple: settings?.siteLogoUrl || "/apple-icon.png",

@@ -45,7 +45,7 @@ export async function sendPasswordResetEmail(email: string, token: string) {
 export async function sendWelcomeEmail(email: string, userName: string) {
   const service = getEmailService();
   const appIdUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
-  const appName = process.env.NEXT_PUBLIC_APP_NAME || "Naiera";
+  const appName = process.env.NEXT_PUBLIC_APP_NAME || "Malang Digital Government";
 
   const html = await render(
     <WelcomeEmail userName={userName} appName={appName} appIdUrl={appIdUrl} />

@@ -39,16 +39,16 @@ export default function LoginPage() {
               <div className="shadow-primary/5 relative flex h-11 w-11 items-center justify-center rounded-xl bg-white shadow-lg ring-1 ring-slate-200">
                 <Image
                   src="/naiera.png"
-                  alt="Naiera Logo"
+                  alt="Malang Digital Government Logo"
                   fill
                   className="object-contain p-1.5"
                 />
               </div>
               <div>
                 <h1 className="group-hover:text-primary text-lg font-bold text-slate-800 transition-colors">
-                  Super App Naiera
+                  Malang Digital Government
                 </h1>
-                <p className="text-xs text-slate-500">Kabupaten Naiera</p>
+                <p className="text-xs text-slate-500">Kabupaten Malang</p>
               </div>
             </Link>
 
@@ -56,7 +56,7 @@ export default function LoginPage() {
               Selamat Datang Kembali
             </h2>
             <p className="text-sm text-slate-600 sm:text-base">
-              Masuk untuk mengakses layanan digital Kabupaten Naiera
+              Masuk untuk mengakses layanan digital Kabupaten Malang
             </p>
           </div>
 
@@ -254,7 +254,7 @@ export default function LoginPage() {
             <span className="text-cyan-200">Satu Aplikasi</span>
           </h2>
           <p className="mb-8 text-base leading-relaxed text-white/80 xl:text-lg">
-            Lebih dari 100+ layanan pemerintahan Kabupaten Naiera siap melayani
+            Lebih dari 100+ layanan pemerintahan Kabupaten Malang siap melayani
             Anda 24/7 dengan cepat, mudah, dan aman.
           </p>
 

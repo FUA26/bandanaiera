@@ -152,7 +152,7 @@ export async function sendPasswordResetEmail({
             />
 
             <p style={{ color: "#999999", fontSize: "12px", margin: "0" }}>
-              © {new Date().getFullYear()} {env.NEXT_PUBLIC_APP_NAME || "Naiera"}. All rights
+              © {new Date().getFullYear()} {env.NEXT_PUBLIC_APP_NAME || "Malang Digital Government"}. All rights
               reserved.
             </p>
           </div>
@@ -243,7 +243,7 @@ export async function sendPasswordResetSuccessEmail({
             />
 
             <p style={{ color: "#999999", fontSize: "12px", margin: "0" }}>
-              © {new Date().getFullYear()} {env.NEXT_PUBLIC_APP_NAME || "Naiera"}. All rights
+              © {new Date().getFullYear()} {env.NEXT_PUBLIC_APP_NAME || "Malang Digital Government"}. All rights
               reserved.
             </p>
           </div>
@@ -301,7 +301,7 @@ export async function sendVerificationEmail({
             </h1>
 
             <p style={{ color: "#666666", marginBottom: "15px" }}>
-              Welcome to {env.NEXT_PUBLIC_APP_NAME || "Naiera"}, {userName}!
+              Welcome to {env.NEXT_PUBLIC_APP_NAME || "Malang Digital Government"}, {userName}!
             </p>
 
             <p style={{ color: "#666666", marginBottom: "20px" }}>
@@ -357,7 +357,7 @@ export async function sendVerificationEmail({
             />
 
             <p style={{ color: "#999999", fontSize: "12px", margin: "0" }}>
-              © {new Date().getFullYear()} {env.NEXT_PUBLIC_APP_NAME || "Naiera"}. All rights
+              © {new Date().getFullYear()} {env.NEXT_PUBLIC_APP_NAME || "Malang Digital Government"}. All rights
               reserved.
             </p>
           </div>

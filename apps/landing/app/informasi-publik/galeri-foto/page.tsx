@@ -47,7 +47,7 @@ const photos: Photo[] = [
   {
     id: "1",
     title: "Peresmian Jembatan Harapan",
-    description: "Bupati Naiera meresmikan jembatan penghubung dua kecamatan",
+    description: "Bupati Malang meresmikan jembatan penghubung dua kecamatan",
     category: "Pembangunan",
     date: "10 Januari 2026",
     views: 1250,
@@ -56,7 +56,7 @@ const photos: Photo[] = [
   },
   {
     id: "2",
-    title: "Festival Budaya Naiera 2025",
+    title: "Festival Budaya Malang 2025",
     description: "Puncak Festival Budaya dengan parade seni tradisional",
     category: "Festival & Event",
     date: "15 Desember 2025",
@@ -67,7 +67,7 @@ const photos: Photo[] = [
   {
     id: "3",
     title: "Kunjungan ke UMKM Batik",
-    description: "Bupati mengunjungi sentra UMKM batik khas Naiera",
+    description: "Bupati mengunjungi sentra UMKM batik khas Malang",
     category: "Kegiatan Bupati",
     date: "8 Januari 2026",
     views: 890,
@@ -106,7 +106,7 @@ const photos: Photo[] = [
   },
   {
     id: "7",
-    title: "Tari Tradisional Naiera",
+    title: "Tari Tradisional Malang",
     description: "Penampilan tari tradisional dalam acara resmi",
     category: "Budaya",
     date: "20 Desember 2025",
@@ -231,7 +231,7 @@ export default function GaleriFotoPage() {
               <div>
                 <h1 className="text-3xl font-bold">Galeri Foto</h1>
                 <p className="text-primary-lighter">
-                  Dokumentasi kegiatan dan momen penting Kabupaten Naiera
+                  Dokumentasi kegiatan dan momen penting Kabupaten Malang
                 </p>
               </div>
             </div>

@@ -19,10 +19,10 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "Naiera Backoffice",
-    template: "%s | Naiera Backoffice",
+    default: "Malang Digital Government Backoffice",
+    template: "%s | Malang Digital Government Backoffice",
   },
-  description: "Layanan Digital Pemerintahan Kabupaten Naiera - Backoffice Dashboard",
+  description: "Layanan Digital Pemerintahan Kabupaten Malang - Backoffice Dashboard",
   icons: {
     icon: "/icon.png",
     apple: "/icon.png",
